@@ -318,9 +318,15 @@ def settings_menu():
 def main_menu_setup():
         show_mouse()
         SCREEN.fill(WHITE)
-        text_surf, text_rect = text_objects('BUZZINGA', MENU_TEXT)
-        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
-        SCREEN.blit(text_surf, text_rect)
+        logo = "BuzzingaLogo.bmp"
+        picture = load_image(logo, 'images')
+        picture_size = picture.get_rect().size
+        rela = picture_size[0]/picture_size[0]
+        picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5)/rela)))
+        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
+        #text_surf, text_rect = text_objects('BUZZINGA', MENU_TEXT)
+        #text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
+        #SCREEN.blit(text_surf, text_rect)
         x, y, w, h = button_layout_28[7]
         pygame.draw.rect(SCREEN, LIGHT_RED, (x,y,w,h))
         text_surf, text_rect = text_objects('S P I E L E R', SMALL_TEXT, WHITE)

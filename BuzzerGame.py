@@ -126,10 +126,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 										else:
 											image_size = (int(picture_length/rela), picture_length)
 									else:
-										#if image_size[1] < picture_length:
 										image_size = (picture_width, int(picture_width/rela))
-										#else:
-										#	image_size = (picture_width, int(picture_width/rela))
                                 # image higher than wide
                                 if rela < 1:
 									if image_size[1] < picture_length:
@@ -192,7 +189,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	pygame.display.set_caption(game_name.encode('utf-8'))
 	
 	# Created Variable for the text on the screen
-	picture = pygame.transform.scale(picture, (picture_width, picture_length))
+	#picture = pygame.transform.scale(picture, (picture_width, picture_length))
 	game_label = myfont.render(game_name, 1, RED)
 	solution_label = myfont.render(welcome, 1, RED)
 	nr = 1
