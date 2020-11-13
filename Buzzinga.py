@@ -433,18 +433,18 @@ def main_menu():
         
 
 if __name__ == "__main__":
-	pygame.init()
+        pygame.init()
 
-	SCREEN_WIDTH, SCREEN_HEIGHT = int(pygame.display.Info().current_w), int(pygame.display.Info().current_h)
-	SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN)
+        SCREEN_WIDTH, SCREEN_HEIGHT = int(pygame.display.Info().current_w), int(pygame.display.Info().current_h)
+        SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN)
 
-	BUTTON_WIDTH = int(SCREEN_WIDTH * 0.625 // 3)
-	BUTTON_HEIGHT = int(SCREEN_HEIGHT * 5 // 81)
-	button_x_start1 = ((SCREEN_WIDTH - 2*BUTTON_WIDTH) // 2) - (SCREEN_WIDTH/100*2)
-	button_x_start2 = button_x_start1 + BUTTON_WIDTH + SCREEN_WIDTH/100*4
-	button_x_start3 = button_x_start2 + BUTTON_WIDTH + SCREEN_WIDTH/100*4
-	button_x_start0 = button_x_start1 - BUTTON_WIDTH - SCREEN_WIDTH/100*4
-	button_layout_28 = [(button_x_start0, SCREEN_HEIGHT * 5 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
+        BUTTON_WIDTH = int(SCREEN_WIDTH * 0.625 // 3)
+        BUTTON_HEIGHT = int(SCREEN_HEIGHT * 5 // 81)
+        button_x_start1 = ((SCREEN_WIDTH - 2*BUTTON_WIDTH) // 2) - (SCREEN_WIDTH/100*2)
+        button_x_start2 = button_x_start1 + BUTTON_WIDTH + SCREEN_WIDTH/100*4
+        button_x_start3 = button_x_start2 + BUTTON_WIDTH + SCREEN_WIDTH/100*4
+        button_x_start0 = button_x_start1 - BUTTON_WIDTH - SCREEN_WIDTH/100*4
+        button_layout_28 = [(button_x_start0, SCREEN_HEIGHT * 5 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
                            (button_x_start0, SCREEN_HEIGHT * 6 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
                            (button_x_start0, SCREEN_HEIGHT * 7 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
                            (button_x_start0, SCREEN_HEIGHT * 8 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
@@ -472,12 +472,12 @@ if __name__ == "__main__":
                            (button_x_start3, SCREEN_HEIGHT * 9 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
                            (button_x_start3, SCREEN_HEIGHT * 10 // 13, BUTTON_WIDTH, BUTTON_HEIGHT),
                            (button_x_start3, SCREEN_HEIGHT * 11 // 13, BUTTON_WIDTH, BUTTON_HEIGHT)]
-	TOGGLE_ADJ = int(BUTTON_WIDTH * 0.075)
-	MENU_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 5))
-	MEDIUM_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 9))
-	SMALL_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 25))
+        TOGGLE_ADJ = int(BUTTON_WIDTH * 0.075)
+        MENU_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 5))
+        MEDIUM_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 9))
+        SMALL_TEXT = pygame.font.SysFont("Ariel", int(SCREEN_HEIGHT / 25))
 
-	pygame.display.set_caption('BUZZINGA')
-	clock = pygame.time.Clock()
+        pygame.display.set_caption('BUZZINGA')
+        clock = pygame.time.Clock()
 
-	main_menu()
+        main_menu()
