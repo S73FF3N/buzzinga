@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import os, pygame, sys, random
-from PIL import Image
-from math import ceil
-from time import sleep
+import os, pygame, sys
 import subprocess
-from game_utilities import convert_image_to, load_image
+from game_utilities import load_image
 from pygame.locals import *
 from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
 from BuzzerGame import buzzer_game
 
-BLACK = 12, 27, 69
-WHITE = 255,255,255
-GREEN = 40, 175, 99
-RED = 133, 5, 33
-LIGHT_RED = 189, 53, 82
+class Static:
+        BLACK = 12, 27, 69
+        WHITE = 255,255,255
+        GREEN = 40, 175, 99
+        RED = 133, 5, 33
+        LIGHT_RED = 189, 53, 82
 
 config = {'images': True,
           'playerNames': ['Spieler 1', 'Spieler 2', 'Spieler 3', 'Spieler 4'],
@@ -24,14 +22,14 @@ config = {'images': True,
           'game modus': True,
           'points_to_win': 10}
 
-def game(screen, screenx, screeny, red, black, white):
-        buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, RED, BLACK, WHITE, config['images'], config['game sounds'], config['game modus'], config['points_to_win']) 
+def game(screen, screenx, screeny):
+        buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['images'], config['game sounds'], config['game modus'], config['points_to_win'])
 	
-def text_objects(text, font, color=BLACK):
+def text_objects(text, font, color=Static.BLACK):
         text_surface = font.render(text, 1, color)
         return text_surface, text_surface.get_rect()
 
-def button(text, x, y, w, h, click, inactive_color=RED, active_color=LIGHT_RED, text_color=WHITE, image=False):
+def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Static.LIGHT_RED, text_color=Static.WHITE, image=False):
         mouse = pygame.mouse.get_pos()
         return_value = False
         if x < mouse[0] < x + w and y < mouse[1] < y + h:
@@ -52,7 +50,7 @@ def button(text, x, y, w, h, click, inactive_color=RED, active_color=LIGHT_RED, 
                 SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x,y,w,h).center))
         return return_value
 
-def player_name_input(x, y, w, h, click, inactive_color=RED, active_color=LIGHT_RED, text_color=RED):
+def player_name_input(x, y, w, h, click, inactive_color=Static.RED, active_color=Static.LIGHT_RED, text_color=Static.RED):
         mouse = pygame.mouse.get_pos()
         return_value = False
         if x < mouse[0] < x + w and y < mouse[1] < y + h:
@@ -67,7 +65,7 @@ def draw_circle(surface, x, y, radius, color):
         gfxdraw.aacircle(surface, x, y, radius, color)
         gfxdraw.filled_circle(surface, x, y, radius, color)
 
-def toggle_btn(text, text2, x, y, w, h, click, text_color=RED, enabled=True, draw_toggle=True, blit_text=True, enabled_color=LIGHT_RED):
+def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=True, draw_toggle=True, blit_text=True, enabled_color=Static.LIGHT_RED):
         mouse = pygame.mouse.get_pos()
         rect_height = h // 2
         text_surf, text_rect = text_objects(text, SMALL_TEXT, color=text_color)
@@ -106,10 +104,10 @@ def delete_category(game_dir):
         current_dir = os.getcwd()
         os.chdir(game_dir)
         for f in os.listdir(game_dir):
-			if not os.path.isdir(game_dir+"/"+f): 
-				os.remove(game_dir+"/"+f)
-			else:
-				pass
+                if not os.path.isdir(game_dir+"/"+f):
+                        os.remove(game_dir+"/"+f)
+                else:
+                        pass
         try:
                 os.rmdir(game_dir)
         except:
@@ -118,21 +116,21 @@ def delete_category(game_dir):
 
 def print_player_name(x, playerName):
         x, y, w, h = button_layout_28[x+8]
-        pygame.draw.rect(SCREEN, WHITE, (x,y,w,h))
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x,y,w,h), 5)
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x-w/4,y-2,w/4,h+3))
+        pygame.draw.rect(SCREEN, Static.WHITE, (x,y,w,h))
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h), 5)
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x-w/4,y-2,w/4,h+3))
         image_file = load_image('user.bmp', '/home/pi/Desktop/venv/mycode/images')
         image_size = image_file.get_rect().size
         rela = image_size[0]/float(image_size[1])
         image_file = pygame.transform.scale(image_file, (int(h/2*rela), h/2))
         SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x-w/4,y,w/4,h).center))
-        text_surf, text_rect = text_objects(playerName, SMALL_TEXT, RED)
+        text_surf, text_rect = text_objects(playerName, SMALL_TEXT, Static.RED)
         text_rect.center = (int(x +w/2), int(y + h/2))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
 def choose_game_setup(import_status="", no_categories=False):
-        SCREEN.fill(WHITE)
+        SCREEN.fill(Static.WHITE)
         text_surf, text_rect = text_objects('S P I E L K A T E G O R I E', MEDIUM_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
@@ -144,10 +142,10 @@ def choose_game_setup(import_status="", no_categories=False):
         text_rect.center = (int(SCREEN_WIDTH / 8), int(SCREEN_HEIGHT / 18*17))
         SCREEN.blit(text_surf, text_rect)
         if no_categories == True:
-		text_surf, text_rect = text_objects('Keine Kategorien vorhanden!', SMALL_TEXT)
-		x, y, w, h = button_layout_28[7]
-		text_rect.center = (int(x+w/2), int(y+h/2))
-		SCREEN.blit(text_surf, text_rect)
+                text_surf, text_rect = text_objects('Keine Kategorien vorhanden!', SMALL_TEXT)
+                x, y, w, h = button_layout_28[7]
+                text_rect.center = (int(x+w/2), int(y+h/2))
+                SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
 global delete_modus
@@ -177,13 +175,13 @@ def choose_game(import_status=""):
                                 game_nr = 1
                                 page_nr += 1
                 return pages, buttons, game_folder
-									             
+
         global delete_modus
-	build_category_buttons_dict()
+        build_category_buttons_dict()
         if len(buttons['page 1']) == 0:
-		choose_game_setup(import_status=import_status, no_categories=True)
-	else:
-		choose_game_setup(import_status=import_status, no_categories=False)
+                choose_game_setup(import_status=import_status, no_categories=True)
+        else:
+                choose_game_setup(import_status=import_status, no_categories=False)
         choose_game_menu = True
         game_options = []
         page_counter = 1
@@ -201,7 +199,7 @@ def choose_game(import_status=""):
                                 game_options.append([game[0], button(game[0], game[1], game[2], game[3], game[4], click), game[1], game[2], game[3], game[4]])
                 if page_counter < pages:
                         x, y, w, h = button_layout_28[27]
-                        if button('>>', x, y, w, h, click, inactive_color=GREEN):
+                        if button('>>', x, y, w, h, click, inactive_color=Static.GREEN):
                                 delete_modus = False
                                 choose_game_setup()
                                 game_options = []
@@ -210,63 +208,63 @@ def choose_game(import_status=""):
                                         game_options.append([game[0], button(game[0], game[1], game[2], game[3], game[4], click), game[1], game[2], game[3], game[4]])       
                 x, y, w, h = button_layout_28[25]
                 if delete_modus == False:
-                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=GREEN, image=True):
+                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
                                 categories_to_delete = []
                                 delete_modus = True
                 else:
-                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=LIGHT_RED, image=True):
+                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=Static.LIGHT_RED, image=True):
                                 for game_option in game_options:
                                         game_option[1] = False
                                 delete_modus = False
-                if button('trash-truck.bmp', x+w/3, y, w/3, h, click, inactive_color=GREEN, image=True):
+                if button('trash-truck.bmp', x+w/3, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
                         if 'categories_to_delete' in locals():
                                 for category in categories_to_delete:
                                         delete_category(game_folder+category)
                         categories_to_delete = []
                         delete_modus = False
                         choose_game()
-                if button('flash-drive.bmp', x+(w/3)*2, y, w/3, h, click, inactive_color=GREEN, image=True):
+                if button('flash-drive.bmp', x+(w/3)*2, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
                         text_surf, text_rect = text_objects('Importiere Dateien', SMALL_TEXT)
                         text_rect.center = (int(SCREEN_WIDTH / 11), int(SCREEN_HEIGHT / 18*17))
-                        pygame.draw.rect(SCREEN, WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
+                        pygame.draw.rect(SCREEN, Static.WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
                         SCREEN.blit(text_surf, text_rect)
                         pygame.display.update()
                         usb_input = subprocess.check_output("python3 check_usb_input.py".split())
                         choose_game(import_status=usb_input)
                         click=False
                 x, y, w, h = button_layout_28[26]
-                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=GREEN):
+                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=Static.GREEN):
                         delete_modus = False
                         choose_game_menu = False
-		for game_option in game_options:
-			if game_option[1] == True:
-				if delete_modus == False:
-					config['game choosen'] = True
-					config['game dir'] = game_folder+game_option[0]+"/"
-					choose_game_menu = False
-				else:
-					pygame.draw.rect(SCREEN, GREEN, (game_option[2], game_option[3], game_option[4], game_option[5]))
-					text_surf, text_rect = text_objects(game_option[0], SMALL_TEXT, color=WHITE)
-					text_rect.center = (int(game_option[2] +game_option[4]/2), int(game_option[3] + game_option[5]/2))
-					SCREEN.blit(text_surf, text_rect)
-					if game_option[0] not in categories_to_delete:
-						categories_to_delete.append(game_option[0])
+                for game_option in game_options:
+                        if game_option[1] == True:
+                                if delete_modus == False:
+                                        config['game choosen'] = True
+                                        config['game dir'] = game_folder+game_option[0]+"/"
+                                        choose_game_menu = False
+                                else:
+                                        pygame.draw.rect(SCREEN, Static.GREEN, (game_option[2], game_option[3], game_option[4], game_option[5]))
+                                        text_surf, text_rect = text_objects(game_option[0], SMALL_TEXT, color=Static.WHITE)
+                                        text_rect.center = (int(game_option[2] +game_option[4]/2), int(game_option[3] + game_option[5]/2))
+                                        SCREEN.blit(text_surf, text_rect)
+                                        if game_option[0] not in categories_to_delete:
+                                                categories_to_delete.append(game_option[0])
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
 def settings_menu_setup():
-        SCREEN.fill(WHITE)
+        SCREEN.fill(Static.WHITE)
         text_surf, text_rect = text_objects('E I N S T E L L U N G E N', MEDIUM_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
         x, y, w, h = button_layout_28[7]
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x,y,w,h))
-        text_surf, text_rect = text_objects('S O U N D S', SMALL_TEXT, WHITE)
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h))
+        text_surf, text_rect = text_objects('S O U N D S', SMALL_TEXT, Static.WHITE)
         text_rect.center = (int(x +w/2), int(y + h/2))
         SCREEN.blit(text_surf, text_rect)
         x7, y7, w7, h7 = button_layout_28[14]
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x7,y7,w7,h7))
-        text_surf, text_rect = text_objects('M O D U S', SMALL_TEXT, WHITE)
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x7,y7,w7,h7))
+        text_surf, text_rect = text_objects('M O D U S', SMALL_TEXT, Static.WHITE)
         text_rect.center = (int(x7 +w7/2), int(y7 + h7/2))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
@@ -291,25 +289,25 @@ def settings_menu():
                         config['game modus'] = not config['game modus']
                         draw_bg_toggle = True
                 if config['game modus'] == False:
-                        pygame.draw.rect(SCREEN, LIGHT_RED, (x9,y9,w9/2,h9))
-                        text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, WHITE)
+                        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x9,y9,w9/2,h9))
+                        text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                         text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
                         SCREEN.blit(text_surf, text_rect)
                         if button('+', x9+w9/2, y9, w9/2, h9/2, click):
                                 config['points_to_win'] += 1
-                                pygame.draw.rect(SCREEN, LIGHT_RED, (x9,y9,w9/2,h9))
-                                text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, WHITE)
+                                pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x9,y9,w9/2,h9))
+                                text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                                 text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
                                 SCREEN.blit(text_surf, text_rect)
                         if button('-', x9+w9/2, y9+h9/2, w9/2, h9/2, click):
                                 if config['points_to_win'] != 1:
                                         config['points_to_win'] -= 1
-                                        pygame.draw.rect(SCREEN, LIGHT_RED, (x9,y9,w9/2,h9))
-                                        text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, WHITE)
+                                        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x9,y9,w9/2,h9))
+                                        text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                                         text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
                                         SCREEN.blit(text_surf, text_rect)
                 if config['game modus'] == True:
-                        pygame.draw.rect(SCREEN, WHITE, (x9,y9,w9,h9))
+                        pygame.draw.rect(SCREEN, Static.WHITE, (x9,y9,w9,h9))
                 if button(u'Hauptmenü', x10, y10, w10, h10, click):
                         settings_menu = False
                 pygame.display.update(button_layout_28)
@@ -317,26 +315,23 @@ def settings_menu():
 
 def main_menu_setup():
         show_mouse()
-        SCREEN.fill(WHITE)
+        SCREEN.fill(Static.WHITE)
         logo = "BuzzingaLogo.bmp"
         picture = load_image(logo, 'images')
         picture_size = picture.get_rect().size
         rela = picture_size[0]/picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5)/rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
-        #text_surf, text_rect = text_objects('BUZZINGA', MENU_TEXT)
-        #text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
-        #SCREEN.blit(text_surf, text_rect)
         x, y, w, h = button_layout_28[7]
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x,y,w,h))
-        text_surf, text_rect = text_objects('S P I E L E R', SMALL_TEXT, WHITE)
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h))
+        text_surf, text_rect = text_objects('S P I E L E R', SMALL_TEXT, Static.WHITE)
         text_rect.center = (int(x +w/2), int(y + h/2))
         SCREEN.blit(text_surf, text_rect)
         for i,player in enumerate(config['playerNames']):
                 print_player_name(i, player)
         x, y, w, h = button_layout_28[14]
-        pygame.draw.rect(SCREEN, LIGHT_RED, (x,y,w,h))
-        text_surf, text_rect = text_objects('S P I E L', SMALL_TEXT, WHITE)
+        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h))
+        text_surf, text_rect = text_objects('S P I E L', SMALL_TEXT, Static.WHITE)
         text_rect.center = (int(x +w/2), int(y + h/2))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
@@ -346,7 +341,7 @@ def main_menu():
 	def no_buzzer_connected():
 		text_surf, text_rect = text_objects('Kein Buzzer verbunden!', SMALL_TEXT)
 		text_rect.center = (int(SCREEN_WIDTH / 11), int(SCREEN_HEIGHT / 18*17))
-		pygame.draw.rect(SCREEN, WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
+		pygame.draw.rect(SCREEN, Static.WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
 		SCREEN.blit(text_surf, text_rect)
 		pygame.display.update()
 
@@ -415,7 +410,7 @@ def main_menu():
                                 choose_game(import_status="")
                                 main_menu_setup()
                         else:
-								try:
+                                try:
 									pygame.joystick.quit()
 									pygame.joystick.init()
 									if pygame.joystick.get_count() == 1:
@@ -431,7 +426,7 @@ def main_menu():
                         main_menu_setup()
                 if start_game:
                         while start_game:
-                                start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT, RED, BLACK, WHITE)
+                                start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
                                 main_menu_setup()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
