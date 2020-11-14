@@ -117,18 +117,18 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				random_content = load_image(random_val, content_dir)
 				image_size = random_content.get_rect().size
 				if image_size[0] >= image_size[1]:
-					if (image_size[1]/image_size[0])*picture_width < picture_length:
+					if int((image_size[1]/float(image_size[0]))*picture_width) < picture_length:
 						image_size = (picture_width, int((image_size[1]/image_size[0])*picture_width))
 						print "1: "+str(image_size)
 					else:
-						image_size = (int((image_size[0]/image_size[1])*picture_length), picture_length)
+						image_size = (int((image_size[0]/float(image_size[1]))*picture_length), picture_length)
 						print "2: " + str(image_size)
 				else:
-					if (image_size[0]/image_size[1])*picture_length < picture_width:
-						image_size = (int((image_size[0]/image_size[0])*picture_length), picture_length)
+					if int((image_size[0]/float(image_size[1]))*picture_length) < picture_width:
+						image_size = (int((image_size[0]/float(image_size[0]))*picture_length), picture_length)
 						print "3: " + str(image_size)
 					else:
-						image_size = (picture_width, int((image_size[1]/image_size[0])*picture_width))
+						image_size = (picture_width, int((image_size[1]/float(image_size[0]))*picture_width))
 						print "4: " + str(image_size)
 				#rela = image_size[0]/float(image_size[1])
 				# image wider than high
