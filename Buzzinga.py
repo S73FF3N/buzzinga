@@ -411,16 +411,16 @@ def main_menu():
                                 main_menu_setup()
                         else:
                                 try:
-									pygame.joystick.quit()
-									pygame.joystick.init()
-									if pygame.joystick.get_count() == 1:
-										js = pygame.joystick.Joystick(0)
-										js.init()
-										start_game = True
-									else:
-										no_buzzer_connected()
-								except:
-									no_buzzer_connected()
+                                        pygame.joystick.quit()
+                                        pygame.joystick.init()
+                                        if pygame.joystick.get_count() == 1:
+                                                js = pygame.joystick.Joystick(0)
+                                                js.init()
+                                                start_game = True
+                                        else:
+                                                no_buzzer_connected()
+                                except:
+                                        no_buzzer_connected()
                 elif button('Einstellungen', x11, y11, w11, h11, click):
                         settings_menu()
                         main_menu_setup()
