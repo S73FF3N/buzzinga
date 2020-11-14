@@ -130,28 +130,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					else:
 						image_size = (picture_width, int((image_size[1]/float(image_size[0]))*picture_width))
 						print "4: " + str(image_size)
-				#rela = image_size[0]/float(image_size[1])
-				# image wider than high
-				#if rela >= 1:
-					#if image_size[0] < picture_width:
-					#	if image_size[1] < picture_length:
-					#		image_size = (image_size[0], image_size[1])
-					#	else:
-					#		image_size = (int(picture_length/rela), picture_length)
-					#else:
-					#	if int(picture_width/rela) < picture_length:
-					#		image_size = (picture_width, int(picture_width/rela))
-					#	else:
-					#		image_size = (int(picture_length*rela), picture_length)
-				# image higher than wide
-				#if rela < 1:
-					#if image_size[1] < picture_length:
-					#	if image_size[0] < picture_width:
-					#		image_size = (image_size[0], image_size[1])
-					#	else:
-					#		image_size = (int(picture_width*rela), picture_length)
-					#else:
-					#	image_size = (int(picture_width*rela), picture_length)
 				random_content = pygame.transform.scale(random_content, image_size)
 				pygame.draw.rect(screen, Static.WHITE, picture_container)
 				screen.blit(random_content, random_content.get_rect(center=picture_container.center))

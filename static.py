@@ -3,6 +3,6 @@
 class Static:
     BLACK = 12, 27, 69
     WHITE = 255, 255, 255
-    GREEN = 40, 175, 99
-    RED = 133, 5, 33
-    LIGHT_RED = 189, 53, 82
+    ORANGE = 201, 87, 16
+    RED = 120, 9, 5
+    LIGHT_RED = 220, 32, 25

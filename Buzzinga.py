@@ -193,7 +193,7 @@ def choose_game(import_status=""):
                                 game_options.append([game[0], button(game[0], game[1], game[2], game[3], game[4], click), game[1], game[2], game[3], game[4]])
                 if page_counter < pages:
                         x, y, w, h = button_layout_28[27]
-                        if button('>>', x, y, w, h, click, inactive_color=Static.GREEN):
+                        if button('>>', x, y, w, h, click, inactive_color=Static.ORANGE):
                                 delete_modus = False
                                 choose_game_setup()
                                 game_options = []
@@ -202,7 +202,7 @@ def choose_game(import_status=""):
                                         game_options.append([game[0], button(game[0], game[1], game[2], game[3], game[4], click), game[1], game[2], game[3], game[4]])       
                 x, y, w, h = button_layout_28[25]
                 if delete_modus == False:
-                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
+                        if button('delete.bmp', x, y, w/3, h, click, inactive_color=Static.ORANGE, image=True):
                                 categories_to_delete = []
                                 delete_modus = True
                 else:
@@ -210,14 +210,14 @@ def choose_game(import_status=""):
                                 for game_option in game_options:
                                         game_option[1] = False
                                 delete_modus = False
-                if button('trash-truck.bmp', x+w/3, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
+                if button('trash-truck.bmp', x+w/3, y, w/3, h, click, inactive_color=Static.ORANGE, image=True):
                         if 'categories_to_delete' in locals():
                                 for category in categories_to_delete:
                                         delete_category(game_folder+category)
                         categories_to_delete = []
                         delete_modus = False
                         choose_game()
-                if button('flash-drive.bmp', x+(w/3)*2, y, w/3, h, click, inactive_color=Static.GREEN, image=True):
+                if button('flash-drive.bmp', x+(w/3)*2, y, w/3, h, click, inactive_color=Static.ORANGE, image=True):
                         text_surf, text_rect = text_objects('Importiere Dateien', SMALL_TEXT)
                         text_rect.center = (int(SCREEN_WIDTH / 11), int(SCREEN_HEIGHT / 18*17))
                         pygame.draw.rect(SCREEN, Static.WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
@@ -227,7 +227,7 @@ def choose_game(import_status=""):
                         choose_game(import_status=usb_input)
                         click=False
                 x, y, w, h = button_layout_28[26]
-                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=Static.GREEN):
+                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_game_menu = False
                 for game_option in game_options:
@@ -237,7 +237,7 @@ def choose_game(import_status=""):
                                         config['game dir'] = game_folder+game_option[0]+"/"
                                         choose_game_menu = False
                                 else:
-                                        pygame.draw.rect(SCREEN, Static.GREEN, (game_option[2], game_option[3], game_option[4], game_option[5]))
+                                        pygame.draw.rect(SCREEN, Static.ORANGE, (game_option[2], game_option[3], game_option[4], game_option[5]))
                                         text_surf, text_rect = text_objects(game_option[0], SMALL_TEXT, color=Static.WHITE)
                                         text_rect.center = (int(game_option[2] +game_option[4]/2), int(game_option[3] + game_option[5]/2))
                                         SCREEN.blit(text_surf, text_rect)
