@@ -125,7 +125,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						print "2: " + str(image_size)
 				else:
 					if int((image_size[0]/float(image_size[1]))*picture_length) < picture_width:
-						image_size = (int((image_size[0]/float(image_size[0]))*picture_length), picture_length)
+						image_size = (int((image_size[0]/float(image_size[1]))*picture_length), picture_length)
 						print "3: " + str(image_size)
 					else:
 						image_size = (picture_width, int((image_size[1]/float(image_size[0]))*picture_width))
