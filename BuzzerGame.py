@@ -267,7 +267,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
 							pygame.draw.rect(screen, Static.RED, player_buzzer_container)
 							# buzzer sound
-		                    if game_sounds == True:
+							if game_sounds == True:
 								buzzerHit = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/buzzer_hit.wav")
 								game_sound_channel.play(buzzerHit)
 							first = 1
