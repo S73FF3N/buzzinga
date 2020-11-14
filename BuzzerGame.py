@@ -116,28 +116,38 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			if winner_found == False:
 				random_content = load_image(random_val, content_dir)
 				image_size = random_content.get_rect().size
-				rela = image_size[0]/float(image_size[1])
+				if image_size[0] >= image_size[1]:
+					if (image_size[1]/image_size[0])*picture_width < picture_length:
+						image_size = (picture_width, int((image_size[1]/image_size[0])*picture_width))
+					else:
+						image_size = (int((image_size[0]/image_size[1])*picture_length), picture_length)
+				else:
+					if (image_size[0]/image_size[1])*picture_length < picture_width:
+						image_size = (int((image_size[0]/image_size[0])*picture_length), picture_length)
+					else:
+						image_size = (picture_width, int((image_size[1]/image_size[0])*picture_width))
+				#rela = image_size[0]/float(image_size[1])
 				# image wider than high
-				if rela >= 1:
-					if image_size[0] < picture_width:
-						if image_size[1] < picture_length:
-							image_size = (image_size[0], image_size[1])
-						else:
-							image_size = (int(picture_length/rela), picture_length)
-					else:
-						if int(picture_width/rela) < picture_length:
-							image_size = (picture_width, int(picture_width/rela))
-						else:
-							image_size = (int(picture_length*rela), picture_length)
+				#if rela >= 1:
+					#if image_size[0] < picture_width:
+					#	if image_size[1] < picture_length:
+					#		image_size = (image_size[0], image_size[1])
+					#	else:
+					#		image_size = (int(picture_length/rela), picture_length)
+					#else:
+					#	if int(picture_width/rela) < picture_length:
+					#		image_size = (picture_width, int(picture_width/rela))
+					#	else:
+					#		image_size = (int(picture_length*rela), picture_length)
 				# image higher than wide
-				if rela < 1:
-					if image_size[1] < picture_length:
-						if image_size[0] < picture_width:
-							image_size = (image_size[0], image_size[1])
-						else:
-							image_size = (int(picture_width*rela), picture_length)
-					else:
-						image_size = (int(picture_width*rela), picture_length)
+				#if rela < 1:
+					#if image_size[1] < picture_length:
+					#	if image_size[0] < picture_width:
+					#		image_size = (image_size[0], image_size[1])
+					#	else:
+					#		image_size = (int(picture_width*rela), picture_length)
+					#else:
+					#	image_size = (int(picture_width*rela), picture_length)
 				random_content = pygame.transform.scale(random_content, image_size)
 				pygame.draw.rect(screen, Static.WHITE, picture_container)
 				screen.blit(random_content, random_content.get_rect(center=picture_container.center))
@@ -148,7 +158,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			sound_channel.play(random_sound)
 			if winner_found == False:
 				pygame.draw.rect(screen, Static.WHITE, solution_container)
-				screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
+		screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 		return random_key, winner_found
 
 	def show_winner():
