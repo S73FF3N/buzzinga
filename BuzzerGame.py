@@ -125,7 +125,10 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						else:
 							image_size = (int(picture_length/rela), picture_length)
 					else:
-						image_size = (picture_width, int(picture_width/rela))
+						if int(picture_width/rela) < picture_length:
+							image_size = (picture_width, int(picture_width/rela))
+						else:
+							image_size = (int(picture_length*rela), picture_length)
 				# image higher than wide
 				if rela < 1:
 					if image_size[1] < picture_length:
