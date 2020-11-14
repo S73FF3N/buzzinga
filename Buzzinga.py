@@ -314,7 +314,7 @@ def main_menu_setup():
         picture = load_image(logo, 'images')
         picture_size = picture.get_rect().size
         rela = picture_size[0]/picture_size[0]
-        picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH * 5.5)/rela)))
+        picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5)*rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
         x, y, w, h = button_layout_28[7]
         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h))
