@@ -3,7 +3,7 @@
 import os, pygame, random
 from pygame.locals import *
 from game_utilities import convert_image_to, load_image
-from Buzzinga import Static
+from static import Static
 
 def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, image_game, game_sounds, game_modus, points_to_win):
 	pygame.mixer.pre_init(44100, -16, 2, 2048)

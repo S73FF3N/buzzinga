@@ -6,13 +6,7 @@ from game_utilities import load_image
 from pygame.locals import *
 from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
 from BuzzerGame import buzzer_game
-
-class Static:
-        BLACK = 12, 27, 69
-        WHITE = 255,255,255
-        GREEN = 40, 175, 99
-        RED = 133, 5, 33
-        LIGHT_RED = 189, 53, 82
+from static import Static
 
 config = {'images': True,
           'playerNames': ['Spieler 1', 'Spieler 2', 'Spieler 3', 'Spieler 4'],
