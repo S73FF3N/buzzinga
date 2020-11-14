@@ -288,7 +288,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					return 'Main Menu'
 
 				# User pressed down on a key
-			    if event.type == pygame.KEYDOWN:
+				if event.type == pygame.KEYDOWN:
 					keypressed = event.key
 
 					# Check if Key Pressed to increase score
