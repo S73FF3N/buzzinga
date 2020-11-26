@@ -350,7 +350,7 @@ def main_menu():
                         if event.type == KEYDOWN:
                                 #if event.key == K_ESCAPE:
                                 #        sys.exit()
-                                elif event.key == K_BACKSPACE:
+                                if event.key == K_BACKSPACE:
                                         try:
                                                 active = [i for i, x in enumerate(playerNameInputsActive) if x==True]
                                                 config['playerNames'][active[0]] = config['playerNames'][active[0]][:-1]
