@@ -331,23 +331,25 @@ def main_menu_setup():
         pygame.display.update()
 
 def main_menu():
-	
-	def no_buzzer_connected():
-		text_surf, text_rect = text_objects('Kein Buzzer verbunden!', SMALL_TEXT)
-		text_rect.center = (int(SCREEN_WIDTH / 11), int(SCREEN_HEIGHT / 18*17))
-		pygame.draw.rect(SCREEN, Static.WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
-		SCREEN.blit(text_surf, text_rect)
-		pygame.display.update()
+        def no_buzzer_connected():
+                text_surf, text_rect = text_objects('Kein Buzzer verbunden!', SMALL_TEXT)
+                text_rect.center = (int(SCREEN_WIDTH / 11), int(SCREEN_HEIGHT / 18*17))
+                pygame.draw.rect(SCREEN, Static.WHITE, (text_rect[0], text_rect[1], text_rect[2]+SCREEN_WIDTH/3, text_rect[3]), 0)
+                SCREEN.blit(text_surf, text_rect)
+                pygame.display.update()
 
-	main_menu_setup()
+        main_menu_setup()
         start_game = view_choose_game = False
         playerNameInputsActive = [False, False, False, False]
         while True:
                 click = False
                 for event in pygame.event.get():
+                        alt_f4 = (event.type == KEYDOWN and (event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        if alt_f4:
+                                sys.exit()
                         if event.type == KEYDOWN:
-                                if event.key == K_ESCAPE:
-                                        sys.exit()
+                                #if event.key == K_ESCAPE:
+                                #        sys.exit()
                                 elif event.key == K_BACKSPACE:
                                         try:
                                                 active = [i for i, x in enumerate(playerNameInputsActive) if x==True]

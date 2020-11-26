@@ -165,9 +165,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			if time_left != 0:
 				pygame.draw.rect(screen, Static.WHITE, countdown_container)
 				pygame.display.flip()
-				if game_sounds == True:
-					countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
-					game_sound_channel.play(countdown_sound)
+		if game_sounds == True:
+			countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
+			game_sound_channel.play(countdown_sound)
 
 	def points_reached():
 		global winner_found
