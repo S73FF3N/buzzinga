@@ -40,7 +40,7 @@ def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Stat
                 image_file = load_image(text, '/home/pi/Desktop/venv/mycode/images')
                 image_size = image_file.get_rect().size
                 rela = image_size[0]/float(image_size[1])
-                image_file = pygame.transform.scale(image_file, (int(h/2*rela), h/2))
+                image_file = pygame.transform.scale(image_file, (int(h/2*rela), int(h/2)))
                 SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x,y,w,h).center))
         return return_value
 
