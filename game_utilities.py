@@ -15,7 +15,7 @@ def load_image(name, folder, colorkey=None):
         image = pygame.image.load(fullname)
     except pygame.error as message:
         print('Cannot load image:', fullname)
-        raise SystemExit as message
+        raise SystemExit(message)
     image = image.convert_alpha()
     if colorkey is not None:
         if colorkey is -1:
