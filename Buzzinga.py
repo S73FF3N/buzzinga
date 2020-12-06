@@ -66,20 +66,20 @@ def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=Tr
         if rect_height % 2 == 0:
                 rect_height += 1
         if enabled and draw_toggle:
-                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + SCREEN_WIDTH/50, y + h/4, TOGGLE_ADJ, rect_height))
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 5, Static.WHITE)
+                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + int(SCREEN_WIDTH/50), y + int(h/4), TOGGLE_ADJ, rect_height))
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 5), Static.WHITE)
         elif draw_toggle:
-                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + SCREEN_WIDTH/50, y + h/4, TOGGLE_ADJ, rect_height))
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 4, enabled_color)
+                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + int(SCREEN_WIDTH/50), y + int(h/4), TOGGLE_ADJ, rect_height))
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
                 draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 5, Static.WHITE)
         if blit_text:
                 text_rect.topleft = (x, int(y + h/4))
                 SCREEN.blit(text_surf, text_rect)
                 text_surf2, text_rect2 = text_objects(text2, SMALL_TEXT, color=text_color)
-                text_rect2.topleft = (x + text_rect.width + SCREEN_WIDTH/25 + h/4 + TOGGLE_ADJ, int(y + h/4))
+                text_rect2.topleft = (x + text_rect.width + int(SCREEN_WIDTH/25) + int(h/4) + TOGGLE_ADJ, int(y + h/4))
                 SCREEN.blit(text_surf2, text_rect2)
         return x < mouse[0] < x + w and y < mouse[1] < y + h and click and pygame.time.get_ticks() > 100
 
