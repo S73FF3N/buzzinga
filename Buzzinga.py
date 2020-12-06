@@ -116,7 +116,7 @@ def print_player_name(x, playerName):
         image_file = load_image('user.bmp', '/home/pi/Desktop/venv/mycode/images')
         image_size = image_file.get_rect().size
         rela = image_size[0]/float(image_size[1])
-        image_file = pygame.transform.scale(image_file, (int(h/2*rela), h/2))
+        image_file = pygame.transform.scale(image_file, (int(h/2*rela), int(h/2)))
         SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x-w/4,y,w/4,h).center))
         text_surf, text_rect = text_objects(playerName, SMALL_TEXT, Static.RED)
         text_rect.center = (int(x +w/2), int(y + h/2))
