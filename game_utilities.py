@@ -15,7 +15,7 @@ def load_image(name, folder, colorkey=None):
         image = pygame.image.load(fullname)
     except pygame.error as message:
         print('Cannot load image:', fullname)
-        raise SystemExit, message
+        raise SystemExit as message
     image = image.convert_alpha()
     if colorkey is not None:
         if colorkey is -1:
@@ -49,7 +49,7 @@ def mp3_to_wav(mp3_file):
     if mp3_file[-3:] == "wav":
         pass
     else:
-        print mp3_file
+        print(mp3_file)
         conversion = subprocess.Popen('sox -v 0.98 '+mp3_file+' '+mp3_file[:-3]+'wav', shell=True)
         subprocess.Popen.wait(conversion)
         os.remove(mp3_file)
