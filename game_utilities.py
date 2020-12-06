@@ -14,7 +14,7 @@ def load_image(name, folder, colorkey=None):
     try:
         image = pygame.image.load(fullname)
     except pygame.error as message:
-        print 'Cannot load image:', fullname
+        print('Cannot load image:', fullname)
         raise SystemExit, message
     image = image.convert_alpha()
     if colorkey is not None:
@@ -28,7 +28,7 @@ def convert_image_to(image_file, im_format):
     if image_file[-4:] == "."+im_format:
         file_out = image_file
     else:
-        print "converting image file..."
+        print("converting image file...")
         img = Image.open(image_file)
         file_out = str(image_file[0:-4])+"."+im_format
         if len(img.split()) == 4:
@@ -40,7 +40,7 @@ def convert_image_to(image_file, im_format):
     return file_out
 
 def reverse_mp3(mp3_file):
-    print mp3_file
+    print(mp3_file)
     reverse = subprocess.Popen('sox -v 0.98 '+mp3_file+' '+mp3_file[:-3]+'wav reverse', shell=True)
     subprocess.Popen.wait(reverse)
     os.remove(mp3_file)
