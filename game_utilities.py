@@ -13,7 +13,7 @@ def load_image(name, folder, colorkey=None):
     fullname = os.path.join(folder, name)
     try:
         image = pygame.image.load(fullname)
-    except pygame.error, message:
+    except pygame.error as message:
         print 'Cannot load image:', fullname
         raise SystemExit, message
     image = image.convert_alpha()
