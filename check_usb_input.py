@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 
 import subprocess
 import time
