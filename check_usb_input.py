@@ -24,8 +24,7 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:
-						return b'here'
-						"""if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							os.mkdir(b'/home/pi/Desktop/SdR/Bilder/'+category)
 							for f in os.listdir(item+b'/Bilder/'+category):
 								if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
@@ -60,7 +59,7 @@ def usb_input_check(done, images_imported, time_consumed):
 		time_consumed += 2
 		if time_consumed >= 4:
 			return "keine Dateien gefunden"
-			break"""
+			break
 
 if __name__ == '__main__':
 	print(usb_input_check([], False, 0))
