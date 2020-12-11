@@ -163,7 +163,7 @@ def choose_game(import_status=""):
                 page_nr = 1
                 for folder in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr-1)]
-                        buttons['page '+str(page_nr)].append([str(folder, "utf-8"), x, y, w, h])
+                        buttons['page '+str(page_nr)].append([str(folder), x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
