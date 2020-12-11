@@ -150,9 +150,9 @@ def choose_game(import_status=""):
         def build_category_buttons_dict():
                 global game_folder
                 if config['images'] == True:
-                        game_folder = u"/home/pi/Desktop/SdR/Bilder/"
+                        game_folder = "/home/pi/Desktop/SdR/Bilder/".encode('utf-8')
                 else:
-                        game_folder = u"/home/pi/Desktop/SdR/Audio/"
+                        game_folder = u"/home/pi/Desktop/SdR/Audio/".encode('utf-8')
                 global pages
                 pages = (len(os.listdir(game_folder)) // 26) + 1
                 global buttons
