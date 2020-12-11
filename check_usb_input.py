@@ -7,12 +7,7 @@ import os
 import sys
 
 def get_mountedlist():
-	with open('log.txt', 'wb') as f:
-		process = subprocess.check_output(["/bin/bash", "-c", "lsblk"], stdout=subprocess.PIPE)
-		for c in iter(lambda: process.stdout.read(1), b''):
-			sys.stdout.write(c)
-			f.write(c)
-	#return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
+	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
 done = []
 images_imported = False
@@ -20,26 +15,22 @@ time_consumed = 0
 
 def usb_input_check(done, images_imported, time_consumed):
 	while True:
-		#mounted =
-		get_mountedlist()
-		return 1
-		"""newly_mounted = [dev for dev in mounted if not dev in done]
+		mounted = get_mountedlist()
+		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 		for item in valid:
-			if item not in ['/boot', '/']:
+			if item not in [b'/boot', b'/']:
 				os.chdir(item)
-				if os.path.exists(item+"/Bilder"):
-					categories = os.listdir(item+"/Bilder")
+				if os.path.exists(item+b'/Bilder'):
+					categories = os.listdir(item+b'/Bilder')
 					for category in categories:
-						if not os.path.exists("/home/pi/Desktop/SdR/Bilder/"+category):
-							os.mkdir("/home/pi/Desktop/SdR/Bilder/"+category)
-							for f in os.listdir(item+"/Bilder/"+category):
-								if not os.path.isfile("/home/pi/Desktop/SdR/Bilder/"+category+"/"+f) and f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-									file_to_copy = item+'/Bilder/'+category+'/'+f
-									file_to_copy = file_to_copy.encode()
-									file_to_create = '/home/pi/Desktop/SdR/Bilder/'+category+'/'+f
-									file_to_create = file_to_create.encode()
-									os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
+							os.mkdir(b'/home/pi/Desktop/SdR/Bilder/'+category)
+							for f in os.listdir(item+b'/Bilder/'+category):
+								if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
+									file_to_copy = item+b'/Bilder/'+category+b'/'+f
+									file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
+									os.popen("cp {} {}".format(file_to_copy, file_to_create))
 					images_imported = True
 				else:
 					images_imported = True
@@ -68,7 +59,7 @@ def usb_input_check(done, images_imported, time_consumed):
 		time_consumed += 2
 		if time_consumed >= 4:
 			return "keine Dateien gefunden"
-			break"""
+			break
 
 if __name__ == '__main__':
 	print(usb_input_check([], False, 0))
