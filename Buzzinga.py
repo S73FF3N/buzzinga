@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: cp1252 -*-
 
 import os, pygame, sys
 import subprocess
@@ -150,9 +150,9 @@ def choose_game(import_status=""):
         def build_category_buttons_dict():
                 global game_folder
                 if config['images'] == True:
-                        game_folder = "/home/pi/Desktop/SdR/Bilder/".encode('utf-8')
+                        game_folder = "/home/pi/Desktop/SdR/Bilder/"
                 else:
-                        game_folder = u"/home/pi/Desktop/SdR/Audio/".encode('utf-8')
+                        game_folder = "/home/pi/Desktop/SdR/Audio/"
                 global pages
                 pages = (len(os.listdir(game_folder)) // 26) + 1
                 global buttons
@@ -163,7 +163,7 @@ def choose_game(import_status=""):
                 page_nr = 1
                 for folder in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr-1)]
-                        buttons['page '+str(page_nr)].append([folder.decode('utf-8'), x, y, w, h])
+                        buttons['page '+str(page_nr)].append([folder, x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
@@ -227,7 +227,7 @@ def choose_game(import_status=""):
                         choose_game(import_status=usb_input)
                         click=False
                 x, y, w, h = button_layout_28[26]
-                if button(u'HauptmenÃ¼', x, y, w, h, click, inactive_color=Static.ORANGE):
+                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_game_menu = False
                 for game_option in game_options:
@@ -302,7 +302,7 @@ def settings_menu():
                                         SCREEN.blit(text_surf, text_rect)
                 if config['game modus'] == True:
                         pygame.draw.rect(SCREEN, Static.WHITE, (x9,y9,w9,h9))
-                if button(u'HauptmenÃ¼', x10, y10, w10, h10, click):
+                if button(u'Hauptmenü', x10, y10, w10, h10, click):
                         settings_menu = False
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
