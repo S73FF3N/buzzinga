@@ -18,13 +18,13 @@ def usb_input_check(done, images_imported, time_consumed):
 		mounted = get_mountedlist()
 		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
-		return valid
-		"""for item in valid:
+		for item in valid:
 			if item not in [b'/boot', b'/']:
 				os.chdir(item)
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
-					for category in categories:
+					return categories
+					"""for category in categories:
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							os.mkdir(b'/home/pi/Desktop/SdR/Bilder/'+category)
 							for f in os.listdir(item+b'/Bilder/'+category):
