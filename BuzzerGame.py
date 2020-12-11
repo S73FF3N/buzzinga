@@ -176,7 +176,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				winner_found = True
 
 	screen.fill(Static.WHITE)
-	pygame.display.set_caption(game_name.encode('utf-8'))
+	pygame.display.set_caption(game_name)
 	
 	# Created Variable for the text on the screen
 	#picture = pygame.transform.scale(picture, (picture_width, picture_length))
