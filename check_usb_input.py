@@ -24,10 +24,10 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
+						return b'here'
+						"""if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							os.mkdir(b'/home/pi/Desktop/SdR/Bilder/'+category)
-							return b'here'
-							"""for f in os.listdir(item+b'/Bilder/'+category):
+							for f in os.listdir(item+b'/Bilder/'+category):
 								if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 									file_to_copy = item+b'/Bilder/'+category+b'/'+f
 									file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
