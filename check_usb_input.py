@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 import subprocess
 import time
@@ -23,6 +23,8 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+"/Bilder"):
 					categories = os.listdir(item+"/Bilder")
 					for category in categories:
+						print(category)
+						print(category.encode())
 						if not os.path.exists("/home/pi/Desktop/SdR/Bilder/"+category):
 							os.mkdir("/home/pi/Desktop/SdR/Bilder/"+category)
 							for f in os.listdir(item+"/Bilder/"+category):
