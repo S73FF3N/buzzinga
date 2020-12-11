@@ -6,7 +6,7 @@ import time
 import os
 
 def get_mountedlist():
-	return [item[item.find("/"):] for item in subprocess.check_output([b"/bin/bash", b"-c", b"lsblk"]).split("\n") if "/" in item]
+	return [item[item.find("/"):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).decode("utf-8").split("\n") if "/" in item]
 
 done = []
 images_imported = False
@@ -18,18 +18,22 @@ def usb_input_check(done, images_imported, time_consumed):
 		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 		for item in valid:
-			if item not in ['/boot', '/']:
+			item = item.encode()
+			if item not in [b'/boot', b'/']:
 				os.chdir(item)
-				if os.path.exists(item+"/Bilder"):
-					categories = os.listdir(item+"/Bilder")
+				if os.path.exists(item+b"/Bilder"):
+					categories = os.listdir(item+b"/Bilder")
 					for category in categories:
-						if not os.path.exists("/home/pi/Desktop/SdR/Bilder/"+category):
-							os.mkdir("/home/pi/Desktop/SdR/Bilder/"+category)
-							for f in os.listdir(item+"/Bilder/"+category):
-								if not os.path.isfile("/home/pi/Desktop/SdR/Bilder/"+category+"/"+f) and f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-									file_to_copy = item+'/Bilder/'+category+'/'+f
-									file_to_copy = file_to_copy.encode()
-									file_to_create = '/home/pi/Desktop/SdR/Bilder/'+category+'/'+f
+						category = category.encode()
+						if not os.path.exists(b"/home/pi/Desktop/SdR/Bilder/"+category):
+							os.mkdir(b"/home/pi/Desktop/SdR/Bilder/"+category)
+							for f in os.listdir(item+b"/Bilder/"+category):
+								f = f.encode()
+								if not os.path.isfile(b"/home/pi/Desktop/SdR/Bilder/"+category+"/"+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
+									file_to_copy = item+b'/Bilder/'+category+b'/'+f
+									file_to_copy = file_to_copy.decode('utf-8')
+									file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
+									file_to_create = file_to_create.decode('utf-8')
 									os.popen("cp {} {}".format(file_to_copy, file_to_create))
 					images_imported = True
 				else:
