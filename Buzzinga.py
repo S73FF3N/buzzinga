@@ -1,4 +1,4 @@
-# -*- coding: cp1252 -*-
+# -*- coding: iso-8859-1 -*-
 
 import os, pygame, sys
 import subprocess
