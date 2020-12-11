@@ -18,22 +18,19 @@ def usb_input_check(done, images_imported, time_consumed):
 		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 		for item in valid:
-			item = item.encode()
-			if item not in [b'/boot', b'/']:
+			if item not in ['/boot', '/']:
 				os.chdir(item)
-				if os.path.exists(item+b"/Bilder"):
-					categories = os.listdir(item+b"/Bilder")
+				if os.path.exists(item+"/Bilder"):
+					categories = os.listdir(item+"/Bilder")
 					for category in categories:
-						category = category.encode()
-						if not os.path.exists(b"/home/pi/Desktop/SdR/Bilder/"+category):
-							os.mkdir(b"/home/pi/Desktop/SdR/Bilder/"+category)
-							for f in os.listdir(item+b"/Bilder/"+category):
-								f = f.encode()
-								if not os.path.isfile(b"/home/pi/Desktop/SdR/Bilder/"+category+"/"+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
-									file_to_copy = item+b'/Bilder/'+category+b'/'+f
-									file_to_copy = file_to_copy.decode('utf-8')
-									file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
-									file_to_create = file_to_create.decode('utf-8')
+						if not os.path.exists("/home/pi/Desktop/SdR/Bilder/"+category):
+							os.mkdir("/home/pi/Desktop/SdR/Bilder/"+category)
+							for f in os.listdir(item+"/Bilder/"+category):
+								if not os.path.isfile("/home/pi/Desktop/SdR/Bilder/"+category+"/"+f) and f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+									file_to_copy = item+'/Bilder/'+category+'/'+f
+									file_to_copy = file_to_copy.encode()
+									file_to_create = '/home/pi/Desktop/SdR/Bilder/'+category+'/'+f
+									file_to_create = file_to_create.encode()
 									os.popen("cp {} {}".format(file_to_copy, file_to_create))
 					images_imported = True
 				else:
