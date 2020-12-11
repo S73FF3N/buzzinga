@@ -150,9 +150,9 @@ def choose_game(import_status=""):
         def build_category_buttons_dict():
                 global game_folder
                 if config['images'] == True:
-                        game_folder = "/home/pi/Desktop/SdR/Bilder/"               
+                        game_folder = u"/home/pi/Desktop/SdR/Bilder/"
                 else:
-                        game_folder = "/home/pi/Desktop/SdR/Audio/"
+                        game_folder = u"/home/pi/Desktop/SdR/Audio/"
                 global pages
                 pages = (len(os.listdir(game_folder)) // 26) + 1
                 global buttons
@@ -163,7 +163,7 @@ def choose_game(import_status=""):
                 page_nr = 1
                 for folder in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr-1)]
-                        buttons['page '+str(page_nr)].append([folder.encode('iso-8859-1'), x, y, w, h])
+                        buttons['page '+str(page_nr)].append([folder, x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
