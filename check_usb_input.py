@@ -6,7 +6,7 @@ import time
 import os
 
 def get_mountedlist():
-	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n'') if b'/'' in item]
+	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
 done = []
 images_imported = False
