@@ -16,10 +16,10 @@ time_consumed = 0
 def usb_input_check(done, images_imported, time_consumed):
 	while True:
 		mounted = get_mountedlist()
-		return mounted
-		"""newly_mounted = [dev for dev in mounted if not dev in done]
+		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
-		for item in valid:
+		return valid
+		"""for item in valid:
 			if item not in [b'/boot', b'/']:
 				os.chdir(item)
 				if os.path.exists(item+b'/Bilder'):
