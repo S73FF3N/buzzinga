@@ -4,9 +4,14 @@
 import subprocess
 import time
 import os
+import sys
 
 def get_mountedlist():
-	return subprocess.check_output(["/bin/bash", "-c", "lsblk"])
+	with open('log.txt', 'wb') as f:
+		process = subprocess.check_output(["/bin/bash", "-c", "lsblk"], stdout=subprocess.PIPE)
+		for c in iter(lambda: process.stdout.read(1), b''):
+			sys.stdout.write(c)
+			f.write(c)
 	#return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
 done = []
@@ -15,8 +20,9 @@ time_consumed = 0
 
 def usb_input_check(done, images_imported, time_consumed):
 	while True:
-		mounted = get_mountedlist()
-		print(mounted)
+		#mounted =
+		get_mountedlist()
+		return 1
 		"""newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 		for item in valid:
