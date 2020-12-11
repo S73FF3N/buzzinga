@@ -17,7 +17,7 @@ def usb_input_check(done, images_imported, time_consumed):
 	while True:
 		mounted = get_mountedlist()
 		print(mounted)
-		newly_mounted = [dev for dev in mounted if not dev in done]
+		"""newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 		for item in valid:
 			if item not in ['/boot', '/']:
@@ -62,7 +62,7 @@ def usb_input_check(done, images_imported, time_consumed):
 		time_consumed += 2
 		if time_consumed >= 4:
 			return "keine Dateien gefunden"
-			break
+			break"""
 
 if __name__ == '__main__':
 	print(usb_input_check([], False, 0))
