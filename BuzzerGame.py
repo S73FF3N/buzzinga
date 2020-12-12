@@ -49,8 +49,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	player_score_container_height = player_container_height/10*7
 	
 	# define picture format
-	picture_width = picture_container_width/10*9
-	picture_length = picture_container_height/10*9
+	picture_width = int(picture_container_width/10*9)
+	picture_length = int(picture_container_height/10*9)
 	
 	# text displayed at the beginning
 	game_name = os.path.basename(os.path.dirname(content_dir))
