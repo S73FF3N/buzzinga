@@ -343,6 +343,7 @@ def main_menu():
         playerNameInputsActive = [False, False, False, False]
         while True:
                 click = False
+                pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
                         alt_f4 = (event.type == KEYDOWN and (event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
                         if alt_f4:
