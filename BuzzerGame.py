@@ -107,6 +107,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		global random_val
 		global winner_found
 		try:
+			print("trying to find random_key")
 			random_key = random.choice(content_dict.keys())
 			random_val = content_dict[random_key]
 			del content_dict[random_key]
