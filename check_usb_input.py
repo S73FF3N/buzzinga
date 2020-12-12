@@ -31,7 +31,7 @@ def usb_input_check(done, images_imported, time_consumed):
 								if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 									file_to_copy = item+b'/Bilder/'+category+b'/'+f
 									file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
-									os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('latin-1')))
+									os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 					images_imported = True
 				else:
 					images_imported = True
