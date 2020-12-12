@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 import os, pygame, sys
 import subprocess
@@ -73,8 +73,8 @@ def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=Tr
         elif draw_toggle:
                 pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + int(SCREEN_WIDTH/50), y + int(h/4), TOGGLE_ADJ, rect_height))
                 draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 4), enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 5, Static.WHITE)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + int(h/4) + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 5), Static.WHITE)
         if blit_text:
                 text_rect.topleft = (x, int(y + h/4))
                 SCREEN.blit(text_surf, text_rect)
@@ -227,7 +227,7 @@ def choose_game(import_status=""):
                         choose_game(import_status=usb_input)
                         click=False
                 x, y, w, h = button_layout_28[26]
-                if button(u'Hauptmenü', x, y, w, h, click, inactive_color=Static.ORANGE):
+                if button(u'HauptmenÃ¼', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_game_menu = False
                 for game_option in game_options:
@@ -302,7 +302,7 @@ def settings_menu():
                                         SCREEN.blit(text_surf, text_rect)
                 if config['game modus'] == True:
                         pygame.draw.rect(SCREEN, Static.WHITE, (x9,y9,w9,h9))
-                if button(u'Hauptmenü', x10, y10, w10, h10, click):
+                if button(u'HauptmenÃ¼', x10, y10, w10, h10, click):
                         settings_menu = False
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
