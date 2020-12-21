@@ -211,11 +211,14 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	show_solution_var = 1
 	initialize = 1
 
+	global image_game
 	def return_to_main_menu():
+		global main_menu
 		if image_game == False:
 			sound_channel.stop()
 		os.chdir("/home/pi/Desktop/venv/mycode/")
-		return 'Main Menu'
+		main_menu = 'Main Menu'
+		return main_menu
 	
 	while True:
 		while initialize == 1:
