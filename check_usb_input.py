@@ -24,6 +24,8 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:
+						if os.path.isdir(item+b'/Bilder/'+category) == False:
+							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
 							os.mkdir(dir_name.decode('utf-8'))
@@ -38,6 +40,8 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Audio'):
 					categories = os.listdir(item+b'/Audio')
 					for category in categories:
+						if os.path.isdir(item+b'/Audio/'+category) == False:
+							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
 							os.mkdir(b'/home/pi/Desktop/SdR/Audio/'+category)
 							for f in os.listdir(item+b'/Audio/'+category):
