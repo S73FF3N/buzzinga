@@ -48,11 +48,10 @@ def usb_input_check(done, images_imported, time_consumed):
 						for f in os.listdir(item+b'/Audio/'+category):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
 								file_to_copy = item+b'/Audio/'+category+b'/'+f
-								os.putenv("file_to_copy", file_to_copy.decode('utf-8'))
+								os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
 								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
-								os.putenv("file_to_create", file_to_create.decode('utf-8'))
-								file_to_create = file_to_create.decode('utf-8')
-								os.popen('cp "$file_to_copy" "$file_to_reate"')
+								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
+								os.popen('cp "$file_to_copy" "$file_to_create"')
 					if images_imported == True:
 						os.system("umount item")
 						return "Bilder und Sounds erfolgreich importiert"
