@@ -210,22 +210,28 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	waitReset = 1 # Reset section for the while loop
 	show_solution_var = 1
 	initialize = 1
+
+	def return_to_main_menu():
+		if image_game == False:
+			sound_channel.stop()
+		os.chdir("/home/pi/Desktop/venv/mycode/")
+		return 'Main Menu'
 	
 	while True:
 		while initialize == 1:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == K_ESCAPE:
-						if image_game == False:
-							sound_channel.stop()
-						os.chdir("/home/pi/Desktop/venv/mycode/")
-						return 'Main Menu'
+						return_to_main_menu()
 					if event.key == K_RETURN:
 						if image_game == True:
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
-						random_pick_content()
-						pygame.display.flip()
+						try:
+							random_pick_content()
+							pygame.display.flip()
+						except:
+							return_to_main_menu()
 						initialize = 0
 					else:
 						pass
@@ -234,10 +240,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == K_ESCAPE:
-						if image_game == False:
-							sound_channel.stop()
-						os.chdir("/home/pi/Desktop/venv/mycode/")
-						return 'Main Menu'
+						return_to_main_menu()
 					if event.key == K_RETURN:
 						first = 1
 						try:
@@ -277,10 +280,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		while waitReset == 0:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-					if image_game == False:
-						sound_channel.stop()
-					os.chdir("/home/pi/Desktop/venv/mycode/")
-					return 'Main Menu'
+					return_to_main_menu()
 
 				# User pressed down on a key
 				if event.type == pygame.KEYDOWN:
@@ -338,8 +338,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							nr += 1
 							progress = myfont.render(str(nr)+"/"+str(amount_of_content), 1, Static.RED)
 							pygame.display.flip()
-							random_pick_content()
-							pygame.display.flip()
+							try:
+								random_pick_content()
+								pygame.display.flip()
+							except:
+								return_to_main_menu()
 							show_solution_var = 1
 
 if __name__ == "__main__":
