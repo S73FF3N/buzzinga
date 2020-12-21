@@ -48,7 +48,7 @@ def usb_input_check(done, images_imported, time_consumed):
 						for f in os.listdir(item+b'/Audio/'+category):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
 								file_to_copy = item+b'/Audio/'+category+b'/'+f
-								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category
+								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 					if images_imported == True:
 						os.system("umount item")
