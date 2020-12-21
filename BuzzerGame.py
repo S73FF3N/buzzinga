@@ -230,13 +230,14 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						if image_game == True:
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
-						random_pick_content()
-						pygame.display.flip()
-						"""except:
+						try:
+							random_pick_content()
+							pygame.display.flip()
+						except:
 							if image_game == False:
 								sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							return 'Main Menu'"""
+							return 'Main Menu'
 						initialize = 0
 					else:
 						pass
