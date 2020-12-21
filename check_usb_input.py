@@ -35,15 +35,15 @@ def usb_input_check(done, images_imported, time_consumed):
 					images_imported = True
 				else:
 					images_imported = True
-				if os.path.exists(item+b'/Sounds'):
-					categories = os.listdir(item+b'/Sounds')
+				if os.path.exists(item+b'/Audio'):
+					categories = os.listdir(item+b'/Audio')
 					for category in categories:
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Sounds/'+category):
-							os.mkdir(b'/home/pi/Desktop/SdR/Sounds/'+category)
-							for f in os.listdir(item+b'/Sounds/'+category):
-								if not os.path.isfile(b'/home/pi/Desktop/SdR/Sounds/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
-									file_to_copy = item+b'/Sounds/'+category+b'/'+f
-									file_to_create = b'/home/pi/Desktop/SdR/Sounds/'+category+b'/'+f
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
+							os.mkdir(b'/home/pi/Desktop/SdR/Audio/'+category)
+							for f in os.listdir(item+b'/Audio/'+category):
+								if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
+									file_to_copy = item+b'/Audio/'+category+b'/'+f
+									file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
 									os.popen("cp {} {}".format(file_to_copy, file_to_create))
 					if images_imported == True:
 						os.system("umount item")
