@@ -83,6 +83,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	for file_in in content_list:
 		if os.path.isdir(file_in):
 			continue
+		if file_in.startswith("."):
+			continue
 		elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
 			try:
 				if image_game == True:
