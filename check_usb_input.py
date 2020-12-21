@@ -30,8 +30,6 @@ def usb_input_check(done, images_imported, time_consumed):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
 							os.mkdir(dir_name.decode('utf-8'))
 						for f in os.listdir(item+b'/Bilder/'+category):
-							if f in os.listdir(b'/home/pi/Desktop/SdR/Bilder/'+category):
-								continue
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 								file_to_copy = item+b'/Bilder/'+category+b'/'+f
 								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
@@ -48,11 +46,9 @@ def usb_input_check(done, images_imported, time_consumed):
 							dir_name = b'/home/pi/Desktop/SdR/Audio/' + category
 							os.mkdir(dir_name.decode('utf-8'))
 						for f in os.listdir(item+b'/Audio/'+category):
-							if f in os.listdir(b'/home/pi/Desktop/SdR/Audio/'+category):
-								continue
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
 								file_to_copy = item+b'/Audio/'+category+b'/'+f
-								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
+								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 					if images_imported == True:
 						os.system("umount item")
