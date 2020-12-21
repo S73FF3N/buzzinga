@@ -8,7 +8,7 @@ from static import Static
 def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, image_game, game_sounds, game_modus, points_to_win):
 	pygame.mixer.pre_init(44100, -16, 2, 2048)
 	pygame.mixer.init()
-	print("game_folder: ", content_dir)
+
 	# declare and array for player names and initial score
 	playerNames = playerNamesList
 	playerScore = [0]*players
@@ -230,14 +230,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						if image_game == True:
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
-						try:
-							random_pick_content()
-							pygame.display.flip()
-						except:
+						random_pick_content()
+						pygame.display.flip()
+						"""except:
 							if image_game == False:
 								sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							return 'Main Menu'
+							return 'Main Menu'"""
 						initialize = 0
 					else:
 						pass
