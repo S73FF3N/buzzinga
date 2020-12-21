@@ -134,12 +134,12 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			else:
 				show_winner()
 		else:
+			random_sound = pygame.mixer.Sound(random_val)
+			sound_channel.play(random_sound)
 			if winner_found == False:
-				random_sound = pygame.mixer.Sound(random_val)
-				sound_channel.play(random_sound)
 				pygame.draw.rect(screen, Static.WHITE, solution_container)
-			else:
-				show_winner()
+			"""else:
+				show_winner()"""
 		screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 		return random_key, winner_found
 
