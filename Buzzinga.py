@@ -99,7 +99,7 @@ def delete_category(game_dir):
         os.chdir(game_dir)
         for f in os.listdir(game_dir):
                 if not os.path.isdir(game_dir+"/"+f):
-                        os.chmod(game_dir+"/"+f, 0o777)
+                        #os.chmod(game_dir+"/"+f, 0o777)
                         os.remove(game_dir+"/"+f)
                 else:
                         pass
