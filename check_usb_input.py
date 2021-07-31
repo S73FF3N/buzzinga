@@ -23,7 +23,7 @@ def usb_input_check(done, images_imported, time_consumed):
 				os.chdir(item)
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
-					for category in categories:
+					for category in categories:  # type: bytes
 						if os.path.isdir(item+b'/Bilder/'+category) == False:
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
@@ -34,6 +34,7 @@ def usb_input_check(done, images_imported, time_consumed):
 								file_to_copy = item+b'/Bilder/'+category+b'/'+f
 								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
+								os.popen("chmod 777 {}".format(file_to_create.decode('utf-8')))
 					images_imported = True
 				else:
 					images_imported = True
@@ -52,6 +53,7 @@ def usb_input_check(done, images_imported, time_consumed):
 								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
 								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 								os.popen('cp "$file_to_copy" "$file_to_create"')
+								os.popen('chmod 777 "$file_to_create"')
 					if images_imported == True:
 						os.system("umount item")
 						return "Bilder und Sounds erfolgreich importiert"
