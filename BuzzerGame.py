@@ -233,7 +233,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						try:
 							random_pick_content()
 							pygame.display.flip()
-						except:
+						except Exception as e:
+							print(e)
 							if image_game == False:
 								sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
