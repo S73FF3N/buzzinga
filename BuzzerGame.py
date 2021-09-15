@@ -86,13 +86,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		if file_in.startswith("."):
 			continue
 		elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
-			try:
-				if image_game == True:
-					# images in image directory are converted into .bmp
-					file_in = convert_image_to(file_in, "bmp")
-				build_content_dict(file_in)
-			except:
-				continue
+			#try:
+			if image_game == True:
+				# images in image directory are converted into .bmp
+				file_in = convert_image_to(file_in, "bmp")
+			build_content_dict(file_in)
+			#except:
+			#	continue
 		else:
 			continue
 
