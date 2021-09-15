@@ -1,5 +1,6 @@
 *.pyc
+**/.idea
 .idea/
 .DS_Store
-Buzzinga Anleitung.docx
-Buzzinga Anleitung.pdf
+*.pdf
+*.docx
