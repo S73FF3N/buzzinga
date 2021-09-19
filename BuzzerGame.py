@@ -69,10 +69,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	content_dict = {}
 	
 	def build_content_dict(content):
-		base=os.path.basename(content_dir+content)
-		name_o=os.path.splitext(base)[0]
-		name=name_o.replace("_"," ")
-		content_dict[name] = content_dir+content
+		if not file_in.lower().endswith(('.bmp', '.wav')):
+			print("{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(content))
+		else:
+			base=os.path.basename(content_dir+content)
+			name_o=os.path.splitext(base)[0]
+			name=name_o.replace("_"," ")
+			content_dict[name] = content_dir+content
 
 	#loading info
 	loading = myfont.render("loading...", 1, Static.RED)
@@ -82,19 +85,19 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 	for file_in in content_list:
 		if os.path.isdir(file_in):
-			continue
+			print("{} is a directory.".format(file_in))
 		if file_in.startswith("."):
-			continue
+			print("{} starts with '.'. That's not allowed.".format(file_in))
 		elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
-			#try:
 			if image_game == True:
-				# images in image directory are converted into .bmp
-				file_in = convert_image_to(file_in, "bmp")
-			build_content_dict(file_in)
-			#except:
-			#	continue
+				try:
+					# images in image directory are converted into .bmp
+					file_in = convert_image_to(file_in, "bmp")
+				except:
+					print("{} could not be converted to .bmp format.".format(file_in))
+				build_content_dict(file_in)
 		else:
-			continue
+			print("{} has no suitable format.".format(file_in))
 
 	amount_of_content = len(content_dict)
 
