@@ -5,7 +5,7 @@ from pygame.locals import *
 from game_utilities import convert_image_to, load_image
 from static import Static
 
-def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, image_game, game_sounds, game_modus, points_to_win):
+def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_type, game_sounds, game_modus, points_to_win):
 	pygame.mixer.pre_init(44100, -16, 2, 2048)
 	pygame.mixer.init()
 
@@ -89,7 +89,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		if file_in.startswith("."):
 			print("{} starts with '.'. That's not allowed.".format(file_in))
 		elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
-			if image_game == True:
+			if game_type == "images":
 				try:
 					# images in image directory are converted into .bmp
 					file_in = convert_image_to(file_in, "bmp")
@@ -117,7 +117,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			del content_dict[random_key]
 		except:
 			winner_found = True
-		if image_game == True:
+		if game_type == "images":
 			if winner_found == False:
 				random_content = load_image(random_val, content_dir)
 				image_size = random_content.get_rect().size
@@ -214,23 +214,23 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	show_solution_var = 1
 	initialize = 1
 
-	def return_to_main_menu():
-		if image_game == False:
+	"""def return_to_main_menu():
+		if game_type == "sounds":
 			sound_channel.stop()
 		os.chdir("/home/pi/Desktop/venv/mycode/")
-		return 'Main Menu'
-	
-	while True:
+		return 'Main Menu'"""
+	running = True
+	while running:
 		while initialize == 1:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == K_ESCAPE:
-						if image_game == False:
+						if game_type == "sounds":
 							sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						return 'Main Menu'
+						running = False
 					if event.key == K_RETURN:
-						if image_game == True:
+						if game_type == "images":
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
 						try:
@@ -238,10 +238,10 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							pygame.display.flip()
 						except Exception as e:
 							print(e)
-							if image_game == False:
+							if game_type == "sounds":
 								sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							return 'Main Menu'
+							running = False
 						initialize = 0
 					else:
 						pass
@@ -250,10 +250,10 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == K_ESCAPE:
-						if image_game == False:
+						if game_type == "sounds":
 							sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						return 'Main Menu'
+						running = False
 					if event.key == K_RETURN:
 						first = 1
 						try:
@@ -272,7 +272,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		                
 					for n in range (0,players):
 						if buttonpressed == playerKeys[n]:
-							if image_game == False:
+							if game_type == "sounds":
 								sound_channel.pause()
 							first_buzz = playerKeys.index(buttonpressed)
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
@@ -293,10 +293,10 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		while waitReset == 0:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-					if image_game == False:
+					if game_type == "sounds":
 						sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
-					return 'Main Menu'
+					running = False
 
 				# User pressed down on a key
 				if event.type == pygame.KEYDOWN:
@@ -322,7 +322,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 					# After buzzer was pressed, referee shows solution and decides if answer was right or wrong
 					if keypressed == K_RETURN and show_solution_var == 2:
-						if image_game == False:
+						if game_type == "sounds":
 							sound_channel.stop()
 						pygame.draw.rect(screen, Static.WHITE, solution_container)
 						pygame.display.flip()
@@ -339,7 +339,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if keypressed == K_RETURN and show_solution_var == 1:
 						try:
 							if winner_found == False:
-								if image_game == False:
+								if game_type == "sounds":
 									sound_channel.unpause()
 								pygame.draw.rect(screen, Static.WHITE, solution_container)
 								show_solution()
@@ -358,11 +358,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 								random_pick_content()
 								pygame.display.flip()
 							except:
-								if image_game == False:
+								if game_type == "sounds":
 									sound_channel.stop()
 								os.chdir("/home/pi/Desktop/venv/mycode/")
-								return 'Main Menu'
+								running = False
 							show_solution_var = 1
 
 if __name__ == "__main__":
-	buzzer_game(players, PlayersNameList, content_dir, screen, screenx, screeny, image_game)
+	buzzer_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)
