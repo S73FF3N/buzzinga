@@ -6,6 +6,7 @@ from game_utilities import convert_image_to, load_image
 from static import Static
 
 def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_type, game_sounds, game_modus, points_to_win):
+	print("content_dir: ", content_dir)
 	pygame.mixer.pre_init(44100, -16, 2, 2048)
 	pygame.mixer.init()
 
