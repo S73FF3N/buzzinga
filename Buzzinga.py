@@ -468,7 +468,7 @@ def settings_menu():
                         except:
                                 no_buzzer_connected()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
-                        setting_menu = False
+                        settings_menu = False
                         choose_category_setup()
                 if start_game:
                         while start_game:
