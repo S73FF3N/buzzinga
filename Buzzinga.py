@@ -408,9 +408,9 @@ def settings_menu():
                 pygame.display.update()
 
         settings_menu_setup()
-        settings_menu = True
-        start_game = False #view_choose_game =
-        while settings_menu:
+        settings_menu_running = True
+        start_game = False#view_choose_game =
+        while settings_menu_running:
                 click = False
                 for event in pygame.event.get():
                         alt_f4 = (event.type == KEYDOWN and (
@@ -468,14 +468,15 @@ def settings_menu():
                         except:
                                 no_buzzer_connected()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
-                        settings_menu = False
-                        choose_category_setup(import_status="", no_categories=False)
+                        settings_menu_running = False
+                        choose_category(import_status="")
                 if start_game:
                         while start_game:
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
-                                settings_menu_setup()
+                                players_names_menu_setup()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
+
 
 if __name__ == "__main__":
         pygame.init()
