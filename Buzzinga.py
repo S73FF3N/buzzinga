@@ -127,20 +127,15 @@ def print_player_name(x, playerName):
 def players_names_menu_setup():
         show_mouse()
         SCREEN.fill(Static.WHITE)
-        logo = "BuzzingaLogo.bmp"
+        """logo = "BuzzingaLogo.bmp"
         picture = load_image(logo, 'images')
         picture_size = picture.get_rect().size
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
-        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
+        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))"""
         text_surf, text_rect = text_objects('W E R  S P I E L T  M I T ?', MEDIUM_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
-        """x, y, w, h = button_layout_28[7]
-        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x, y, w, h))
-        text_surf, text_rect = text_objects('W E R  S P I E L T  M I T ?', SMALL_TEXT, Static.WHITE)
-        text_rect.center = (int(x + w / 2), int(y + h / 2))
-        SCREEN.blit(text_surf, text_rect)"""
         for i, player in enumerate(config['playerNames']):
                 print_player_name(i, player)
         pygame.display.update()
@@ -174,11 +169,11 @@ def players_names_menu():
                                                 pass
                         elif event.type == MOUSEBUTTONDOWN:
                                 click = True
-                x1, y1, w1, h1 = button_layout_28[8]
-                x2, y2, w2, h2 = button_layout_28[9]
-                x3, y3, w3, h3 = button_layout_28[10]
-                x4, y4, w4, h4 = button_layout_28[11]
-                x11, y11, w11, h11 = button_layout_28[18]
+                x1, y1, w1, h1 = button_layout_28[7]
+                x2, y2, w2, h2 = button_layout_28[8]
+                x3, y3, w3, h3 = button_layout_28[9]
+                x4, y4, w4, h4 = button_layout_28[10]
+                x11, y11, w11, h11 = button_layout_28[17]
 
                 if player_name_input(x1, y1, w1, h1, click):
                         playerNameInputsActive = [True, False, False, False]
@@ -208,7 +203,7 @@ def players_names_menu():
 def choose_game_menu_setup():
         show_mouse()
         SCREEN.fill(Static.WHITE)
-        text_surf, text_rect = text_objects('W E L C H E S  S P I E L ?', MEDIUM_TEXT)
+        text_surf, text_rect = text_objects('W E L C H E  S P I E L A R T ?', MEDIUM_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
@@ -226,10 +221,10 @@ def choose_game_menu():
                         if event.type == MOUSEBUTTONDOWN:
                                 click = True
 
-                x2, y2, w2, h2 = button_layout_28[8]
-                x8, y8, w8, h8 = button_layout_28[9]
-                x9, y9, w9, h9 = button_layout_28[10]
-                x7, y7, w7, h7 = button_layout_28[11]
+                x2, y2, w2, h2 = button_layout_28[7]
+                x8, y8, w8, h8 = button_layout_28[8]
+                x9, y9, w9, h9 = button_layout_28[9]
+                x7, y7, w7, h7 = button_layout_28[17]
 
                 if button(u'Bilder', x2, y2, w2, h2, click):
                         config['game_type'] = "images"
@@ -363,10 +358,10 @@ def choose_category(import_status=""):
                         choose_category(import_status=usb_input)
                         click = False
                 x, y, w, h = button_layout_28[26]
-                if button('Einstellungen', x, y, w, h, click, inactive_color=Static.ORANGE):
+                if button(u'Zurück', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_game_menu = False
-                        settings_menu()
+                        choose_game_menu_setup()
                 for game_option in game_options:
                         if game_option[1] == True:
                                 if delete_modus == False:
@@ -473,7 +468,7 @@ def settings_menu():
                         except:
                                 no_buzzer_connected()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
-                        running = False
+                        setting_menu = False
                         choose_category_setup()
                 if start_game:
                         while start_game:
