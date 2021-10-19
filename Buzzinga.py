@@ -210,8 +210,8 @@ def choose_game_menu_setup():
 
 def choose_game_menu():
         choose_game_menu_setup()
-        running = True
-        while running:
+        choose_game_menu = True
+        while choose_game_menu:
                 click = False
                 for event in pygame.event.get():
                         alt_f4 = (event.type == KEYDOWN and (
@@ -236,7 +236,7 @@ def choose_game_menu():
                         config['game_type'] = "questions"
                         choose_category()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
-                        running = False
+                        choose_game_menu = False
                         players_names_menu_setup()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
@@ -360,7 +360,7 @@ def choose_category(import_status=""):
                 x, y, w, h = button_layout_28[26]
                 if button(u'Zurück', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
-                        choose_game_menu = False
+                        choose_category_menu = False
                         choose_game_menu_setup()
                 for game_option in game_options:
                         if game_option[1] == True:
