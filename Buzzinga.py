@@ -247,6 +247,7 @@ def choose_game_menu():
                         choose_category()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
                         running = False
+                        players_names_menu_setup()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
@@ -469,6 +470,7 @@ def settings_menu():
                                 no_buzzer_connected()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
                         running = False
+                        choose_category_setup()
                 if start_game:
                         while start_game:
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
