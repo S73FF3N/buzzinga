@@ -232,8 +232,9 @@ def choose_game_menu():
                                 click = True
 
                 x2, y2, w2, h2 = button_layout_28[8]
-                x8, y8, w8, h8 = button_layout_28[15]
-                x9, y9, w9, h9 = button_layout_28[16]
+                x8, y8, w8, h8 = button_layout_28[9]
+                x9, y9, w9, h9 = button_layout_28[10]
+                x7, y7, w7, h7 = button_layout_28[11]
 
                 if button(u'Bilder', x2, y2, w2, h2, click):
                         config['game_type'] = "images"
@@ -241,9 +242,11 @@ def choose_game_menu():
                 elif button(u'Sounds', x8, y8, w8, h8, click):
                         config['game_type'] = "sounds"
                         choose_category()
-                if button(u'Multiple Choice Quiz', x9, y9, w9, h9, click):
+                elif button(u'Multiple Choice Quiz', x9, y9, w9, h9, click):
                         config['game_type'] = "questions"
                         choose_category()
+                elif button(u'Zurück', x7, y7, w7, h7, click):
+                        running = False
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
@@ -424,6 +427,7 @@ def settings_menu():
                 x8, y8, w8, h8 = button_layout_28[15]
                 x9, y9, w9, h9 = button_layout_28[16]
                 x10, y10, w10, h10 = button_layout_28[17]
+                x7, y7, w7, h7 = button_layout_28[18]
                 
                 if toggle_btn('Aus', 'Ein', x2, y2, w2, h2, click, enabled=config['game sounds']):
                         config['game sounds'] = not config['game sounds']
@@ -463,6 +467,8 @@ def settings_menu():
                                         no_buzzer_connected()
                         except:
                                 no_buzzer_connected()
+                elif button(u'Zurück', x7, y7, w7, h7, click):
+                        running = False
                 if start_game:
                         while start_game:
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
