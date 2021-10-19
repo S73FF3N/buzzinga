@@ -60,6 +60,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	# build content dictionary from content directory
 	
 	content_list = os.listdir(content_dir)
+	print("content_list: ", content_list)
 	
 	logo = "BuzzingaLogo.bmp"
 	picture = load_image(logo, 'images')
