@@ -95,7 +95,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					file_in = convert_image_to(file_in, "bmp")
 				except:
 					print("{} could not be converted to .bmp format.".format(file_in))
-				build_content_dict(file_in)
+			build_content_dict(file_in)
 		else:
 			print("{} has no suitable format.".format(file_in))
 

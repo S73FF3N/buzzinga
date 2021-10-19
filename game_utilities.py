@@ -29,7 +29,11 @@ def convert_image_to(image_file, im_format):
         file_out = image_file
     else:
         print("converting image file...")
-        img = Image.open(image_file)
+        try:
+            img = Image.open(image_file)
+        except:
+            print("Could not open {}".format(img))
+            return
         file_out = str(image_file[0:-4])+"."+im_format
         if len(img.split()) == 4:
             # prevent IOError: cannot write mode RGBA as BMP
