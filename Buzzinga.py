@@ -110,7 +110,7 @@ def delete_category(game_dir):
         os.chdir(current_dir)
 
 def print_player_name(x, playerName):
-        x, y, w, h = button_layout_28[x+8]
+        x, y, w, h = button_layout_28[x+7]
         pygame.draw.rect(SCREEN, Static.WHITE, (x,y,w,h))
         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x,y,w,h), 5)
         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x-w/4,y-2,w/4,h+3))
