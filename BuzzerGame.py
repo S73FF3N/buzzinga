@@ -75,9 +75,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			print("{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(content))
 		else:
 			base=os.path.basename(content_dir+content)
+			print(base)
 			name_o=os.path.splitext(base)[0]
 			name=name_o.replace("_"," ")
 			content_dict[name] = content_dir+content
+			print(content_dict[name])
 
 	#loading info
 	loading = myfont.render("loading...", 1, Static.RED)
