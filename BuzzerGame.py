@@ -71,6 +71,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	content_dict = {}
 	
 	def build_content_dict(content):
+		print(content)
 		if not file_in.lower().endswith(('.bmp', '.wav')):
 			print("{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(content))
 		else:
