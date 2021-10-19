@@ -469,7 +469,7 @@ def settings_menu():
                                 no_buzzer_connected()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
                         settings_menu = False
-                        choose_category_setup()
+                        choose_category_setup(import_status="", no_categories=False)
                 if start_game:
                         while start_game:
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
