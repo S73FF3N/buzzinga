@@ -133,11 +133,14 @@ def players_names_menu_setup():
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
-        x, y, w, h = button_layout_28[7]
+        text_surf, text_rect = text_objects('W E R  S P I E L T  M I T ?', MEDIUM_TEXT)
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
+        SCREEN.blit(text_surf, text_rect)
+        """x, y, w, h = button_layout_28[7]
         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x, y, w, h))
         text_surf, text_rect = text_objects('W E R  S P I E L T  M I T ?', SMALL_TEXT, Static.WHITE)
         text_rect.center = (int(x + w / 2), int(y + h / 2))
-        SCREEN.blit(text_surf, text_rect)
+        SCREEN.blit(text_surf, text_rect)"""
         for i, player in enumerate(config['playerNames']):
                 print_player_name(i, player)
         pygame.display.update()
@@ -205,16 +208,8 @@ def players_names_menu():
 def choose_game_menu_setup():
         show_mouse()
         SCREEN.fill(Static.WHITE)
-        """logo = "BuzzingaLogo.bmp"
-        picture = load_image(logo, 'images')
-        picture_size = picture.get_rect().size
-        rela = picture_size[0] / picture_size[0]
-        picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
-        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))"""
-        x, y, w, h = button_layout_28[7]
-        pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x, y, w, h))
-        text_surf, text_rect = text_objects('W E L C H E S  S P I E L ?', SMALL_TEXT, Static.WHITE)
-        text_rect.center = (int(x + w / 2), int(y + h / 2))
+        text_surf, text_rect = text_objects('W E L C H E S  S P I E L ?', MEDIUM_TEXT)
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
