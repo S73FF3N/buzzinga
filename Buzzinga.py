@@ -205,12 +205,12 @@ def players_names_menu():
 def choose_game_menu_setup():
         show_mouse()
         SCREEN.fill(Static.WHITE)
-        logo = "BuzzingaLogo.bmp"
+        """logo = "BuzzingaLogo.bmp"
         picture = load_image(logo, 'images')
         picture_size = picture.get_rect().size
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
-        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
+        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))"""
         x, y, w, h = button_layout_28[7]
         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x, y, w, h))
         text_surf, text_rect = text_objects('W E L C H E S  S P I E L ?', SMALL_TEXT, Static.WHITE)
@@ -373,7 +373,8 @@ def choose_category(import_status=""):
                                 if delete_modus == False:
                                         config['game choosen'] = True
                                         config['game dir'] = game_folder + game_option[0] + "/"
-                                        choose_game_menu = False
+                                        #choose_game_menu = False
+                                        settings_menu()
                                 else:
                                         pygame.draw.rect(SCREEN, Static.ORANGE, (
                                         game_option[2], game_option[3], game_option[4], game_option[5]))
@@ -414,7 +415,7 @@ def settings_menu():
 
         settings_menu_setup()
         settings_menu = True
-        start_game = view_choose_game = False
+        start_game = False #view_choose_game =
         while settings_menu:
                 click = False
                 for event in pygame.event.get():
