@@ -313,6 +313,10 @@ def choose_category(import_status=""):
         while choose_category_menu:
                 click = False
                 for event in pygame.event.get():
+                        alt_f4 = (event.type == KEYDOWN and (
+                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        if alt_f4:
+                                sys.exit()
                         if event.type == KEYDOWN:
                                 if event.key == K_ESCAPE:
                                         delete_modus = False
@@ -419,6 +423,10 @@ def settings_menu():
         while settings_menu:
                 click = False
                 for event in pygame.event.get():
+                        alt_f4 = (event.type == KEYDOWN and (
+                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        if alt_f4:
+                                sys.exit()
                         if event.type == KEYDOWN:
                                 if event.key == K_ESCAPE:
                                         settings_menu = False
