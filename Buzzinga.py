@@ -474,7 +474,7 @@ def settings_menu():
                         while start_game:
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
                                 settings_menu_running = False
-                                players_names_menu_setup()
+                                players_names_menu()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
