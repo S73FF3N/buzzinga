@@ -287,7 +287,7 @@ def choose_category(import_status=""):
                 for item in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr - 1)]
                         print(os.path.isfile(item))
-                        if os.path.isfile(item):
+                        if item.lower().endswith('.json'):
                                 buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
                         else:
                                 buttons['page ' + str(page_nr)].append([item, x, y, w, h])
