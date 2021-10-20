@@ -379,7 +379,7 @@ def choose_category(import_status=""):
                 if button(u'Zurück', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_category_menu = False
-                        choose_game_menu_setup()
+                        choose_game_menu()
                 for game_option in game_options:
                         if game_option[1] == True:
                                 if delete_modus == False:
