@@ -69,13 +69,13 @@ def usb_input_check(done, images_imported, time_consumed):
 							os.popen('chmod 777 "$file_to_create"')
 					files_imported = True
 
-		# unmount usb and print message
-		if files_imported == True:
-			os.system("umount item")
-			return "Dateien erfolgreich importiert"
-		else:
-			os.system("umount item")
-			return "Keine Dateien importiert"
+			# unmount usb and print message
+			if files_imported == True:
+				os.system("umount item")
+				return "Dateien erfolgreich importiert"
+			else:
+				os.system("umount item")
+				return "Keine Dateien importiert"
 
 		done = mounted
 		time.sleep(2)
