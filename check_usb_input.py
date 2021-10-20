@@ -65,24 +65,16 @@ def usb_input_check(done, images_imported, time_consumed):
 						files_imported = True
 
 				if os.path.exists(item + b'/Questions'):
-					categories = os.listdir(item + b'/Questions')
-					for category in categories:
-						if os.path.isdir(item + b'/Questions/' + category) == False:
-							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Questions/' + category):
-							dir_name = b'/home/pi/Desktop/SdR/Questions/' + category
-							os.mkdir(dir_name.decode('utf-8'))
-						for f in os.listdir(item + b'/Questions/' + category):
-							if not os.path.isfile(
-									b'/home/pi/Desktop/SdR/Questions/' + category + b'/' + f) and f.lower().endswith(
-									b'.json'):
-								file_to_copy = item + b'/Questions/' + category + b'/' + f
-								os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-								file_to_create = b'/home/pi/Desktop/SdR/Questions/' + category + b'/' + f
-								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
-								os.popen('cp "$file_to_copy" "$file_to_create"')
-								os.popen('chmod 777 "$file_to_create"')
-						files_imported = True
+					for f in os.listdir(item + b'/Questions/'):
+						if not os.path.isfile(
+								b'/home/pi/Desktop/SdR/Questions/' + b'/' + f) and f.lower().endswith(b'.json'):
+							file_to_copy = item + b'/Questions/' + b'/' + f
+							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
+							file_to_create = b'/home/pi/Desktop/SdR/Questions/' + b'/' + f
+							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
+							os.popen('cp "$file_to_copy" "$file_to_create"')
+							os.popen('chmod 777 "$file_to_create"')
+					files_imported = True
 
 		# unmount usb and print message
 		if files_imported == True:
