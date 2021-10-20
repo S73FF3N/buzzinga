@@ -35,7 +35,8 @@ def usb_input_check(done, images_imported, time_consumed):
 							file = item + b'/Bilder/' + category + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
 							file_renamed = item + b'/Bilder/' + category + b'/' + f_renamed
-							os.popen("mv {} {}".format(file.decode('utf-8'), file_renamed.decode('utf-8')))
+							if f != f_renamed:
+								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
 						for f in os.listdir(item + b'/Bilder/' + category):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 								file_to_copy = item+b'/Bilder/'+category+b'/'+f
