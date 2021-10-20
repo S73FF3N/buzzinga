@@ -19,13 +19,6 @@ def usb_input_check(done, images_imported, time_consumed):
 		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 
-		# create folders for images, sounds and questions on raspberry
-		required_folders = ["Bilder/", "Audio/", "Questions/"]
-		for f in required_folders:
-			if not os.path.exists(b'/home/pi/Desktop/SdR/'+f):
-				dir_name = b'/home/pi/Desktop/SdR/'+f
-				os.mkdir(dir_name.decode('utf-8'))
-
 		# get files from usb and copy them to raspberry
 		for item in valid:
 			if item not in [b'/boot', b'/']:
