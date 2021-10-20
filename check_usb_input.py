@@ -33,7 +33,7 @@ def usb_input_check(done, images_imported, time_consumed):
 							os.mkdir(dir_name.decode('utf-8'))
 						for f in os.listdir(item + b'/Bilder/' + category):
 							file = item + b'/Bilder/' + category + b'/' + f
-							f_renamed = f.replace(" ", "_")
+							f_renamed = f.replace(b' ', b'_')
 							file_renamed = item + b'/Bilder/' + category + b'/' + f_renamed
 							os.popen("mv {} {}".format(file.decode('utf-8'), file_renamed.decode('utf-8')))
 						for f in os.listdir(item + b'/Bilder/' + category):
