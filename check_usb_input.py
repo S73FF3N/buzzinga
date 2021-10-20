@@ -10,7 +10,7 @@ def get_mountedlist():
 	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
 done = []
-images_imported = False
+files_imported = False
 time_consumed = 0
 
 def usb_input_check(done, images_imported, time_consumed):
@@ -18,6 +18,15 @@ def usb_input_check(done, images_imported, time_consumed):
 		mounted = get_mountedlist()
 		newly_mounted = [dev for dev in mounted if not dev in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
+
+		# create folders for images, sounds and questions on raspberry
+		required_folders = ["Bilder/", "Audio/", "Questions/"]
+		for f in required_folders:
+			if not os.path.exists(b'/home/pi/Desktop/SdR/'+f):
+				dir_name = b'/home/pi/Desktop/SdR/'+f
+				os.mkdir(dir_name.decode('utf-8'))
+
+		# get files from usb and copy them to raspberry
 		for item in valid:
 			if item not in [b'/boot', b'/']:
 				os.chdir(item)
@@ -35,9 +44,8 @@ def usb_input_check(done, images_imported, time_consumed):
 								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 								os.popen("chmod 777 {}".format(file_to_create.decode('utf-8')))
-					images_imported = True
-				else:
-					images_imported = True
+					files_imported = True
+
 				if os.path.exists(item+b'/Audio'):
 					categories = os.listdir(item+b'/Audio')
 					for category in categories:
@@ -54,21 +62,41 @@ def usb_input_check(done, images_imported, time_consumed):
 								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 								os.popen('cp "$file_to_copy" "$file_to_create"')
 								os.popen('chmod 777 "$file_to_create"')
-					if images_imported == True:
-						os.system("umount item")
-						return "Bilder und Sounds erfolgreich importiert"
-					else:
-						os.system("umount item")
-						return "Sounds erfolgreich importiert"
-				else:
-					if images_imported == True:
-						os.system("umount item")
-						return "Bilder erfolgreich importiert"
+						files_imported = True
+
+				if os.path.exists(item + b'/Questions'):
+					categories = os.listdir(item + b'/Questions')
+					for category in categories:
+						if os.path.isdir(item + b'/Questions/' + category) == False:
+							continue
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Questions/' + category):
+							dir_name = b'/home/pi/Desktop/SdR/Questions/' + category
+							os.mkdir(dir_name.decode('utf-8'))
+						for f in os.listdir(item + b'/Questions/' + category):
+							if not os.path.isfile(
+									b'/home/pi/Desktop/SdR/Questions/' + category + b'/' + f) and f.lower().endswith(
+									b'.json'):
+								file_to_copy = item + b'/Questions/' + category + b'/' + f
+								os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
+								file_to_create = b'/home/pi/Desktop/SdR/Questions/' + category + b'/' + f
+								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
+								os.popen('cp "$file_to_copy" "$file_to_create"')
+								os.popen('chmod 777 "$file_to_create"')
+						files_imported = True
+
+		# unmount usb and print message
+		if files_imported == True:
+			os.system("umount item")
+			return "Dateien erfolgreich importiert"
+		else:
+			os.system("umount item")
+			return "Keine Dateien importiert"
+
 		done = mounted
 		time.sleep(2)
 		time_consumed += 2
 		if time_consumed >= 4:
-			return "keine Dateien gefunden"
+			return "keine Dateien importiert"
 			break
 
 if __name__ == '__main__':
