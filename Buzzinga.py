@@ -288,8 +288,11 @@ def choose_category(import_status=""):
                 page_nr = 1
                 for item in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr - 1)]
-                        if item.lower().endswith('.json') and not item.lower().startswith('.'):
-                                buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
+                        if item.lower().endswith('.json'):
+                                if item.lower().startswith('.'):
+                                        continue
+                                else:
+                                        buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
                         else:
                                 buttons['page ' + str(page_nr)].append([item, x, y, w, h])
                         game_nr += 1
