@@ -96,15 +96,17 @@ def get_free_disk_space():
 
 def delete_category(game_dir, multiple_files=True):
         current_dir = os.getcwd()
-        os.chdir(game_dir)
         # differentiate between images & Sounds and json; done
         if multiple_files:
+                os.chdir(game_dir)
                 for f in os.listdir(game_dir):
                         if not os.path.isdir(game_dir+"/"+f):
                                 #os.chmod(game_dir+"/"+f, 0o777)
                                 os.remove(game_dir+"/"+f)
                         else:
                                 pass
+        else:
+                os.chdir(game_dir[:game_dir.rfind("/")])
         try:
                 os.rmdir(game_dir)
         except:
