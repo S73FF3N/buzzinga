@@ -94,15 +94,17 @@ def get_free_disk_space():
         free_percentage = int(100.0/total_size*free_size)
         return str(free_percentage)
 
-def delete_category(game_dir):
+def delete_category(game_dir, multiple_files=True):
         current_dir = os.getcwd()
         os.chdir(game_dir)
-        for f in os.listdir(game_dir):
-                if not os.path.isdir(game_dir+"/"+f):
-                        #os.chmod(game_dir+"/"+f, 0o777)
-                        os.remove(game_dir+"/"+f)
-                else:
-                        pass
+        # differentiate between images & Sounds and json; done
+        if multiple_files:
+                for f in os.listdir(game_dir):
+                        if not os.path.isdir(game_dir+"/"+f):
+                                #os.chmod(game_dir+"/"+f, 0o777)
+                                os.remove(game_dir+"/"+f)
+                        else:
+                                pass
         try:
                 os.rmdir(game_dir)
         except:
@@ -282,9 +284,12 @@ def choose_category(import_status=""):
                         buttons['page ' + str(page + 1)] = []
                 game_nr = 1
                 page_nr = 1
-                for folder in os.listdir(game_folder):
+                for item in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr - 1)]
-                        buttons['page ' + str(page_nr)].append([folder, x, y, w, h])
+                        if os.path.isfile(item):
+                                buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
+                        else:
+                                buttons['page ' + str(page_nr)].append([item, x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
@@ -341,8 +346,12 @@ def choose_category(import_status=""):
                                 delete_modus = False
                 if button('trash-truck.bmp', x + w / 3, y, w / 3, h, click, inactive_color=Static.ORANGE, image=True):
                         if 'categories_to_delete' in locals():
+                                # differentiate between images & Sounds and json; doen
                                 for category in categories_to_delete:
-                                        delete_category(game_folder + category)
+                                        if config['game_type'] in ["images", "sounds"]:
+                                                delete_category(game_folder + category, multiple_files=True)
+                                        else:
+                                                delete_category(game_folder + category, multiple_files=False)
                         categories_to_delete = []
                         delete_modus = False
                         choose_category()
@@ -366,8 +375,11 @@ def choose_category(import_status=""):
                         if game_option[1] == True:
                                 if delete_modus == False:
                                         config['game choosen'] = True
-                                        config['game dir'] = game_folder + game_option[0] + "/"
-                                        #choose_game_menu = False
+                                        # differentiate between images & Sounds and json; done
+                                        if config['game_type'] in ["images", "sounds"]:
+                                                config['game dir'] = game_folder + game_option[0] + "/"
+                                        else:
+                                                config['game dir'] = game_folder + "/"
                                         settings_menu()
                                 else:
                                         pygame.draw.rect(SCREEN, Static.ORANGE, (
@@ -378,7 +390,11 @@ def choose_category(import_status=""):
                                                             int(game_option[3] + game_option[5] / 2))
                                         SCREEN.blit(text_surf, text_rect)
                                         if game_option[0] not in categories_to_delete:
-                                                categories_to_delete.append(game_option[0])
+                                                # differentiate between images & Sounds and json
+                                                if config['game_type'] in ["images", "sounds"]:
+                                                        categories_to_delete.append(game_option[0])
+                                                else:
+                                                        categories_to_delete.append(game_option[0]+".json")
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
