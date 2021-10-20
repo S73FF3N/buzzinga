@@ -107,7 +107,8 @@ def delete_category(game_dir, multiple_files=True):
                                 pass
         else:
                 os.chdir(game_dir[:game_dir.rfind("/")])
-                print(game_dir[:game_dir.rfind("/")])
+                print(os.getcwd())
+                print(game_dir)
         try:
                 os.rmdir(game_dir)
                 print("rm "+game_dir)
