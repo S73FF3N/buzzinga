@@ -496,6 +496,13 @@ def settings_menu():
 
 
 if __name__ == "__main__":
+        # create folders for images, sounds and questions on raspberry
+        required_folders = ["Bilder/", "Audio/", "Questions/"]
+        for f in required_folders:
+                if not os.path.exists(b'/home/pi/Desktop/SdR/' + f):
+                        dir_name = b'/home/pi/Desktop/SdR/' + f
+                        os.mkdir(dir_name.decode('utf-8'))
+
         pygame.init()
 
         SCREEN_WIDTH, SCREEN_HEIGHT = int(pygame.display.Info().current_w), int(pygame.display.Info().current_h)
