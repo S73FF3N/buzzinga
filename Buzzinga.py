@@ -105,15 +105,17 @@ def delete_category(game_dir, multiple_files=True):
                                 os.remove(game_dir+"/"+f)
                         else:
                                 pass
+                try:
+                        os.rmdir(game_dir)
+                        print("rm " + game_dir)
+                except:
+                        pass
         else:
                 os.chdir(game_dir[:game_dir.rfind("/")])
-                print(os.getcwd())
-                print(game_dir)
-        try:
-                os.rmdir(game_dir)
-                print("rm "+game_dir)
-        except:
-                pass
+                try:
+                        os.remove(game_dir)
+                except:
+                        pass
         os.chdir(current_dir)
 
 def print_player_name(x, playerName):
