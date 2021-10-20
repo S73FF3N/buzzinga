@@ -36,7 +36,7 @@ def usb_input_check(done, images_imported, time_consumed):
 								file_to_copy = item+b'/Bilder/'+category+b'/'+f
 								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
-								os.popen("chmod 777 {}".format(file_to_create.decode('utf-8')))
+								os.popen("sudo chmod 777 {}".format(file_to_create.decode('utf-8')))
 					files_imported = True
 
 				if os.path.exists(item+b'/Audio'):
@@ -54,7 +54,7 @@ def usb_input_check(done, images_imported, time_consumed):
 								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
 								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 								os.popen('cp "$file_to_copy" "$file_to_create"')
-								os.popen('chmod 777 "$file_to_create"')
+								os.popen('sudo chmod 777 "$file_to_create"')
 						files_imported = True
 
 				if os.path.exists(item + b'/Questions'):
@@ -66,7 +66,7 @@ def usb_input_check(done, images_imported, time_consumed):
 							file_to_create = b'/home/pi/Desktop/SdR/Questions/' + b'/' + f
 							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 							os.popen('cp "$file_to_copy" "$file_to_create"')
-							os.popen('chmod 777 "$file_to_create"')
+							os.popen('sudo chmod 777 "$file_to_create"')
 					files_imported = True
 
 			# unmount usb and print message
