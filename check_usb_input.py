@@ -31,8 +31,8 @@ def usb_input_check(done, images_imported, time_consumed):
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
 							os.mkdir(dir_name.decode('utf-8'))
-						for f in os.listdir(item+b'/Bilder/'+category):
-							os.rename(item+b'/Bilder/'+category+b"/"+f, os.path.join(item+b'/Bilder/'+category, f.replace(" ", "_")))
+						for f in os.listdir(item+b'/Bilder/' + category):
+							os.rename(item+b'/Bilder/'+category+b"/"+f, item+b'/Bilder/'+category+b'/'+f.replace(" ", "_"))
 						for f in os.listdir(item + b'/Bilder/' + category):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 								file_to_copy = item+b'/Bilder/'+category+b'/'+f
