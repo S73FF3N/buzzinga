@@ -27,8 +27,17 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     game_label_container_height = screeny / 10
     game_label_container = pygame.Rect(0, 0, game_label_container_width, game_label_container_height)
     picture_container_width = game_label_container_width
-    picture_container_height = screeny / 10 * 8
+    picture_container_height = screeny / 10 * 5
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
+    option_container_width = game_label_container_width / 2
+    option_container_height = picture_container_height / 2
+    option1_container = pygame.Rect(0, game_label_container_height + picture_container_height, option_container_width, option_container_height)
+    option2_container = pygame.Rect(option_container_width, game_label_container_height + picture_container_height, option_container_width,
+                                    option_container_height)
+    option3_container = pygame.Rect(0, game_label_container_height + picture_container_height + option_container_height, option_container_width,
+                                    option_container_height)
+    option4_container = pygame.Rect(option_container_width, game_label_container_height + picture_container_height + option_container_height, option_container_width,
+                                    option_container_height)
     solution_container_width = picture_container_width
     solution_container_height = screeny / 10
     solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height),
@@ -61,7 +70,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # text displayed at the beginning
     head, tail = os.path.split(content_dir)
-    game_name = tail[:-4]
+    game_name = tail[:-5]
     welcome = u"Willkommen zu " + game_name
 
     # build content dictionary from content directory
