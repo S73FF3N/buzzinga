@@ -6,7 +6,6 @@ from game_utilities import convert_image_to, load_image
 from static import Static
 
 def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_type, game_sounds, game_modus, points_to_win):
-	print("content_dir: ", content_dir)
 	pygame.mixer.pre_init(44100, -16, 2, 2048)
 	pygame.mixer.init()
 
@@ -39,7 +38,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	scoreboard_container = pygame.Rect(picture_container_width, picture_container_height, scoreboard_container_width, scoreboard_container_height)
 	countdown_container_width = scoreboard_container_width
 	countdown_container_height = screeny/10
-	countdown_container = pygame.Rect(solution_container_width, ( game_label_container_height + picture_container_height), countdown_container_width, countdown_container_height)
+	countdown_container = pygame.Rect(solution_container_width, (game_label_container_height + picture_container_height), countdown_container_width, countdown_container_height)
 	player_container_width = scoreboard_container_width
 	player_container_height = scoreboard_container_height/4
 	player_label_container_width = player_container_width
@@ -54,7 +53,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	picture_length = int(picture_container_height/10*9)
 	
 	# text displayed at the beginning
-	game_name = os.path.basename(os.path.dirname(content_dir))
+	if game_type in ["images", "sounds"]:
+		game_name = os.path.basename(os.path.dirname(content_dir))
+	else:
+		head, tail = os.path.split(content_dir)
+		game_name = tail
 	welcome = u"Willkommen zu " + game_name
 	
 	# build content dictionary from content directory
