@@ -327,7 +327,7 @@ def choose_category(import_status=""):
                         if event.type == KEYDOWN:
                                 if event.key == K_ESCAPE:
                                         delete_modus = False
-                                        choose_game_menu = False
+                                        choose_game_menu_running = False
                         elif event.type == MOUSEBUTTONDOWN:
                                 click = True
                 if page_counter <= pages:
