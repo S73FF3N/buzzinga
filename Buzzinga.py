@@ -395,7 +395,7 @@ def choose_category(import_status=""):
                                         if config['game_type'] in ["images", "sounds"]:
                                                 config['game dir'] = game_folder + game_option[0] + "/"
                                         else:
-                                                config['game dir'] = game_folder + "/"
+                                                config['game dir'] = game_folder + game_option[0] + ".json"
                                         settings_menu()
                                 else:
                                         # categories to selected are deleted
