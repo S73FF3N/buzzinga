@@ -31,6 +31,7 @@ def usb_input_check(done, images_imported, time_consumed):
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
 							os.mkdir(dir_name.decode('utf-8'))
+						# remove whitespaces from file names
 						for f in os.listdir(item + b'/Bilder/' + category):
 							file = item + b'/Bilder/' + category + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
@@ -53,6 +54,12 @@ def usb_input_check(done, images_imported, time_consumed):
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
 							dir_name = b'/home/pi/Desktop/SdR/Audio/' + category
 							os.mkdir(dir_name.decode('utf-8'))
+						for f in os.listdir(item + b'/Audio/' + category):
+							file = item + b'/Audio/' + category + b'/' + f
+							f_renamed = f.replace(b' ', b'_')
+							file_renamed = item + b'/Audio/' + category + b'/' + f_renamed
+							if f != f_renamed:
+								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
 						for f in os.listdir(item+b'/Audio/'+category):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
 								file_to_copy = item+b'/Audio/'+category+b'/'+f

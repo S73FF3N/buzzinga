@@ -218,8 +218,8 @@ def choose_game_menu_setup():
 
 def choose_game_menu():
         choose_game_menu_setup()
-        choose_game_menu = True
-        while choose_game_menu:
+        choose_game_menu_running = True
+        while choose_game_menu_running:
                 click = False
                 for event in pygame.event.get():
                         alt_f4 = (event.type == KEYDOWN and (
@@ -244,8 +244,8 @@ def choose_game_menu():
                         config['game_type'] = "questions"
                         choose_category()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
-                        choose_game_menu = False
-                        players_names_menu_setup()
+                        choose_game_menu_running = False
+                        players_names_menu()
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
@@ -355,7 +355,7 @@ def choose_category(import_status=""):
                                 delete_modus = False
                 if button('trash-truck.bmp', x + w / 3, y, w / 3, h, click, inactive_color=Static.ORANGE, image=True):
                         if 'categories_to_delete' in locals():
-                                # differentiate between images & Sounds and json; doen
+                                # differentiate between images & Sounds and json; done
                                 for category in categories_to_delete:
                                         if config['game_type'] in ["images", "sounds"]:
                                                 delete_category(game_folder + category, multiple_files=True)
@@ -363,6 +363,7 @@ def choose_category(import_status=""):
                                                 delete_category(game_folder + category, multiple_files=False)
                         categories_to_delete = []
                         delete_modus = False
+                        choose_category_menu = False #test
                         choose_category()
                 if button('flash-drive.bmp', x + (w / 3) * 2, y, w / 3, h, click, inactive_color=Static.ORANGE,
                           image=True):
