@@ -40,7 +40,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                     option_container_height)
     solution_container_width = picture_container_width
     solution_container_height = screeny / 10
-    solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height),
+    solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height + 2*option_container_height),
                                      solution_container_width, solution_container_height)
     picture_counter_container_width = screenx / 10 * 2
     picture_counter_container_height = screeny / 10
@@ -119,6 +119,19 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
             screen.blit(question, question.get_rect(center=picture_container.center))
+            options = [random_val["option1"], random_val["option2"], random_val["option3"], random_val["solution"]]
+            random.shuffle(options)
+            option1 = myfont.render(options[0], 1, Static.RED)
+            del options[0]
+            option2 = myfont.render(options[0], 1, Static.RED)
+            del options[0]
+            option3 = myfont.render(options[0], 1, Static.RED)
+            del options[0]
+            option4 = myfont.render(options[0], 1, Static.RED)
+            screen.blit(option1, option1.get_rect(center=option1_container.center))
+            screen.blit(option2, option2.get_rect(center=option2_container.center))
+            screen.blit(option3, option3.get_rect(center=option3_container.center))
+            screen.blit(option4, option4.get_rect(center=option4_container.center))
         else:
             show_winner()
         """else:
