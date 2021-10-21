@@ -18,9 +18,9 @@ config = {'game_type': "images",
           'points_to_win': 10}
 
 def game(screen, screenx, screeny):
-        if game_type in ["images", "sounds"]:
+        if config['game_type'] in ["images", "sounds"]:
                 buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'], config['game sounds'], config['game modus'], config['points_to_win'])
-        elif game_type == "questions":
+        elif config['game_type'] == "questions":
                 multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
                             config['game sounds'], config['game modus'], config['points_to_win'])
 	
