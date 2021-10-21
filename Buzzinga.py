@@ -246,7 +246,7 @@ def choose_game_menu():
                 elif button(u'Zurück', x7, y7, w7, h7, click):
                         choose_game_menu_running = False
                         players_names_menu()
-                pygame.display.update(button_layout_28)
+                pygame.display.update()
                 clock.tick(100)
 
 
@@ -381,7 +381,7 @@ def choose_category(import_status=""):
                 if button(u'Zurück', x, y, w, h, click, inactive_color=Static.ORANGE):
                         delete_modus = False
                         choose_category_menu = False
-                        choose_game_menu_setup()
+                        #choose_game_menu_setup()
                 for game_option in game_options:
                         if game_option[1] == True:
                                 if delete_modus == False:
@@ -408,7 +408,7 @@ def choose_category(import_status=""):
                                                         categories_to_delete.append(game_option[0])
                                                 else:
                                                         categories_to_delete.append(game_option[0]+".json")
-                pygame.display.update(button_layout_28)
+                pygame.display.update()
                 clock.tick(100)
 
 def settings_menu_setup():
@@ -504,7 +504,7 @@ def settings_menu():
                                 start_game = game(SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT)
                                 settings_menu_running = False
                                 players_names_menu()
-                pygame.display.update(button_layout_28)
+                pygame.display.update()
                 clock.tick(100)
 
 
