@@ -32,8 +32,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     question_container_width = game_label_container_width
     question_container_height = screeny / 10 * 3
     question_container = pygame.Rect(0, game_label_container_height, question_container_width, question_container_height)
-    option_container_width = game_label_container_width / 2
-    option_container_height = screeny / 10 * 2.5
+    option_container_width = (game_label_container_width / 2)-10
+    option_container_height = (screeny / 10 * 2.5)-10
     option1_container = pygame.Rect(0, game_label_container_height + question_container_height, option_container_width, option_container_height)
     option2_container = pygame.Rect(option_container_width, game_label_container_height + question_container_height, option_container_width,
                                     option_container_height)
