@@ -6,6 +6,7 @@ from game_utilities import load_image
 from pygame.locals import *
 from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
 from BuzzerGame import buzzer_game
+from MultipleChoiceGame import multiple_choice_game
 from static import Static
 
 config = {'game_type': "images",
@@ -17,7 +18,11 @@ config = {'game_type': "images",
           'points_to_win': 10}
 
 def game(screen, screenx, screeny):
-        buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'], config['game sounds'], config['game modus'], config['points_to_win'])
+        if game_type in ["images", "sounds"]:
+                buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'], config['game sounds'], config['game modus'], config['points_to_win'])
+        elif game_type == "questions":
+                multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
+                            config['game sounds'], config['game modus'], config['points_to_win'])
 	
 def text_objects(text, font, color=Static.BLACK):
         text_surface = font.render(text, 1, color)
@@ -147,7 +152,6 @@ def players_names_menu_setup():
         for i, player in enumerate(config['playerNames']):
                 print_player_name(i, player)
         pygame.display.update()
-        clock.tick(100)
 
 def players_names_menu():
         players_names_menu_setup()
@@ -216,7 +220,6 @@ def choose_game_menu_setup():
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
-        clock.tick(100)
 
 def choose_game_menu():
         choose_game_menu_setup()
@@ -270,8 +273,6 @@ def choose_category_setup(import_status="", no_categories=False):
                 text_rect.center = (int(x + w / 2), int(y + h / 2))
                 SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
-        clock.tick(100)
-
 
 global delete_modus
 delete_modus = False
