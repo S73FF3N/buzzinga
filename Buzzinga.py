@@ -247,7 +247,7 @@ def choose_game_menu():
                         choose_category()
                 elif button(u'Zurück', x7, y7, w7, h7, click):
                         choose_game_menu_running = False
-                        players_names_menu()
+                        #players_names_menu()
                 pygame.display.update()
                 clock.tick(100)
 
