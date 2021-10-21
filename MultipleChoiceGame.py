@@ -80,38 +80,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         content_dict[q["fields"]["quiz_question"]] = {'solution': q["fields"]["solution"], 'option1': q["fields"]["option1"], 'option2': q["fields"]["option2"], 'option3': q["fields"]["option3"]}
     print(content_dict)
 
-    """def build_content_dict(content):
-        if not file_in.lower().endswith(('.bmp', '.wav')):
-            print(
-                "{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(
-                    content))
-        else:
-            base = os.path.basename(content_dir + content)
-            name_o = os.path.splitext(base)[0]
-            name = name_o.replace("_", " ")
-            content_dict[name] = content_dir + content"""
-
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
     screen.fill(Static.WHITE)
     screen.blit(loading, loading.get_rect(center=picture_container.center))
     pygame.display.flip()
-
-    for file_in in content_list:
-        if os.path.isdir(file_in):
-            print("{} is a directory.".format(file_in))
-        if file_in.startswith("."):
-            print("{} starts with '.'. That's not allowed.".format(file_in))
-        elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
-            if game_type == "images":
-                try:
-                    # images in image directory are converted into .bmp
-                    file_in = convert_image_to(file_in, "bmp")
-                except:
-                    print("{} could not be converted to .bmp format.".format(file_in))
-            build_content_dict(file_in)
-        else:
-            print("{} has no suitable format.".format(file_in))
 
     amount_of_content = len(content_dict)
 
@@ -132,32 +105,17 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             del content_dict[random_key]
         except:
             winner_found = True
-        if game_type == "images":
-            if winner_found == False:
-                random_content = load_image(random_val, content_dir)
-                image_size = random_content.get_rect().size
-                if image_size[0] >= image_size[1]:
-                    if int((image_size[1] / float(image_size[0])) * picture_width) < picture_length:
-                        image_size = (picture_width, int((image_size[1] / float(image_size[0])) * picture_width))
-                    else:
-                        image_size = (int((image_size[0] / float(image_size[1])) * picture_length), picture_length)
-                else:
-                    if int((image_size[0] / float(image_size[1])) * picture_length) < picture_width:
-                        image_size = (int((image_size[0] / float(image_size[1])) * picture_length), picture_length)
-                    else:
-                        image_size = (picture_width, int((image_size[1] / float(image_size[0])) * picture_width))
-                random_content = pygame.transform.scale(random_content, image_size)
-                pygame.draw.rect(screen, Static.WHITE, picture_container)
-                screen.blit(random_content, random_content.get_rect(center=picture_container.center))
-            else:
-                show_winner()
+        #if game_type == "images":
+        if winner_found == False:
+            pygame.draw.rect(screen, Static.WHITE, picture_container)
+            screen.blit(random_key, random_key.get_rect(center=picture_container.center))
         else:
+            show_winner()
+        """else:
             random_sound = pygame.mixer.Sound(random_val)
             sound_channel.play(random_sound)
             if winner_found == False:
-                pygame.draw.rect(screen, Static.WHITE, solution_container)
-            """else:
-                show_winner()"""
+                pygame.draw.rect(screen, Static.WHITE, solution_container)"""
         screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         return random_key, winner_found
 
@@ -174,7 +132,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # print solution in solution label
     def show_solution():
-        solution = myfont.render(random_key, 1, Static.RED)
+        solution = myfont.render(random_val["solution"], 1, Static.RED)
         screen.blit(solution, solution.get_rect(center=solution_container.center))
 
     # countdown printed in solution label
@@ -253,16 +211,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
-                        if game_type == "images":
-                            pygame.draw.rect(screen, Static.WHITE, picture_container)
-                            pygame.display.flip()
+                        pygame.draw.rect(screen, Static.WHITE, picture_container)
+                        pygame.display.flip()
                         try:
                             random_pick_content()
                             pygame.display.flip()
                         except Exception as e:
                             print(e)
-                            if game_type == "sounds":
-                                sound_channel.stop()
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                         initialize = 0
@@ -273,8 +228,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        if game_type == "sounds":
-                            sound_channel.stop()
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
@@ -299,8 +252,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                     for n in range(0, players):
                         if buttonpressed == playerKeys[n]:
-                            if game_type == "sounds":
-                                sound_channel.pause()
                             first_buzz = playerKeys.index(buttonpressed)
                             player_buzzer_container = pygame.Rect(picture_container_width, (
                                         game_label_container_height + player_label_container_height + first_buzz * player_container_height),
@@ -323,8 +274,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         while waitReset == 0:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-                    if game_type == "sounds":
-                        sound_channel.stop()
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
 
@@ -355,8 +304,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
                     if keypressed == K_RETURN and show_solution_var == 2:
-                        if game_type == "sounds":
-                            sound_channel.stop()
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
@@ -375,8 +322,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if keypressed == K_RETURN and show_solution_var == 1:
                         try:
                             if winner_found == False:
-                                if game_type == "sounds":
-                                    sound_channel.unpause()
                                 pygame.draw.rect(screen, Static.WHITE, solution_container)
                                 show_solution()
                         except:
@@ -394,12 +339,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 random_pick_content()
                                 pygame.display.flip()
                             except:
-                                if game_type == "sounds":
-                                    sound_channel.stop()
                                 os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                             show_solution_var = 1
 
 
 if __name__ == "__main__":
-    buzzer_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)
+    multiple_choice_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)
