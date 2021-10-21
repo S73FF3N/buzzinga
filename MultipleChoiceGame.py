@@ -61,7 +61,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # text displayed at the beginning
     head, tail = os.path.split(content_dir)
-    game_name = tail
+    game_name = tail[:-4]
     welcome = u"Willkommen zu " + game_name
 
     # build content dictionary from content directory
@@ -108,7 +108,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         #if game_type == "images":
         if winner_found == False:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
-            screen.blit(random_key, random_key.get_rect(center=picture_container.center))
+            question = myfont.render(random_key, 1, Static.RED)
+            screen.blit(question, question.get_rect(center=picture_container.center))
         else:
             show_winner()
         """else:
