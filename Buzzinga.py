@@ -147,6 +147,7 @@ def players_names_menu_setup():
         for i, player in enumerate(config['playerNames']):
                 print_player_name(i, player)
         pygame.display.update()
+        clock.tick(100)
 
 def players_names_menu():
         players_names_menu_setup()
@@ -215,6 +216,7 @@ def choose_game_menu_setup():
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
+        clock.tick(100)
 
 def choose_game_menu():
         choose_game_menu_setup()
@@ -268,6 +270,7 @@ def choose_category_setup(import_status="", no_categories=False):
                 text_rect.center = (int(x + w / 2), int(y + h / 2))
                 SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
+        clock.tick(100)
 
 
 global delete_modus
