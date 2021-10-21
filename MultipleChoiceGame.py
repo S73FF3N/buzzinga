@@ -73,11 +73,12 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     game_started_from_path = os.getcwd()
     #os.chdir(content_dir)
 
-    #content_dict = {}
+    content_dict = {}
     with open(content_dir) as json_file:
         data = json.load(json_file)
     for q in data:
-        print(q["fields"])
+        content_dict[q["fields"]["quiz_question"]] = {'solution': q["fields"]["solution"], 'option1': q["fields"]["option1"], 'option2': q["fields"]["option2"], 'option3': q["fields"]["option3"]}
+    print(content_dict)
 
     """def build_content_dict(content):
         if not file_in.lower().endswith(('.bmp', '.wav')):
