@@ -76,7 +76,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     #content_dict = {}
     with open(content_dir) as json_file:
         data = json.load(json_file)
-    print(data)
+    for q in data:
+        print(q["fields"])
 
     """def build_content_dict(content):
         if not file_in.lower().endswith(('.bmp', '.wav')):
