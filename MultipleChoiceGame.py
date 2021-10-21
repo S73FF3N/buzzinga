@@ -74,8 +74,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     #os.chdir(content_dir)
 
     #content_dict = {}
-    #with open(content_dir) as json_file:
-    data = json.load(content_dir)
+    with open(content_dir) as json_file:
+        data = json.load(content_dir)
     print(data)
 
     """def build_content_dict(content):
