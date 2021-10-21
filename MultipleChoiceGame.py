@@ -27,10 +27,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     game_label_container_height = screeny / 10
     game_label_container = pygame.Rect(0, 0, game_label_container_width, game_label_container_height)
     picture_container_width = game_label_container_width
-    picture_container_height = screeny / 10 * 4
+    picture_container_height = screeny / 10 * 8
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
+    question_container_width = game_label_container_width
+    question_container_height = screeny / 10 * 4
+    question_container = pygame.Rect(0, game_label_container_height, question_container_width, question_container_height)
     option_container_width = game_label_container_width / 2
-    option_container_height = screeny / 10 * 5
+    option_container_height = screeny / 10 * 2.5
     option1_container = pygame.Rect(0, game_label_container_height + picture_container_height, option_container_width, option_container_height)
     option2_container = pygame.Rect(option_container_width, game_label_container_height + picture_container_height, option_container_width,
                                     option_container_height)
@@ -114,11 +117,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             del content_dict[random_key]
         except:
             winner_found = True
-        #if game_type == "images":
         if winner_found == False:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
-            screen.blit(question, question.get_rect(center=picture_container.center))
+            screen.blit(question, question.get_rect(center=question_container.center))
             options = [random_val["option1"], random_val["option2"], random_val["option3"], random_val["solution"]]
             random.shuffle(options)
             option1 = myfont.render(options[0], 1, Static.RED)
