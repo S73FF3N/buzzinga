@@ -43,7 +43,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                     option_container_height)
     solution_container_width = picture_container_width
     solution_container_height = screeny / 10
-    solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height + 2*option_container_height),
+    solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height),
                                      solution_container_width, solution_container_height)
     picture_counter_container_width = screenx / 10 * 2
     picture_counter_container_height = screeny / 10
@@ -51,8 +51,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                             picture_counter_container_height)
     scoreboard_container_width = picture_counter_container_width
     scoreboard_container_height = screeny / 10 * 8
-    scoreboard_container = pygame.Rect(picture_container_width, picture_container_height, scoreboard_container_width,
-                                       scoreboard_container_height)
     countdown_container_width = scoreboard_container_width
     countdown_container_height = screeny / 10
     countdown_container = pygame.Rect(solution_container_width,
@@ -67,23 +65,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     player_score_container_width = player_container_width / 2
     player_score_container_height = player_container_height / 10 * 7
 
-    # define picture format
-    picture_width = int(picture_container_width / 10 * 9)
-    picture_length = int(picture_container_height / 10 * 9)
-
     # text displayed at the beginning
     head, tail = os.path.split(content_dir)
     game_name = tail[:-5]
     welcome = u"Willkommen zu " + game_name
 
-    # build content dictionary from content directory
-    #content_list = os.listdir(content_dir)
-
     logo = "BuzzingaLogo.bmp"
     picture = load_image(logo, 'images')
-
-    game_started_from_path = os.getcwd()
-    #os.chdir(content_dir)
 
     content_dict = {}
     with open(content_dir) as json_file:
@@ -111,6 +99,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         global random_key
         global random_val
         global winner_found
+        global solution_dict
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
@@ -123,32 +112,32 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             screen.blit(question, question.get_rect(center=question_container.center))
             options = [random_val["option1"], random_val["option2"], random_val["option3"], random_val["solution"]]
             random.shuffle(options)
-            pygame.draw.rect(screen, Static.BLACK, option1_container)
+            solution_dict = {}
+            pygame.draw.rect(screen, Static.BLUE, option1_container)
             pygame.draw.rect(screen, Static.RED, option1_container, 10)
             option1 = myfont.render(options[0], 1, Static.RED)
+            solution_dict[1] = options[0]
             del options[0]
-            pygame.draw.rect(screen, Static.BLACK, option2_container)
+            pygame.draw.rect(screen, Static.ORANGE, option2_container)
             pygame.draw.rect(screen, Static.RED, option2_container, 10)
             option2 = myfont.render(options[0], 1, Static.RED)
+            solution_dict[2] = options[0]
             del options[0]
-            pygame.draw.rect(screen, Static.BLACK, option3_container)
+            pygame.draw.rect(screen, Static.GREEN, option3_container)
             pygame.draw.rect(screen, Static.RED, option3_container, 10)
             option3 = myfont.render(options[0], 1, Static.RED)
+            solution_dict[3] = options[0]
             del options[0]
-            pygame.draw.rect(screen, Static.BLACK, option4_container)
+            pygame.draw.rect(screen, Static.YELLOW, option4_container)
             pygame.draw.rect(screen, Static.RED, option4_container, 10)
             option4 = myfont.render(options[0], 1, Static.RED)
+            solution_dict[4] = options[0]
             screen.blit(option1, option1.get_rect(center=option1_container.center))
             screen.blit(option2, option2.get_rect(center=option2_container.center))
             screen.blit(option3, option3.get_rect(center=option3_container.center))
             screen.blit(option4, option4.get_rect(center=option4_container.center))
         else:
             show_winner()
-        """else:
-            random_sound = pygame.mixer.Sound(random_val)
-            sound_channel.play(random_sound)
-            if winner_found == False:
-                pygame.draw.rect(screen, Static.WHITE, solution_container)"""
         screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         return random_key, winner_found
 
@@ -165,28 +154,34 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # print solution in solution label
     def show_solution():
-        solution = myfont.render(random_val["solution"], 1, Static.RED)
-        screen.blit(solution, solution.get_rect(center=solution_container.center))
+        if solution_dict[1] == random_val["solution"]:
+            pygame.draw.rect(screen, Static.LIGHT_GREEN, option1_container, 20)
+        elif solution_dict[2] == random_val["solution"]:
+            pygame.draw.rect(screen, Static.LIGHT_GREEN, option2_container, 20)
+        elif solution_dict[3] == random_val["solution"]:
+            pygame.draw.rect(screen, Static.LIGHT_GREEN, option3_container, 20)
+        elif solution_dict[4] == random_val["solution"]:
+            pygame.draw.rect(screen, Static.LIGHT_GREEN, option4_container, 20)
 
     # countdown printed in solution label
     def countdown(count_from):
         for i in range(1, count_from):
             time_left = count_from - i
             time_left = str(time_left)
-            countdown = myfont.render(time_left, 1, Static.RED)
-            screen.blit(countdown, countdown.get_rect(center=countdown_container.center))
+            countdown_text = myfont.render(time_left, 1, Static.RED)
+            screen.blit(countdown_text, countdown.get_rect(center=countdown_container.center))
             pygame.display.flip()
             pygame.time.wait(1000)
             if time_left != 0:
                 pygame.draw.rect(screen, Static.WHITE, countdown_container)
                 pygame.display.flip()
-        if game_sounds == True:
+        if game_sounds:
             countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
             game_sound_channel.play(countdown_sound)
 
     def points_reached():
         global winner_found
-        if game_modus == False:
+        if not game_modus:
             if points_to_win == max(playerScore):
                 winner_found = True
 
@@ -194,7 +189,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     pygame.display.set_caption(game_name)
 
     # Created Variable for the text on the screen
-    # picture = pygame.transform.scale(picture, (picture_width, picture_length))
     game_label = myfont.render(game_name, 1, Static.RED)
     solution_label = myfont.render(welcome, 1, Static.RED)
     nr = 1
@@ -228,11 +222,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     show_solution_var = 1
     initialize = 1
 
-    """def return_to_main_menu():
-        if game_type == "sounds":
-            sound_channel.stop()
-        os.chdir("/home/pi/Desktop/venv/mycode/")
-        return 'Main Menu'"""
     running = True
     while running:
         while initialize == 1:
@@ -266,7 +255,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if event.key == K_RETURN:
                         first = 1
                         try:
-                            if winner_found == False:
+                            if not winner_found:
                                 show_solution_var = 1
                                 for n in range(0, players):
                                     player_buzzer_container = pygame.Rect(picture_container_width, (
