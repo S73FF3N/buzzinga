@@ -108,6 +108,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         global player2_locked
         global player3_locked
         global player4_locked
+        global player_answers
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
@@ -116,6 +117,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             winner_found = True
         if not winner_found:
             player1_locked = player2_locked = player3_locked = player4_locked = False
+            player_answers = {1:False, 2:False, 3:False, 4:False}
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
             screen.blit(question, question.get_rect(center=question_container.center))
@@ -221,8 +223,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        if game_type == "sounds":
-                            sound_channel.stop()
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
@@ -267,6 +267,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                     if buttonpressed in player1Keys and not player1_locked:
                         player1_locked = True
+                        player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                     game_label_container_height + player_label_container_height + 0 * player_container_height),
                                                               player_buzzer_container_width,
@@ -274,6 +275,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
                         player2_locked = True
+                        player_answers[2] = solution_dict[buttonpressed-5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 1 * player_container_height),
                                                               player_buzzer_container_width,
@@ -281,6 +283,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player3Keys and not player3_locked:
                         player3_locked = True
+                        player_answers[3] = solution_dict[buttonpressed - 10]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 2 * player_container_height),
                                                               player_buzzer_container_width,
@@ -288,6 +291,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player4Keys and not player4_locked:
                         player4_locked = True
+                        player_answers[4] = solution_dict[buttonpressed - 15]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 3 * player_container_height),
                                                               player_buzzer_container_width,
