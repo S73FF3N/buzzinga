@@ -15,7 +15,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     playerNames = playerNamesList
     playerScore = [0] * players
     # key definitions
-    playerKeys = [0, 5, 10, 15]
+    playerBuzzerKeys = [0, 5, 10, 15]
+    player1Keys = [1, 2, 3, 4]
+    player2Keys = [6, 7, 8, 9]
+    player3Keys = [11, 12, 13, 14]
+    player4Keys = [16, 17, 18, 19]
     answer = [K_r, K_f]
 
     # Set the fonts for the textf
@@ -100,13 +104,18 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         global random_val
         global winner_found
         global solution_dict
+        global player1_locked
+        global player2_locked
+        global player3_locked
+        global player4_locked
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
             winner_found = True
-        if winner_found == False:
+        if not winner_found:
+            player1_locked = player2_locked = player3_locked = player4_locked = False
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
             screen.blit(question, question.get_rect(center=question_container.center))
@@ -162,22 +171,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option3_container, 20)
         elif solution_dict[4] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option4_container, 20)
-
-    # countdown printed in solution label
-    def countdown(count_from):
-        for i in range(1, count_from):
-            time_left = count_from - i
-            time_left = str(time_left)
-            countdown_text = myfont.render(time_left, 1, Static.RED)
-            screen.blit(countdown_text, countdown.get_rect(center=countdown_container.center))
-            pygame.display.flip()
-            pygame.time.wait(1000)
-            if time_left != 0:
-                pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                pygame.display.flip()
-        if game_sounds:
-            countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
-            game_sound_channel.play(countdown_sound)
 
     def points_reached():
         global winner_found
@@ -272,20 +265,36 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
 
-                    for n in range(0, players):
-                        if buttonpressed == playerKeys[n]:
-                            first_buzz = playerKeys.index(buttonpressed)
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + first_buzz * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                            # buzzer sound
-                            if game_sounds == True:
-                                buzzerHit = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/buzzer_hit.wav")
-                                game_sound_channel.play(buzzerHit)
-                            first = 1
-                            countdown(5)
+                    if buttonpressed in player1Keys and not player1_locked:
+                        player1_locked = True
+                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                    game_label_container_height + player_label_container_height + 0 * player_container_height),
+                                                              player_buzzer_container_width,
+                                                              player_buzzer_container_height)
+                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                    elif buttonpressed in player2Keys and not player2_locked:
+                        player2_locked = True
+                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                game_label_container_height + player_label_container_height + 1 * player_container_height),
+                                                              player_buzzer_container_width,
+                                                              player_buzzer_container_height)
+                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                    elif buttonpressed in player3Keys and not player3_locked:
+                        player3_locked = True
+                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                game_label_container_height + player_label_container_height + 2 * player_container_height),
+                                                              player_buzzer_container_width,
+                                                              player_buzzer_container_height)
+                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                    elif buttonpressed in player4Keys and not player4_locked:
+                        player4_locked = True
+                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                game_label_container_height + player_label_container_height + 3 * player_container_height),
+                                                              player_buzzer_container_width,
+                                                              player_buzzer_container_height)
+                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                    if player1_locked and player2_locked and player3_locked and player4_locked:
+                        first = 1
                     pygame.display.flip()
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
