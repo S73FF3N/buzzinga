@@ -323,13 +323,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
                     # Show solution
                     if buttonpressed == K_RETURN and show_solution_var and not reset:
-                        if winner_found == False:
+                        if not winner_found:
                             pygame.draw.rect(screen, Static.WHITE, solution_container)
                             show_solution()
                         show_solution_var = False
                         pygame.display.flip()
 
-                    # Check if answer is correct to increase score
+                    """"# Check if answer is correct to increase score
                     if buttonpressed == K_RETURN and not show_solution_var and not reset:
                         for n in range(1, players+1):
                             print("answer player ", str(n), ": ", player_answers[n])
@@ -360,7 +360,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                        if winner_found == False:
+                        if not winner_found:
                             pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                             nr += 1
                             progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
@@ -372,7 +372,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                         question_answered = False
-                        pygame.display.flip()
+                        pygame.display.flip()"""
 
 
 if __name__ == "__main__":
