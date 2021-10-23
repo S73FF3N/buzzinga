@@ -312,7 +312,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							points_reached()
 							if winner_found:
 								show_winner()
-					# After buzzer was pressed, referee shows solution and decides if answer was right or wrong
+							else:
+								pass
 					if keypressed == K_RETURN and show_solution_var == 2:
 						if game_type == "sounds":
 							sound_channel.stop()
