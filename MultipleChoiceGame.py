@@ -54,8 +54,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                             picture_counter_container_height)
     scoreboard_container_width = picture_counter_container_width
     scoreboard_container_height = screeny / 10 * 8
-    countdown_container_width = scoreboard_container_width
-    countdown_container_height = screeny / 10
     player_container_width = scoreboard_container_width
     player_container_height = scoreboard_container_height / 4
     player_label_container_width = player_container_width
@@ -165,7 +163,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
-        pygame.display.flip()
 
     # show solution
     def show_solution():
@@ -228,6 +225,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
             if alt_f4:
                 sys.exit()
+            if event.key == K_ESCAPE:
+                running = False
         while initialize:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
