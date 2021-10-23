@@ -2,7 +2,8 @@
 
 import os, pygame, random, sys
 from pygame.locals import *
-from game_utilities import convert_image_to, load_image
+from pygame import KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
+from game_utilities import load_image
 from static import Static
 import json
 
@@ -15,12 +16,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     playerNames = playerNamesList
     playerScore = [0] * players
     # key definitions
-    playerBuzzerKeys = [0, 5, 10, 15]
     player1Keys = [1, 2, 3, 4]
     player2Keys = [6, 7, 8, 9]
     player3Keys = [11, 12, 13, 14]
     player4Keys = [16, 17, 18, 19]
-    answer = [K_r, K_f]
 
     # Set the fonts for the textf
     myfont = pygame.font.SysFont("Ariel", 50)
@@ -57,9 +56,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     scoreboard_container_height = screeny / 10 * 8
     countdown_container_width = scoreboard_container_width
     countdown_container_height = screeny / 10
-    countdown_container = pygame.Rect(solution_container_width,
-                                      (game_label_container_height + picture_container_height),
-                                      countdown_container_width, countdown_container_height)
     player_container_width = scoreboard_container_width
     player_container_height = scoreboard_container_height / 4
     player_label_container_width = player_container_width
@@ -103,10 +99,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     global player_answers
     winner_found = player1_locked = player2_locked = player3_locked = player4_locked = False
 
-    # randomly chosing content from content dictionary and updating solution label
-    sound_channel = pygame.mixer.Channel(0)
-    game_sound_channel = pygame.mixer.Channel(1)
-
+    # randomly chosing content from content dictionary
     def random_pick_content():
         global winner_found
         global player1_locked
@@ -172,7 +165,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
 
-    # print solution in solution label
+    # show solution
     def show_solution():
         if solution_dict[1] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option1_container, 20)
@@ -224,16 +217,16 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     question_answered = False  # all players have answered the question
     show_solution_var = False
     reset = False
-    initialize = 1
-
+    initialize = True
     running = True
+
     while running:
         for event in pygame.event.get():
             alt_f4 = (event.type == KEYDOWN and (
                     event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
             if alt_f4:
                 sys.exit()
-        while initialize == 1:
+        while initialize:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
@@ -249,10 +242,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             print(e)
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
-                        initialize = 0
+                        initialize = False
                     else:
                         pass
 
+        # player provide answer, game coordinator closes question eventually
         while not question_answered:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -261,8 +255,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
                     if event.key == K_RETURN:
                         question_answered = True
+                        show_solution_var = True
                         if not winner_found:
-                            show_solution_var = True
                             for n in range(0, players):
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
                                             game_label_container_height + player_label_container_height + n * player_container_height),
@@ -315,6 +309,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         show_solution_var = True
                         question_answered = True
                     pygame.display.flip()
+
         # all player have given an answer or game coordinator has closed the question
         # points are given by K_RETURN
         while question_answered:
@@ -327,14 +322,15 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     # Show solution
-                    if buttonpressed == K_RETURN and show_solution_var:
+                    if buttonpressed == K_RETURN and show_solution_var and not reset:
                         if winner_found == False:
                             pygame.draw.rect(screen, Static.WHITE, solution_container)
                             show_solution()
-                            show_solution_var = False
+                        show_solution_var = False
                         pygame.display.flip()
+
                     # Check if answer is correct to increase score
-                    if buttonpressed == K_RETURN and not show_solution_var:
+                    if buttonpressed == K_RETURN and not show_solution_var and not reset:
                         for n in range(1, players+1):
                             print("answer player ", str(n), ": ", player_answers[n])
                             print("solution: ", random_val["solution"])
@@ -347,10 +343,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 playerScore[(n-1)] = playerScore[(n-1)] + 1
                                 player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                                pygame.display.flip()
                                 points_reached()
                                 if winner_found == True:
                                     show_winner()
+                        pygame.display.flip()
                         reset = True
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
