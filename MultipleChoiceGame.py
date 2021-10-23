@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, pygame, random
+import os, pygame, random, sys
 from pygame.locals import *
 from game_utilities import convert_image_to, load_image
 from static import Static
@@ -313,12 +313,14 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if player1_locked and player2_locked and player3_locked and player4_locked:
                         question_answered = True
                     pygame.display.flip()
-                # a 'buzzer' was pressed and shown on screen
-            # now go to the reset code
-
+        # all player have given an answer or game coordinator has closed the question
         # points are given by K_RETURN
         while question_answered:
             for event in pygame.event.get():
+                alt_f4 = (event.type == KEYDOWN and (
+                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                if alt_f4:
+                    sys.exit()
                 if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
