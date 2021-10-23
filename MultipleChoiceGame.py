@@ -325,13 +325,14 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
 
-                # Check if Key Pressed to increase score
+                # Check if answer is correct to increase score
                 if event.type == pygame.KEYDOWN and event.key == K_RETURN and show_solution_var == 1:
+                    if winner_found == False:
+                        pygame.draw.rect(screen, Static.WHITE, solution_container)
+                        show_solution()
+                    pygame.display.flip()
                     for n in range(1, players):
                         if player_answers[1] == random_val["solution"]:
-                            if winner_found == False:
-                                pygame.draw.rect(screen, Static.WHITE, solution_container)
-                                show_solution()
                             try:
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
@@ -345,8 +346,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 points_reached()
                                 if winner_found == True:
                                     show_winner()
-                                pygame.display.flip()
-                                show_solution_var = 2
+                                #show_solution_var = 2
                             except:
                                 pass
 
