@@ -116,7 +116,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
-            winner_found = True
+            show_winner()
         if not winner_found:
             player1_locked = player2_locked = player3_locked = player4_locked = False
             player_answers = {1:False, 2:False, 3:False, 4:False}
@@ -149,9 +149,9 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             screen.blit(option2, option2.get_rect(center=option2_container.center))
             screen.blit(option3, option3.get_rect(center=option3_container.center))
             screen.blit(option4, option4.get_rect(center=option4_container.center))
+            screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
             show_winner()
-        screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         return random_key, winner_found
 
     def show_winner():
@@ -373,11 +373,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             nr += 1
                             progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
                             pygame.display.flip()
-                            try:
-                                random_pick_content()
-                                pygame.display.flip()
-                            except:
-                                running = False
+                            random_pick_content()
+                            pygame.display.flip()
                         question_answered = False
                         solution_shown = "Waiting"
                         pygame.display.flip()
