@@ -116,7 +116,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         except:
             winner_found = True
         if not winner_found:
-            player1_locked = player2_locked = player3_locked = player4_locked = False
+            player1_locked = False
+            player2_locked = False
+            player3_locked = False
+            player4_locked = False
             player_answers = {1:False, 2:False, 3:False, 4:False}
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
