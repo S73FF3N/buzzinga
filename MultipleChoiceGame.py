@@ -221,7 +221,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     pygame.display.flip()
 
-    first = 0  # used to signify the first key pressed and stops other being used
+    question_answered = False  # all players have answered the question
     waitReset = 1  # Reset section for the while loop
     show_solution_var = 1
     initialize = 1
@@ -248,14 +248,14 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     else:
                         pass
 
-        while first == 0:
+        while not question_answered:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
-                        first = 1
+                        question_answered = True
                         try:
                             if not winner_found:
                                 show_solution_var = 1
@@ -275,7 +275,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     buttonpressed = event.button
                     if buttonpressed in player1Keys and not player1_locked:
                         player1_locked = True
-                        print("player1_locked: ", player1_locked)
                         player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                     game_label_container_height + player_label_container_height + 0 * player_container_height),
@@ -284,7 +283,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
                         player2_locked = True
-                        print("player2_locked: ", player2_locked)
                         player_answers[2] = solution_dict[buttonpressed-5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 1 * player_container_height),
@@ -293,7 +291,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player3Keys and not player3_locked:
                         player3_locked = True
-                        print("player3_locked: ", player3_locked)
                         player_answers[3] = solution_dict[buttonpressed - 10]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 2 * player_container_height),
@@ -302,7 +299,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player4Keys and not player4_locked:
                         player4_locked = True
-                        print("player4_locked: ", player4_locked)
                         player_answers[4] = solution_dict[buttonpressed - 15]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 3 * player_container_height),
@@ -310,48 +306,45 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     if player1_locked and player2_locked and player3_locked and player4_locked:
-                        first = 1
-                    print("first: ", first)
+                        question_answered = True
                     pygame.display.flip()
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
 
-        # loop waiting until the 'button' are reset
-        waitReset = 0
-
-        while waitReset == 0:
+        # points are given by K_RETURN
+        while question_answered:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
 
-                # User pressed down on a key
-                if event.type == pygame.KEYDOWN:
-                    keypressed = event.key
-
-                    # Check if Key Pressed to increase score
-                    if keypressed in answer:
-                        try:
-                            player_score_container = pygame.Rect(
-                                (picture_container_width + player_buzzer_container_width), (
-                                            game_label_container_height + player_label_container_height + first_buzz * player_container_height),
-                                player_score_container_width, player_score_container_height)
-                            pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                            if keypressed == answer[0]:
-                                playerScore[first_buzz] = playerScore[first_buzz] + 1
-                            if keypressed == answer[1]:
-                                playerScore[first_buzz] = playerScore[first_buzz] - 1
-                            player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
-                            screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                            pygame.display.flip()
-                            points_reached()
-                            if winner_found == True:
-                                show_winner()
-                        except:
-                            pass
+                # Check if Key Pressed to increase score
+                if event.type == pygame.KEYDOWN and event.key == K_RETURN and show_solution_var == 1:
+                    for n in range(1, players):
+                        if player_answers[1] == random_val["solution"]:
+                            if winner_found == False:
+                                pygame.draw.rect(screen, Static.WHITE, solution_container)
+                                show_solution()
+                            try:
+                                player_score_container = pygame.Rect(
+                                    (picture_container_width + player_buzzer_container_width), (
+                                                game_label_container_height + player_label_container_height + (n-1) * player_container_height),
+                                    player_score_container_width, player_score_container_height)
+                                pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                                playerScore[(n-1)] = playerScore[(n-1)] + 1
+                                player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
+                                screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+                                pygame.display.flip()
+                                points_reached()
+                                if winner_found == True:
+                                    show_winner()
+                                pygame.display.flip()
+                                show_solution_var = 2
+                            except:
+                                pass
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
-                    if keypressed == K_RETURN and show_solution_var == 2:
+                    if event.key == K_RETURN and show_solution_var == 2:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
@@ -361,23 +354,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                        first = 0
-                        waitReset = 1
+                        question_answered = False
                         pygame.display.flip()
                         show_solution_var = 0
 
-                    # solution is shown
-                    if keypressed == K_RETURN and show_solution_var == 1:
-                        try:
-                            if winner_found == False:
-                                pygame.draw.rect(screen, Static.WHITE, solution_container)
-                                show_solution()
-                        except:
-                            pass
-                        pygame.display.flip()
-                        show_solution_var = 2
-
-                    if keypressed == K_RETURN and show_solution_var == 0:
+                    if event.key == K_RETURN and show_solution_var == 0:
                         if winner_found == False:
                             pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                             nr += 1
