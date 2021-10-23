@@ -315,27 +315,24 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         # points are given by K_RETURN
         while question_answered:
             for event in pygame.event.get():
-                alt_f4 = (event.type == KEYDOWN and (
-                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
-                if alt_f4:
-                    sys.exit()
-                if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
-                    os.chdir("/home/pi/Desktop/venv/mycode/")
-                    running = False
-
-                # Check if answer is correct to increase score
                 if event.type == pygame.KEYDOWN:
                     buttonpressed = event.key
+                    if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                        sys.exit()
+                    if buttonpressed == K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
+                        running = False
+                    # Show solution
                     if buttonpressed == K_RETURN and show_solution_var:
                         if winner_found == False:
                             pygame.draw.rect(screen, Static.WHITE, solution_container)
                             show_solution()
                             show_solution_var = False
                         pygame.display.flip()
-
+                    # Check if answer is correct to increase score
                     if buttonpressed == K_RETURN and not show_solution_var:
                         for n in range(1, players):
-                            print(n)
+                            print(str(n))
                             if player_answers[1] == random_val["solution"]:
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
