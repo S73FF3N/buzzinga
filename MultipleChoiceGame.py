@@ -156,6 +156,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     def show_winner():
         pygame.draw.rect(screen, Static.WHITE, picture_container)
+        pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
         winner_ix = [i for i, x in enumerate(playerScore) if x == max(playerScore)]
         winners = [scorefont.render("Gewinner:", 1, Static.RED)]
         [winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
@@ -216,7 +217,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     question_answered = False  # all players have answered the question
     solution_shown = "Waiting"
-    reset = False
     initialize = True
     running = True
 
@@ -385,7 +385,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                         question_answered = False
-                        solution_shown = "Waiting"
+                        #solution_shown = "Waiting"
                         pygame.display.flip()
 
 
