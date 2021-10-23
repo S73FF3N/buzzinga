@@ -331,25 +331,27 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         show_solution_var = False
                     pygame.display.flip()
 
-                if event.type == pygame.KEYDOWN and event.key == K_RETURN and not show_solution_var:
-                    for n in range(1, players):
-                        if player_answers[1] == random_val["solution"]:
-                            player_score_container = pygame.Rect(
-                                (picture_container_width + player_buzzer_container_width), (
-                                            game_label_container_height + player_label_container_height + (n-1) * player_container_height),
-                                player_score_container_width, player_score_container_height)
-                            pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                            playerScore[(n-1)] = playerScore[(n-1)] + 1
-                            player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
-                            screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                            pygame.display.flip()
-                            points_reached()
-                            if winner_found == True:
-                                show_winner()
-                            reset = True
+                if event.type == pygame.KEYDOWN:
+                    buttonpressed = event.key
+                    if buttonpressed == K_RETURN and not show_solution_var:
+                        for n in range(1, players):
+                            if player_answers[1] == random_val["solution"]:
+                                player_score_container = pygame.Rect(
+                                    (picture_container_width + player_buzzer_container_width), (
+                                                game_label_container_height + player_label_container_height + (n-1) * player_container_height),
+                                    player_score_container_width, player_score_container_height)
+                                pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                                playerScore[(n-1)] = playerScore[(n-1)] + 1
+                                player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
+                                screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+                                pygame.display.flip()
+                                points_reached()
+                                if winner_found == True:
+                                    show_winner()
+                                reset = True
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
-                    if event.key == K_RETURN and reset:
+                    if buttonpressed == K_RETURN and reset:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
