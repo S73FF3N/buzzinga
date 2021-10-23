@@ -165,6 +165,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
+        pygame.display.flip()
 
     # show solution
     def show_solution():
@@ -231,7 +232,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
                         pygame.draw.rect(screen, Static.WHITE, picture_container)
@@ -241,7 +241,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             pygame.display.flip()
                         except Exception as e:
                             print(e)
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                         initialize = False
                     else:
@@ -252,7 +251,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == K_ESCAPE:
-                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     if event.key == K_RETURN:
                         question_answered = True
@@ -316,7 +314,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
                         sys.exit()
                     if buttonpressed == K_ESCAPE:
-                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     # Show solution
                     if buttonpressed == K_RETURN and solution_shown == "Prepared":
@@ -334,7 +331,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
                             sys.exit()
                         if buttonpressed == K_ESCAPE:
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                     # Check if answer is correct to increase score
                     if buttonpressed == K_RETURN:
@@ -361,7 +357,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
                             sys.exit()
                         if buttonpressed == K_ESCAPE:
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                     if buttonpressed == K_RETURN:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
@@ -382,7 +377,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 random_pick_content()
                                 pygame.display.flip()
                             except:
-                                os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                         question_answered = False
                         solution_shown = "Waiting"
