@@ -152,6 +152,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     def show_winner():
         pygame.draw.rect(screen, Static.WHITE, picture_container)
+        pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
+        pygame.draw.rect(screen, Static.WHITE, solution_container)
         winner_ix = [i for i, x in enumerate(playerScore) if x == max(playerScore)]
         winners = [scorefont.render("Gewinner:", 1, Static.RED)]
         [winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
@@ -226,6 +228,9 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 if event.key == pygame.K_ESCAPE:
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
+                if event.key == pygame.K_RETURN and winner_found:
+                    show_winner()
+                    pygame.display.flip()
         while initialize:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -343,8 +348,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                                 points_reached()
-                                if winner_found:
-                                    show_winner()
+                                #if winner_found:
+                                 #   show_winner()
                         solution_shown = "Reset"
                         pygame.display.flip()
 
