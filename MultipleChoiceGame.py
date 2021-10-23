@@ -274,7 +274,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
-
+                    print("player1_locked: ", player1_locked)
+                    print("player2_locked: ", player2_locked)
+                    print("player3_locked: ", player3_locked)
+                    print("player4_locked: ", player4_locked)
                     if buttonpressed in player1Keys and not player1_locked:
                         player1_locked = True
                         print("player1_locked: ", player1_locked)
