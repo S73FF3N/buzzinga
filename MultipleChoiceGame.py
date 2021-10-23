@@ -324,15 +324,15 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     running = False
 
                 # Check if answer is correct to increase score
-                if event.type == pygame.KEYDOWN and event.key == K_RETURN and show_solution_var:
-                    if winner_found == False:
-                        pygame.draw.rect(screen, Static.WHITE, solution_container)
-                        show_solution()
-                        show_solution_var = False
-                    pygame.display.flip()
-
                 if event.type == pygame.KEYDOWN:
                     buttonpressed = event.key
+                    if buttonpressed == K_RETURN and show_solution_var:
+                        if winner_found == False:
+                            pygame.draw.rect(screen, Static.WHITE, solution_container)
+                            show_solution()
+                            show_solution_var = False
+                        pygame.display.flip()
+
                     if buttonpressed == K_RETURN and not show_solution_var:
                         for n in range(1, players):
                             if player_answers[1] == random_val["solution"]:
