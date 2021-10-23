@@ -357,6 +357,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 points_reached()
                                 if winner_found:
                                     show_winner()
+                        solution_shown = "Reset"
                         pygame.display.flip()
                         #reset = True
 
