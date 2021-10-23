@@ -114,7 +114,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
-            show_winner()
+            winner_found = True
+            #show_winner()
         if not winner_found:
             player1_locked = player2_locked = player3_locked = player4_locked = False
             player_answers = {1:False, 2:False, 3:False, 4:False}
@@ -166,13 +167,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # show solution
     def show_solution():
-        if solution_dict[1] == random_val["solution"]:
+        if solution_dict[4] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option1_container, 20)
-        elif solution_dict[2] == random_val["solution"]:
-            pygame.draw.rect(screen, Static.LIGHT_GREEN, option2_container, 20)
         elif solution_dict[3] == random_val["solution"]:
+            pygame.draw.rect(screen, Static.LIGHT_GREEN, option2_container, 20)
+        elif solution_dict[2] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option3_container, 20)
-        elif solution_dict[4] == random_val["solution"]:
+        elif solution_dict[1] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option4_container, 20)
 
     def points_reached():
@@ -373,11 +374,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             nr += 1
                             progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
                             pygame.display.flip()
-                            try:
-                                random_pick_content()
-                                pygame.display.flip()
-                            except:
-                                running = False
+                            random_pick_content()
+                            pygame.display.flip()
                         question_answered = False
                         solution_shown = "Waiting"
                         pygame.display.flip()
