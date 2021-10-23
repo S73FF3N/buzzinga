@@ -209,7 +209,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	pygame.display.flip()
 	
 	first = False # used to signify the first key pressed and stops other being used
-	waitReset = True # Reset section for the while loop
+	#waitReset = True # Reset section for the while loop
 	show_solution_var = 1
 	initialize = True
 
@@ -223,6 +223,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				sys.exit()
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
+					os.chdir("/home/pi/Desktop/venv/mycode/")
 					running = False
 		while initialize:
 			for event in pygame.event.get():
@@ -286,19 +287,18 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					# a 'buzzer' was pressed and shown on screen
 				# now go to the reset code
 		# loop waiting until the 'button' are reset
-		waitReset = False
+		#waitReset = False
 		
-		while not waitReset and not winner_found:
+		while first and not winner_found:
 			for event in pygame.event.get():
-				if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-					if game_type == "sounds":
-						sound_channel.stop()
-					os.chdir("/home/pi/Desktop/venv/mycode/")
-					running = False
-
 				# User pressed down on a key
 				if event.type == pygame.KEYDOWN:
 					keypressed = event.key
+					if event.key == pygame.K_ESCAPE:
+						if game_type == "sounds":
+							sound_channel.stop()
+						os.chdir("/home/pi/Desktop/venv/mycode/")
+						running = False
 					# Check if Key Pressed to increase score
 					if keypressed in answer:
 						player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_score_container_width, player_score_container_height)
@@ -324,7 +324,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + n*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
 							pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
 						first = False
-						waitReset = True
+						#waitReset = True
 						pygame.display.flip()
 						show_solution_var = 0
 
