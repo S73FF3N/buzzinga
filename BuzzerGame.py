@@ -225,6 +225,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		return 'Main Menu'"""
 	running = True
 	while running:
+		pressed_keys = pygame.key.get_pressed()
 		while initialize == 1:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:

@@ -221,6 +221,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     running = True
 
     while running:
+        pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             alt_f4 = (event.type == KEYDOWN and (
                     event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
@@ -329,8 +330,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         show_solution_var = False
                         pygame.display.flip()
 
-                    """"# Check if answer is correct to increase score
-                    if buttonpressed == K_RETURN and not show_solution_var and not reset:
+                    # Check if answer is correct to increase score
+                    if buttonpressed == K_RETURN and not show_solution_var:# and not reset:
                         for n in range(1, players+1):
                             print("answer player ", str(n), ": ", player_answers[n])
                             print("solution: ", random_val["solution"])
@@ -344,13 +345,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                                 points_reached()
-                                if winner_found == True:
+                                if winner_found:
                                     show_winner()
                         pygame.display.flip()
-                        reset = True
+                        #reset = True
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
-                    if buttonpressed == K_RETURN and reset:
+                    """if buttonpressed == K_RETURN and reset:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
