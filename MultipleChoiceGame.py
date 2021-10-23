@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os, pygame, random, sys
-from pygame.locals import *
-from pygame import KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
+#from pygame.locals import *
+#from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_F4, K_LALT, K_RALT
 from game_utilities import load_image
 from static import Static
 import json
@@ -218,19 +218,21 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
-            alt_f4 = (event.type == KEYDOWN and (
-                    event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+            alt_f4 = (event.type == pygame.KEYDOWN and (
+                    event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
             if alt_f4:
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
+                    os.chdir("/home/pi/Desktop/venv/mycode/")
                     running = False
         while initialize:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
-                    if event.key == K_RETURN:
+                    if event.key == pygame.K_RETURN:
                         pygame.draw.rect(screen, Static.WHITE, picture_container)
                         pygame.display.flip()
                         try:
@@ -245,12 +247,12 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         while not question_answered and not winner_found:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
-                    if event.key == K_RETURN:
+                    if event.key == pygame.K_RETURN:
                         question_answered = True
                         solution_shown = "Prepared"
-                        #if not winner_found:
                         for n in range(0, players):
                             player_buzzer_container = pygame.Rect(picture_container_width, (
                                         game_label_container_height + player_label_container_height + n * player_container_height),
@@ -306,13 +308,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     buttonpressed = event.key
-                    if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                    if buttonpressed == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
                         sys.exit()
-                    if buttonpressed == K_ESCAPE:
+                    if buttonpressed == pygame.K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     # Show solution
-                    if buttonpressed == K_RETURN and solution_shown == "Prepared":
-                        #if not winner_found:
+                    if buttonpressed == pygame.K_RETURN and solution_shown == "Prepared":
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         show_solution()
                         question_answered = False
@@ -323,12 +325,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
-                        if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                        if buttonpressed == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
                             sys.exit()
-                        if buttonpressed == K_ESCAPE:
+                        if buttonpressed == pygame.K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                     # Check if answer is correct to increase score
-                    if buttonpressed == K_RETURN:
+                    if buttonpressed == pygame.K_RETURN:
                         for n in range(1, players+1):
                             if player_answers[n] == random_val["solution"]:
                                 player_score_container = pygame.Rect(
@@ -349,11 +352,12 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
-                        if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                        if buttonpressed == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
                             sys.exit()
-                        if buttonpressed == K_ESCAPE:
+                        if buttonpressed == pygame.K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
-                    if buttonpressed == K_RETURN:
+                    if buttonpressed == pygame.K_RETURN:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
@@ -363,7 +367,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                        #if not winner_found:
                         pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                         nr += 1
                         progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
