@@ -131,6 +131,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				random_content = pygame.transform.scale(random_content, image_size)
 				pygame.draw.rect(screen, Static.WHITE, picture_container)
 				screen.blit(random_content, random_content.get_rect(center=picture_container.center))
+				screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 			else:
 				show_winner()
 		else:
@@ -138,13 +139,14 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			sound_channel.play(random_sound)
 			if not winner_found:
 				pygame.draw.rect(screen, Static.WHITE, solution_container)
+				screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 			else:
 				show_winner()
-		screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 		return random_key, winner_found
 
 	def show_winner():
 		pygame.draw.rect(screen, Static.WHITE, picture_container)
+		pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
 		winner_ix = [i for i,x in enumerate(playerScore) if x==max(playerScore)]
 		winners = [scorefont.render("Gewinner:", 1, Static.RED)]
 		[winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
@@ -311,9 +313,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
 						pygame.display.flip()
 						points_reached()
-						if winner_found:
-							show_winner()
-							first = False
+						#if winner_found:
+						#	show_winner()
+						#	first = False
 
 					if keypressed == pygame.K_RETURN and show_solution_var == 2:
 						if game_type == "sounds":
