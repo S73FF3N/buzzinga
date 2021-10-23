@@ -276,6 +276,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
                     if buttonpressed in player1Keys and not player1_locked:
+                        print("player 1 pressed button: ", buttonpressed)
                         player1_locked = True
                         player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -284,6 +285,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
+                        print("player 2 pressed button: ", buttonpressed)
                         player2_locked = True
                         player_answers[2] = solution_dict[buttonpressed-5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -292,6 +294,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player3Keys and not player3_locked:
+                        print("player 3 pressed button: ", buttonpressed)
                         player3_locked = True
                         player_answers[3] = solution_dict[buttonpressed - 10]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -300,6 +303,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player4Keys and not player4_locked:
+                        print("player 4 pressed button: ", buttonpressed)
                         player4_locked = True
                         player_answers[4] = solution_dict[buttonpressed - 15]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
