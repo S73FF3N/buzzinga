@@ -373,8 +373,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             nr += 1
                             progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
                             pygame.display.flip()
-                            random_pick_content()
-                            pygame.display.flip()
+                            try:
+                                random_pick_content()
+                                pygame.display.flip()
+                            except:
+                                running = False
                         question_answered = False
                         solution_shown = "Waiting"
                         pygame.display.flip()
