@@ -281,7 +281,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							if game_sounds:
 								buzzerHit = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/buzzer_hit.wav")
 								game_sound_channel.play(buzzerHit)
-							first = 1
+							first = True
 							countdown(5)
 					pygame.display.flip()
 					# a 'buzzer' was pressed and shown on screen
@@ -313,6 +313,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						points_reached()
 						if winner_found:
 							show_winner()
+							first = False
 
 					if keypressed == pygame.K_RETURN and show_solution_var == 2:
 						if game_type == "sounds":
