@@ -334,8 +334,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.display.flip()
 
                     if buttonpressed == K_RETURN and not show_solution_var:
-                        print("show_solution_var: ", show_solution_var)
                         for n in range(1, players):
+                            print(n)
                             if player_answers[1] == random_val["solution"]:
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
