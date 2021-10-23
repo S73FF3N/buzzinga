@@ -223,7 +223,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					os.chdir("/home/pi/Desktop/venv/mycode/")
 					running = False
 				if event.key == pygame.K_RETURN and winner_found:
-					show_solution()
+					show_winner()
 					pygame.display.flip()
 
 		while initialize:
