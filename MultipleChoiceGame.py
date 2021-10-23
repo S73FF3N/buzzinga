@@ -273,10 +273,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
-                    print("player1_locked: ", player1_locked)
-                    print("player2_locked: ", player2_locked)
-                    print("player3_locked: ", player3_locked)
-                    print("player4_locked: ", player4_locked)
                     if buttonpressed in player1Keys and not player1_locked:
                         player1_locked = True
                         print("player1_locked: ", player1_locked)
@@ -315,6 +311,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     if player1_locked and player2_locked and player3_locked and player4_locked:
                         first = 1
+                    print("first: ", first)
                     pygame.display.flip()
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
