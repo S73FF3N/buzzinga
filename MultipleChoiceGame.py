@@ -215,7 +215,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     pygame.display.flip()
 
     question_answered = False  # all players have answered the question
-    show_solution_var = False
+    solution_shown = "Waiting"
     reset = False
     initialize = True
     running = True
@@ -256,7 +256,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
                     if event.key == K_RETURN:
                         question_answered = True
-                        show_solution_var = True
+                        solution_shown = "Prepared"
                         if not winner_found:
                             for n in range(0, players):
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -307,7 +307,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     if player1_locked and player2_locked and player3_locked and player4_locked:
-                        show_solution_var = True
+                        solution_shown = "Prepared"
                         question_answered = True
                     pygame.display.flip()
 
@@ -323,15 +323,25 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     # Show solution
-                    if buttonpressed == K_RETURN and show_solution_var and not reset:
+                    if buttonpressed == K_RETURN and solution_shown == "Prepared":#and not reset:
                         if not winner_found:
                             pygame.draw.rect(screen, Static.WHITE, solution_container)
                             show_solution()
-                        show_solution_var = False
+                        question_answered = False
+                        solution_shown = "Done"
                         pygame.display.flip()
 
+            while solution_shown == "Done":
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        buttonpressed = event.key
+                        if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                            sys.exit()
+                        if buttonpressed == K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
+                            running = False
                     # Check if answer is correct to increase score
-                    if buttonpressed == K_RETURN and not show_solution_var:# and not reset:
+                    if buttonpressed == K_RETURN:# and not reset:
                         for n in range(1, players+1):
                             print("answer player ", str(n), ": ", player_answers[n])
                             print("solution: ", random_val["solution"])
