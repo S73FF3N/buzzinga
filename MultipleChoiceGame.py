@@ -271,7 +271,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
                     if buttonpressed in player1Keys and not player1_locked:
-                        print("player 1 pressed button: ", buttonpressed)
                         player1_locked = True
                         player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -280,7 +279,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
-                        print("player 2 pressed button: ", buttonpressed)
                         player2_locked = True
                         player_answers[2] = solution_dict[buttonpressed-5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -289,7 +287,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player3Keys and not player3_locked:
-                        print("player 3 pressed button: ", buttonpressed)
                         player3_locked = True
                         player_answers[3] = solution_dict[buttonpressed - 10]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -298,7 +295,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player4Keys and not player4_locked:
-                        print("player 4 pressed button: ", buttonpressed)
                         player4_locked = True
                         player_answers[4] = solution_dict[buttonpressed - 15]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -323,7 +319,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         running = False
                     # Show solution
-                    if buttonpressed == K_RETURN and solution_shown == "Prepared":#and not reset:
+                    if buttonpressed == K_RETURN and solution_shown == "Prepared":
                         if not winner_found:
                             pygame.draw.rect(screen, Static.WHITE, solution_container)
                             show_solution()
@@ -341,10 +337,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             running = False
                     # Check if answer is correct to increase score
-                    if buttonpressed == K_RETURN:# and not reset:
+                    if buttonpressed == K_RETURN:
                         for n in range(1, players+1):
-                            print("answer player ", str(n), ": ", player_answers[n])
-                            print("solution: ", random_val["solution"])
                             if player_answers[n] == random_val["solution"]:
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
@@ -359,10 +353,17 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                     show_winner()
                         solution_shown = "Reset"
                         pygame.display.flip()
-                        #reset = True
 
-                    # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
-                    """if buttonpressed == K_RETURN and reset:
+            while solution_shown == "Reset":
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        buttonpressed = event.key
+                        if buttonpressed == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT]):
+                            sys.exit()
+                        if buttonpressed == K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
+                            running = False
+                    if buttonpressed == K_RETURN:
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
@@ -384,7 +385,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                         question_answered = False
-                        pygame.display.flip()"""
+                        solution_shown = "Waiting"
+                        pygame.display.flip()
 
 
 if __name__ == "__main__":
