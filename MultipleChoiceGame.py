@@ -225,8 +225,9 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
             if alt_f4:
                 sys.exit()
-            if event.key == K_ESCAPE:
-                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
         while initialize:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
