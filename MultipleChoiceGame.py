@@ -385,7 +385,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 os.chdir("/home/pi/Desktop/venv/mycode/")
                                 running = False
                         question_answered = False
-                        #solution_shown = "Waiting"
+                        solution_shown = "Waiting"
                         pygame.display.flip()
 
 
