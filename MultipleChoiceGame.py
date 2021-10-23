@@ -97,6 +97,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     global player2_locked
     global player3_locked
     global player4_locked
+    global random_key
+    global random_val
+    global winner_found
+    global solution_dict
+    global player_answers
     winner_found = False
     player1_locked = player2_locked = player3_locked = player4_locked = False
 
@@ -105,11 +110,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     game_sound_channel = pygame.mixer.Channel(1)
 
     def random_pick_content():
-        global random_key
-        global random_val
-        global winner_found
-        global solution_dict
-        global player_answers
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
