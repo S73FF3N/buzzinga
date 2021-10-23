@@ -224,6 +224,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					running = False
 		if winner_found:
 			show_solution()
+			pygame.display.flip()
 
 		while initialize:
 			for event in pygame.event.get():
