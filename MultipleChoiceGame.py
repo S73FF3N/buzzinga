@@ -334,6 +334,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.display.flip()
 
                     if buttonpressed == K_RETURN and not show_solution_var:
+                        print("show_solution_var: ", show_solution_var)
                         for n in range(1, players):
                             if player_answers[1] == random_val["solution"]:
                                 player_score_container = pygame.Rect(
@@ -348,7 +349,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 points_reached()
                                 if winner_found == True:
                                     show_winner()
-                                reset = True
+                        reset = True
 
                     # After buzzer was pressed, referee shows solution and decides if answer was right or wrong
                     if buttonpressed == K_RETURN and reset:
