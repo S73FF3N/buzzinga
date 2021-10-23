@@ -93,7 +93,12 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     amount_of_content = len(content_dict)
 
     global winner_found
+    global player1_locked
+    global player2_locked
+    global player3_locked
+    global player4_locked
     winner_found = False
+    player1_locked = player2_locked = player3_locked = player4_locked = False
 
     # randomly chosing content from content dictionary and updating solution label
     sound_channel = pygame.mixer.Channel(0)
@@ -104,10 +109,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         global random_val
         global winner_found
         global solution_dict
-        global player1_locked
-        global player2_locked
-        global player3_locked
-        global player4_locked
         global player_answers
         try:
             random_key = random.choice(list(content_dict.keys()))
@@ -116,10 +117,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         except:
             winner_found = True
         if not winner_found:
-            player1_locked = False
-            player2_locked = False
-            player3_locked = False
-            player4_locked = False
+            player1_locked = player2_locked = player3_locked = player4_locked = False
             player_answers = {1:False, 2:False, 3:False, 4:False}
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
