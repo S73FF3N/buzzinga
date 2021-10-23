@@ -82,7 +82,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         data = json.load(json_file)
     for q in data:
         content_dict[q["fields"]["quiz_question"]] = {'solution': q["fields"]["solution"], 'option1': q["fields"]["option1"], 'option2': q["fields"]["option2"], 'option3': q["fields"]["option3"]}
-    print(content_dict)
 
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
