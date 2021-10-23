@@ -2,6 +2,7 @@
 
 import os, pygame, random
 from pygame.locals import *
+from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
 from game_utilities import convert_image_to, load_image
 from static import Static
 
@@ -143,7 +144,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		else:
 			random_sound = pygame.mixer.Sound(random_val)
 			sound_channel.play(random_sound)
-			if winner_found == False:
+			if not winner_found:
 				pygame.draw.rect(screen, Static.WHITE, solution_container)
 			"""else:
 				show_winner()"""
@@ -176,13 +177,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			if time_left != 0:
 				pygame.draw.rect(screen, Static.WHITE, countdown_container)
 				pygame.display.flip()
-		if game_sounds == True:
+		if game_sounds:
 			countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
 			game_sound_channel.play(countdown_sound)
 
 	def points_reached():
 		global winner_found
-		if game_modus == False:
+		if not game_modus:
 			if points_to_win == max(playerScore):
 				winner_found = True
 
@@ -293,7 +294,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		            # now go to the reset code
 		
 		# loop waiting until the 'button' are reset
-		waitReset=0
+		waitReset = 0
 		
 		while waitReset == 0:
 			for event in pygame.event.get():
@@ -336,7 +337,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + n*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
 							pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
 						first=0
-						waitReset=1
+						waitReset = 1
 						pygame.display.flip()
 						show_solution_var = 0
 
