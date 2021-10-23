@@ -102,8 +102,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     global winner_found
     global solution_dict
     global player_answers
-    winner_found = False
-    player1_locked = player2_locked = player3_locked = player4_locked = False
+    winner_found = player1_locked = player2_locked = player3_locked = player4_locked = False
 
     # randomly chosing content from content dictionary and updating solution label
     sound_channel = pygame.mixer.Channel(0)
@@ -278,6 +277,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
                     if buttonpressed in player1Keys and not player1_locked:
                         player1_locked = True
+                        print("player1_locked: ", player1_locked)
                         player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                     game_label_container_height + player_label_container_height + 0 * player_container_height),
@@ -286,6 +286,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
                         player2_locked = True
+                        print("player2_locked: ", player2_locked)
                         player_answers[2] = solution_dict[buttonpressed-5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 1 * player_container_height),
@@ -294,6 +295,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player3Keys and not player3_locked:
                         player3_locked = True
+                        print("player3_locked: ", player3_locked)
                         player_answers[3] = solution_dict[buttonpressed - 10]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 2 * player_container_height),
@@ -302,6 +304,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player4Keys and not player4_locked:
                         player4_locked = True
+                        print("player4_locked: ", player4_locked)
                         player_answers[4] = solution_dict[buttonpressed - 15]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 3 * player_container_height),
