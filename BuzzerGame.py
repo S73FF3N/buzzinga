@@ -147,6 +147,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	def show_winner():
 		pygame.draw.rect(screen, Static.WHITE, picture_container)
 		pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
+		pygame.draw.rect(screen, Static.WHITE, solution_container)
 		winner_ix = [i for i,x in enumerate(playerScore) if x==max(playerScore)]
 		winners = [scorefont.render("Gewinner:", 1, Static.RED)]
 		[winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
