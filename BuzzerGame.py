@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os, pygame, random
-from pygame.locals import *
-from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_r, K_f
+import os, pygame, random, sys
+#from pygame.locals import *
+#from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_r, K_f, K_F4, K_LALT, K_RALT
 from game_utilities import convert_image_to, load_image
 from static import Static
 
@@ -15,7 +15,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	playerScore = [0]*players
 	# key definitions
 	playerKeys = [0, 5, 10, 15]
-	answer = [K_r, K_f]
+	answer = [pygame.K_r, pygame.K_f]
 
 	# Set the fonts for the textf
 	myfont = pygame.font.SysFont("Ariel", 50)
@@ -215,22 +215,22 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	while running:
 		pressed_keys = pygame.key.get_pressed()
 		for event in pygame.event.get():
-			alt_f4 = (event.type == KEYDOWN and (
-					event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+			alt_f4 = (event.type == pygame.KEYDOWN and (
+					event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
 			if alt_f4:
 				sys.exit()
 			if event.type == pygame.KEYDOWN:
-				if event.key == K_ESCAPE:
+				if event.key == pygame.K_ESCAPE:
 					running = False
 		while initialize:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
-					if event.key == K_ESCAPE:
+					if event.key == pygame.K_ESCAPE:
 						if game_type == "sounds":
 							sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						running = False
-					if event.key == K_RETURN:
+					if event.key == pygame.K_RETURN:
 						if game_type == "images":
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
@@ -248,12 +248,12 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		while not first and not winner_found:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
-					if event.key == K_ESCAPE:
+					if event.key == pygame.K_ESCAPE:
 						if game_type == "sounds":
 							sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						running = False
-					if event.key == K_RETURN:
+					if event.key == pygame.K_RETURN:
 						first = True
 						try:
 							show_solution_var = 1
@@ -288,7 +288,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		
 		while not waitReset and not winner_found:
 			for event in pygame.event.get():
-				if event.type == pygame.KEYDOWN and event.key == K_ESCAPE:
+				if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 					if game_type == "sounds":
 						sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
@@ -299,22 +299,20 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					keypressed = event.key
 					# Check if Key Pressed to increase score
 					if keypressed in answer:
-						try:
-							player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_score_container_width, player_score_container_height)
-							pygame.draw.rect(screen, Static.WHITE, player_score_container)
-							if keypressed == answer[0]:
-								playerScore[first_buzz] = playerScore[first_buzz] + 1
-							if keypressed == answer[1]:
-								playerScore[first_buzz] = playerScore[first_buzz] - 1
-							player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
-							screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-							pygame.display.flip()
-							points_reached()
-							if winner_found:
-								show_winner()
-							else:
-								pass
-					if keypressed == K_RETURN and show_solution_var == 2:
+						player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_score_container_width, player_score_container_height)
+						pygame.draw.rect(screen, Static.WHITE, player_score_container)
+						if keypressed == answer[0]:
+							playerScore[first_buzz] = playerScore[first_buzz] + 1
+						if keypressed == answer[1]:
+							playerScore[first_buzz] = playerScore[first_buzz] - 1
+						player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
+						screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+						pygame.display.flip()
+						points_reached()
+						if winner_found:
+							show_winner()
+
+					if keypressed == pygame.K_RETURN and show_solution_var == 2:
 						if game_type == "sounds":
 							sound_channel.stop()
 						pygame.draw.rect(screen, Static.WHITE, solution_container)
@@ -329,16 +327,15 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						show_solution_var = 0
 
 					# solution is shown
-					if keypressed == K_RETURN and show_solution_var == 1:
-						try:
-							if game_type == "sounds":
-								sound_channel.unpause()
-							pygame.draw.rect(screen, Static.WHITE, solution_container)
-							show_solution()
+					if keypressed == pygame.K_RETURN and show_solution_var == 1:
+						if game_type == "sounds":
+							sound_channel.unpause()
+						pygame.draw.rect(screen, Static.WHITE, solution_container)
+						show_solution()
 						pygame.display.flip()
 						show_solution_var = 2
 
-					if keypressed == K_RETURN and show_solution_var == 0:
+					if keypressed == pygame.K_RETURN and show_solution_var == 0:
 						pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
 						nr += 1
 						progress = myfont.render(str(nr)+"/"+str(amount_of_content), 1, Static.RED)
