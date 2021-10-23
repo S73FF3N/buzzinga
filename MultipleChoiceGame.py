@@ -136,22 +136,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             pygame.draw.rect(screen, Static.BLUE, option1_container)
             pygame.draw.rect(screen, Static.RED, option1_container, 10)
             option1 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[1] = options[0]
+            solution_dict[4] = options[0]
             del options[0]
             pygame.draw.rect(screen, Static.ORANGE, option2_container)
             pygame.draw.rect(screen, Static.RED, option2_container, 10)
             option2 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[2] = options[0]
+            solution_dict[3] = options[0]
             del options[0]
             pygame.draw.rect(screen, Static.GREEN, option3_container)
             pygame.draw.rect(screen, Static.RED, option3_container, 10)
             option3 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[3] = options[0]
+            solution_dict[2] = options[0]
             del options[0]
             pygame.draw.rect(screen, Static.YELLOW, option4_container)
             pygame.draw.rect(screen, Static.RED, option4_container, 10)
             option4 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[4] = options[0]
+            solution_dict[1] = options[0]
             screen.blit(option1, option1.get_rect(center=option1_container.center))
             screen.blit(option2, option2.get_rect(center=option2_container.center))
             screen.blit(option3, option3.get_rect(center=option3_container.center))
