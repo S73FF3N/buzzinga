@@ -175,11 +175,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 	def points_reached():
 		global winner_found
-		print("game_modus: ", game_modus)
 		if not game_modus:
 			if points_to_win == max(playerScore):
 				winner_found = True
-		print("winner_found: ", winner_found)
 
 	screen.fill(Static.WHITE)
 	pygame.display.set_caption(game_name)
@@ -209,7 +207,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	pygame.display.flip()
 	
 	first = False # used to signify the first key pressed and stops other being used
-	#waitReset = True # Reset section for the while loop
 	show_solution_var = 1
 	initialize = True
 
@@ -225,6 +222,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.key == pygame.K_ESCAPE:
 					os.chdir("/home/pi/Desktop/venv/mycode/")
 					running = False
+		if winner_found:
+			show_solution()
+
 		while initialize:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
@@ -287,7 +287,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					# a 'buzzer' was pressed and shown on screen
 				# now go to the reset code
 		# loop waiting until the 'button' are reset
-		#waitReset = False
 		
 		while first and not winner_found:
 			for event in pygame.event.get():
@@ -325,7 +324,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + n*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
 							pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
 						first = False
-						#waitReset = True
 						pygame.display.flip()
 						show_solution_var = 0
 
