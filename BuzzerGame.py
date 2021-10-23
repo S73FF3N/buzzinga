@@ -175,9 +175,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 	def points_reached():
 		global winner_found
+		print("game_modus: ", game_modus)
 		if not game_modus:
 			if points_to_win == max(playerScore):
 				winner_found = True
+		print("winner_found: ", winner_found)
 
 	screen.fill(Static.WHITE)
 	pygame.display.set_caption(game_name)
