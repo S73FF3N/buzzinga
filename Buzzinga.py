@@ -160,7 +160,7 @@ def start_screen(update_status=""):
                 for event in pygame.event.get():
                         if event.type == KEYDOWN:
                                 if event.key == K_u:
-                                        update_status = subprocess.run("python3 update_buzzinga.py".split())
+                                        update_status = subprocess.check_output("python3 update_buzzinga.py".split())
                                         print(update_status)
                                         start_screen(update_status=update_status)
                                 else:
