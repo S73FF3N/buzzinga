@@ -146,7 +146,7 @@ def start_screen_setup(update_status=""):
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 4), int((SCREEN_WIDTH / 4) * rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 3))))
         text_surf, text_rect = text_objects('Press any key or <u> to update Buzzinga', SMALL_TEXT)
-        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*9))
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*7))
         SCREEN.blit(text_surf, text_rect)
         print(update_status, type(update_status))
         update_status = b'update_status'
