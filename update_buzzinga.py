@@ -17,4 +17,4 @@ def run_update_buzzinga():
 
 
 if __name__ == '__main__':
-	print(run_update_buzzinga())
+	run_update_buzzinga()

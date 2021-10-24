@@ -169,7 +169,6 @@ def start_screen(update_status=""):
                         if event.type == KEYDOWN:
                                 if event.key == K_u:
                                         update_status = subprocess.check_output("python3 update_buzzinga.py".split())
-                                        #print(update_status)
                                         start_screen(update_status=update_status)
                                 else:
                                         players_names_menu()
