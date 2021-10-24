@@ -348,8 +348,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                                 points_reached()
-                                #if winner_found:
-                                 #   show_winner()
                         solution_shown = "Reset"
                         pygame.display.flip()
 
