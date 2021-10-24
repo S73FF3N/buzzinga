@@ -155,6 +155,7 @@ def start_screen_setup(update_status=""):
         update_status = update_status.split("\n")
         if update_status[-1] == "None":
                 update_status = update_status[:-1]
+        # everything works
         line = 0
         for l in update_status:
                 text_surf, text_rect = text_objects(l, MINI_TEXT)
