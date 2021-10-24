@@ -4,7 +4,7 @@ import os, pygame, sys
 import subprocess
 from game_utilities import load_image
 from pygame.locals import *
-from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE
+from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_u
 from BuzzerGame import buzzer_game
 from MultipleChoiceGame import multiple_choice_game
 from static import Static
@@ -159,7 +159,7 @@ def start_screen(update_status=""):
         while running:
                 for event in pygame.event.get():
                         if event.type == KEYDOWN:
-                                if event.key == pygame.K_u:
+                                if event.key == K_u:
                                         update_status = subprocess.check_output("update_buzzinga.py")
                                         start_screen(update_status=update_status)
                                 else:
