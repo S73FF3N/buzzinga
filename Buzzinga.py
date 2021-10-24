@@ -137,15 +137,31 @@ def print_player_name(x, playerName):
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
-def players_names_menu_setup():
-        show_mouse()
+def start_screen_setup():
         SCREEN.fill(Static.WHITE)
-        """logo = "BuzzingaLogo.bmp"
+        logo = "BuzzingaLogo.bmp"
         picture = load_image(logo, 'images')
         picture_size = picture.get_rect().size
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
-        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))"""
+        SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
+        text_surf, text_rect = text_objects('Press any key', MEDIUM_TEXT)
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10))
+        SCREEN.blit(text_surf, text_rect)
+        pygame.display.update()
+
+def start_screen():
+        start_screen_setup()
+        running = True
+        while running:
+                for event in pygame.event.get():
+                        if event.type == KEYDOWN:
+                                players_names_menu()
+
+
+def players_names_menu_setup():
+        show_mouse()
+        SCREEN.fill(Static.WHITE)
         text_surf, text_rect = text_objects('W E R  S P I E L T  M I T ?', MEDIUM_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 4))
         SCREEN.blit(text_surf, text_rect)
@@ -567,4 +583,4 @@ if __name__ == "__main__":
         pygame.display.set_caption('BUZZINGA')
         clock = pygame.time.Clock()
 
-        players_names_menu()
+        start_screen()
