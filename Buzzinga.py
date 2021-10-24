@@ -137,7 +137,7 @@ def print_player_name(x, playerName):
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
-def start_screen_setup():
+def start_screen_setup(update_status=""):
         SCREEN.fill(Static.WHITE)
         logo = "BuzzingaLogo.bmp"
         picture = load_image(logo, 'images')
@@ -145,18 +145,26 @@ def start_screen_setup():
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 5.5), int((SCREEN_WIDTH / 5.5) * rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 5))))
-        text_surf, text_rect = text_objects('Press any key', MEDIUM_TEXT)
-        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10))
+        text_surf, text_rect = text_objects('Press any key or <q> to update Buzzinga', MEDIUM_TEXT)
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*8))
+        SCREEN.blit(text_surf, text_rect)
+        text_surf, text_rect = text_objects(update_status, SMALL_TEXT)
+        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*9))
         SCREEN.blit(text_surf, text_rect)
         pygame.display.update()
 
-def start_screen():
+def start_screen(update_status=""):
         start_screen_setup()
         running = True
         while running:
                 for event in pygame.event.get():
                         if event.type == KEYDOWN:
-                                players_names_menu()
+                                if event.key == pygame.K_u:
+                                        update_status = subprocess.check_output("update_buzzinga.py")
+                                        start_screen(update_status=update_status)
+                                else:
+                                        players_names_menu()
+                pygame.display.update()
 
 
 def players_names_menu_setup():

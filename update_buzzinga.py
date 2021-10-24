@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: latin-1 -*-
+
+import subprocess
+import time
+import os
+
+time_consumed = 0
+
+def update_buzzinga():
+    try:
+        os.chdir("/home/pi/Desktop/venv/mycode/")
+        os.system("git pull origin v300")
+        return "Update erfolgreich."
+    except:
+        return "Update nicht erfolgreich."
+
+
+if __name__ == '__main__':
+	print(update_buzzinga())
