@@ -149,13 +149,12 @@ def start_screen_setup(update_status=""):
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*7))
         SCREEN.blit(text_surf, text_rect)
         print(update_status, type(update_status))
-        try:
+        if not type(update_status) == str:
                 update_status = str(update_status, "utf-8")
                 print(update_status, type(update_status))
-        except:
-                pass
         update_status = update_status.split("\n")
-        print(update_status, type(update_status))
+        if update_status[-1] == "None":
+                update_status = update_status[:-1]
         line = 0
         for l in update_status:
                 text_surf, text_rect = text_objects(l, MINI_TEXT)
