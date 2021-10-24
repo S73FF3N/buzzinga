@@ -151,7 +151,6 @@ def start_screen_setup(update_status=""):
         print(update_status, type(update_status))
         if not type(update_status) == str:
                 update_status = str(update_status, "utf-8")
-                print(update_status, type(update_status))
         update_status = update_status.split("\n")
         if update_status[-2] == "None":
                 update_status = update_status[:-2]
