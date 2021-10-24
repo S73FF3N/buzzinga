@@ -154,7 +154,7 @@ def start_screen_setup(update_status=""):
         pygame.display.update()
 
 def start_screen(update_status=""):
-        start_screen_setup()
+        start_screen_setup(update_status=update_status)
         running = True
         while running:
                 for event in pygame.event.get():
