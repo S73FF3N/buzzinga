@@ -326,6 +326,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         solution_shown = "Done"
                         pygame.display.flip()
 
+            #solution has been displayed
             while solution_shown == "Done":
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
