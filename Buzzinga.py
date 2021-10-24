@@ -160,7 +160,7 @@ def start_screen_setup(update_status=""):
                 SCREEN.blit(text_surf, text_rect)
                 line += 0.1
         pygame.display.update()
-#test
+
 def start_screen(update_status=""):
         start_screen_setup(update_status=update_status)
         running = True
