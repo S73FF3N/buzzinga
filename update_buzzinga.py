@@ -11,7 +11,7 @@ def run_update_buzzinga():
     try:
         os.chdir("/home/pi/Desktop/venv/mycode/")
         os.system("git pull origin v300")
-        return "Update erfolgreich."
+        return ""
     except:
         return "Update nicht erfolgreich."
 
