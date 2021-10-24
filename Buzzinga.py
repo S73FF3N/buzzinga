@@ -148,14 +148,14 @@ def start_screen_setup(update_status=""):
         text_surf, text_rect = text_objects('Press any key or <u> to update Buzzinga', SMALL_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*9))
         SCREEN.blit(text_surf, text_rect)
-        update_status = update_status.split(b'\n')
-        print(update_status)
-        line = 0
-        for l in update_status:
-                text_surf, text_rect = text_objects(l, MINI_TEXT)
-                text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*(8+line)))
-                SCREEN.blit(text_surf, text_rect)
-                line += 0.4
+        #update_status = update_status.split(b'\n')
+        print(update_status, type(update_status))
+        #line = 0
+        #for l in update_status:
+        #        text_surf, text_rect = text_objects(l, MINI_TEXT)
+        #        text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*(8+line)))
+        #        SCREEN.blit(text_surf, text_rect)
+        #        line += 0.4
         pygame.display.update()
 
 def start_screen(update_status=""):
