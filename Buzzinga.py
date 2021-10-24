@@ -152,7 +152,7 @@ def start_screen_setup(update_status=""):
         print(update_status)
         line = 0
         for l in update_status:
-                text_surf, text_rect = text_objects(update_status, MINI_TEXT)
+                text_surf, text_rect = text_objects(l, MINI_TEXT)
                 text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*(8+line)))
                 SCREEN.blit(text_surf, text_rect)
                 line += 0.4
