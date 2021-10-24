@@ -7,7 +7,7 @@ import os
 
 time_consumed = 0
 
-def update_buzzinga():
+def run_update_buzzinga():
     try:
         os.chdir("/home/pi/Desktop/venv/mycode/")
         os.system("git pull origin v300")
@@ -17,4 +17,4 @@ def update_buzzinga():
 
 
 if __name__ == '__main__':
-	print(update_buzzinga())
+	print(run_update_buzzinga())

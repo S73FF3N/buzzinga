@@ -145,7 +145,7 @@ def start_screen_setup(update_status=""):
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 4), int((SCREEN_WIDTH / 4) * rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 3))))
-        text_surf, text_rect = text_objects('Press any key or <q> to update Buzzinga', SMALL_TEXT)
+        text_surf, text_rect = text_objects('Press any key or <u> to update Buzzinga', SMALL_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*8))
         SCREEN.blit(text_surf, text_rect)
         text_surf, text_rect = text_objects(update_status, SMALL_TEXT)
@@ -160,7 +160,7 @@ def start_screen(update_status=""):
                 for event in pygame.event.get():
                         if event.type == KEYDOWN:
                                 if event.key == K_u:
-                                        update_status = subprocess.check_output("update_buzzinga.py")
+                                        update_status = subprocess.check_output("python3 update_buzzinga.py".split())
                                         start_screen(update_status=update_status)
                                 else:
                                         players_names_menu()
