@@ -32,7 +32,7 @@ def convert_image_to(image_file, im_format):
         try:
             img = Image.open(image_file)
         except:
-            print("Could not open {} .".format(img))
+            print("Could not open {}".format(img))
             return
         file_out = str(image_file[0:-4])+"."+im_format
         if len(img.split()) == 4:
