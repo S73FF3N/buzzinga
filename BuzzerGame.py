@@ -49,8 +49,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	player_score_container_height = player_container_height/10*7
 	
 	# define picture format
-	picture_width = picture_container_width/10*9
-	picture_length = picture_container_height/10*9
+	picture_width = int(picture_container_width/10*9)
+	picture_length = int(picture_container_height/10*9)
 	
 	# text displayed at the beginning
 	game_name = os.path.basename(os.path.dirname(content_dir))
@@ -69,10 +69,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	content_dict = {}
 	
 	def build_content_dict(content):
-		base=os.path.basename(content_dir+content)
-		name_o=os.path.splitext(base)[0]
-		name=name_o.replace("_"," ")
-		content_dict[name] = content_dir+content
+		if not file_in.lower().endswith(('.bmp', '.wav')):
+			print("{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(content))
+		else:
+			base=os.path.basename(content_dir+content)
+			name_o=os.path.splitext(base)[0]
+			name=name_o.replace("_"," ")
+			content_dict[name] = content_dir+content
 
 	#loading info
 	loading = myfont.render("loading...", 1, Static.RED)
@@ -82,17 +85,19 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 	for file_in in content_list:
 		if os.path.isdir(file_in):
-			continue
+			print("{} is a directory.".format(file_in))
+		if file_in.startswith("."):
+			print("{} starts with '.'. That's not allowed.".format(file_in))
 		elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
-			try:
-				if image_game == True:
+			if image_game == True:
+				try:
 					# images in image directory are converted into .bmp
 					file_in = convert_image_to(file_in, "bmp")
-				build_content_dict(file_in)
-			except:
-				continue
+				except:
+					print("{} could not be converted to .bmp format.".format(file_in))
+			build_content_dict(file_in)
 		else:
-			continue
+			print("{} has no suitable format.".format(file_in))
 
 	amount_of_content = len(content_dict)
 
@@ -107,7 +112,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		global random_val
 		global winner_found
 		try:
-			random_key = random.choice(content_dict.keys())
+			random_key = random.choice(list(content_dict.keys()))
 			random_val = content_dict[random_key]
 			del content_dict[random_key]
 		except:
@@ -136,6 +141,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			sound_channel.play(random_sound)
 			if winner_found == False:
 				pygame.draw.rect(screen, Static.WHITE, solution_container)
+			"""else:
+				show_winner()"""
 		screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
 		return random_key, winner_found
 
@@ -176,7 +183,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				winner_found = True
 
 	screen.fill(Static.WHITE)
-	pygame.display.set_caption(game_name.encode('utf-8'))
+	pygame.display.set_caption(game_name)
 	
 	# Created Variable for the text on the screen
 	#picture = pygame.transform.scale(picture, (picture_width, picture_length))
@@ -206,6 +213,12 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	waitReset = 1 # Reset section for the while loop
 	show_solution_var = 1
 	initialize = 1
+
+	def return_to_main_menu():
+		if image_game == False:
+			sound_channel.stop()
+		os.chdir("/home/pi/Desktop/venv/mycode/")
+		return 'Main Menu'
 	
 	while True:
 		while initialize == 1:
@@ -220,8 +233,15 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						if image_game == True:
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
 							pygame.display.flip()
-						random_pick_content()
-						pygame.display.flip()
+						try:
+							random_pick_content()
+							pygame.display.flip()
+						except Exception as e:
+							print(e)
+							if image_game == False:
+								sound_channel.stop()
+							os.chdir("/home/pi/Desktop/venv/mycode/")
+							return 'Main Menu'
 						initialize = 0
 					else:
 						pass
@@ -334,8 +354,14 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							nr += 1
 							progress = myfont.render(str(nr)+"/"+str(amount_of_content), 1, Static.RED)
 							pygame.display.flip()
-							random_pick_content()
-							pygame.display.flip()
+							try:
+								random_pick_content()
+								pygame.display.flip()
+							except:
+								if image_game == False:
+									sound_channel.stop()
+								os.chdir("/home/pi/Desktop/venv/mycode/")
+								return 'Main Menu'
 							show_solution_var = 1
 
 if __name__ == "__main__":

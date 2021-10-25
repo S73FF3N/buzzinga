@@ -1,5 +1,10 @@
-sounds/
-images/
-archive/
-
 *.pyc
+**/.idea
+.idea/
+**/images
+images/
+**/sounds
+sounds/
+.DS_Store
+*.pdf
+*.docx

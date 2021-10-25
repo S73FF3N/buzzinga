@@ -40,7 +40,7 @@ def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Stat
                 image_file = load_image(text, '/home/pi/Desktop/venv/mycode/images')
                 image_size = image_file.get_rect().size
                 rela = image_size[0]/float(image_size[1])
-                image_file = pygame.transform.scale(image_file, (int(h/2*rela), h/2))
+                image_file = pygame.transform.scale(image_file, (int(h/2*rela), int(h/2)))
                 SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x,y,w,h).center))
         return return_value
 
@@ -66,20 +66,20 @@ def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=Tr
         if rect_height % 2 == 0:
                 rect_height += 1
         if enabled and draw_toggle:
-                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + SCREEN_WIDTH/50, y + h/4, TOGGLE_ADJ, rect_height))
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 5, Static.WHITE)
+                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + int(SCREEN_WIDTH/50), y + int(h/4), TOGGLE_ADJ, rect_height))
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + int(h/2), int(h // 5), Static.WHITE)
         elif draw_toggle:
-                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + SCREEN_WIDTH/50, y + h/4, TOGGLE_ADJ, rect_height))
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + h/4 + TOGGLE_ADJ/2), y + h/2, h // 4, enabled_color)
-                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + h/2, h // 5, Static.WHITE)
+                pygame.draw.rect(SCREEN, enabled_color, (x + text_rect.width + int(SCREEN_WIDTH/50), y + int(h/4), TOGGLE_ADJ, rect_height))
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50 + int(h/4) + TOGGLE_ADJ/2), y + int(h/2), int(h // 4), enabled_color)
+                draw_circle(SCREEN, int(x + text_rect.width + SCREEN_WIDTH/50), y + int(h/2), int(h // 5), Static.WHITE)
         if blit_text:
                 text_rect.topleft = (x, int(y + h/4))
                 SCREEN.blit(text_surf, text_rect)
                 text_surf2, text_rect2 = text_objects(text2, SMALL_TEXT, color=text_color)
-                text_rect2.topleft = (x + text_rect.width + SCREEN_WIDTH/25 + h/4 + TOGGLE_ADJ, int(y + h/4))
+                text_rect2.topleft = (x + text_rect.width + int(SCREEN_WIDTH/25) + int(h/4) + TOGGLE_ADJ, int(y + h/4))
                 SCREEN.blit(text_surf2, text_rect2)
         return x < mouse[0] < x + w and y < mouse[1] < y + h and click and pygame.time.get_ticks() > 100
 
@@ -99,6 +99,7 @@ def delete_category(game_dir):
         os.chdir(game_dir)
         for f in os.listdir(game_dir):
                 if not os.path.isdir(game_dir+"/"+f):
+                        #os.chmod(game_dir+"/"+f, 0o777)
                         os.remove(game_dir+"/"+f)
                 else:
                         pass
@@ -116,7 +117,7 @@ def print_player_name(x, playerName):
         image_file = load_image('user.bmp', '/home/pi/Desktop/venv/mycode/images')
         image_size = image_file.get_rect().size
         rela = image_size[0]/float(image_size[1])
-        image_file = pygame.transform.scale(image_file, (int(h/2*rela), h/2))
+        image_file = pygame.transform.scale(image_file, (int(h/2*rela), int(h/2)))
         SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x-w/4,y,w/4,h).center))
         text_surf, text_rect = text_objects(playerName, SMALL_TEXT, Static.RED)
         text_rect.center = (int(x +w/2), int(y + h/2))
@@ -150,7 +151,7 @@ def choose_game(import_status=""):
         def build_category_buttons_dict():
                 global game_folder
                 if config['images'] == True:
-                        game_folder = "/home/pi/Desktop/SdR/Bilder/"               
+                        game_folder = "/home/pi/Desktop/SdR/Bilder/"
                 else:
                         game_folder = "/home/pi/Desktop/SdR/Audio/"
                 global pages
@@ -163,7 +164,7 @@ def choose_game(import_status=""):
                 page_nr = 1
                 for folder in os.listdir(game_folder):
                         x, y, w, h = button_layout_28[int(game_nr-1)]
-                        buttons['page '+str(page_nr)].append([unicode(folder, "utf-8"), x, y, w, h])
+                        buttons['page '+str(page_nr)].append([folder, x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
@@ -343,13 +344,12 @@ def main_menu():
         playerNameInputsActive = [False, False, False, False]
         while True:
                 click = False
+                pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
                         alt_f4 = (event.type == KEYDOWN and (event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
                         if alt_f4:
                                 sys.exit()
                         if event.type == KEYDOWN:
-                                #if event.key == K_ESCAPE:
-                                #        sys.exit()
                                 if event.key == K_BACKSPACE:
                                         try:
                                                 active = [i for i, x in enumerate(playerNameInputsActive) if x==True]
