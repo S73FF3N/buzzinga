@@ -171,7 +171,9 @@ def start_screen(update_status=""):
                                         update_status = subprocess.check_output("python3 update_buzzinga.py".split())
                                         start_screen(update_status=update_status)
                                 if event.key == pygame.K_w:
-                                        subprocess.run("python3 wifi_settings.py".split())
+                                        sys.exit()
+                                        os.system("sudo raspi-config")
+                                        #subprocess.run("python3 wifi_settings.py".split())
                                 else:
                                         players_names_menu()
                 pygame.display.update()
