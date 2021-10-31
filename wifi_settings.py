@@ -3,8 +3,8 @@ import os, sys
 
 def run_wifi_settings():
     try:
-        sys.exit()
         os.system("sudo raspi-config")
+        sys.exit()
         return
     except:
         return "Wifi Settings nicht erreichbar."
