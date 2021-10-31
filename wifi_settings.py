@@ -3,6 +3,7 @@ import os, sys
 
 def run_wifi_settings():
     try:
+        running = False
         os.system("sudo raspi-config")
         sys.exit()
         return
