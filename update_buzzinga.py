@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: latin-1 -*-
-
-import subprocess
-import time
 import os
-
-time_consumed = 0
 
 def run_update_buzzinga():
     try:

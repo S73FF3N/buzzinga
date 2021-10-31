@@ -3,8 +3,8 @@
 import os, pygame, sys
 import subprocess
 from game_utilities import load_image
-from pygame.locals import *
-from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_u
+#from pygame.locals import *
+#from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_u, K_w
 from BuzzerGame import buzzer_game
 from MultipleChoiceGame import multiple_choice_game
 from static import Static
@@ -37,7 +37,7 @@ def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Stat
                         return_value = True
         else:
                 pygame.draw.rect(SCREEN, inactive_color, (x,y,w,h))
-        if image == False:
+        if not image:
                 text_surf, text_rect = text_objects(text, SMALL_TEXT, color=text_color)
                 text_rect.center = (int(x +w/2), int(y + h/2))
                 SCREEN.blit(text_surf, text_rect)
@@ -61,8 +61,8 @@ def player_name_input(x, y, w, h, click, inactive_color=Static.RED, active_color
         return return_value
 
 def draw_circle(surface, x, y, radius, color):
-        gfxdraw.aacircle(surface, x, y, radius, color)
-        gfxdraw.filled_circle(surface, x, y, radius, color)
+        pygame.gfxdraw.aacircle(surface, x, y, radius, color)
+        pygame.gfxdraw.filled_circle(surface, x, y, radius, color)
 
 def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=True, draw_toggle=True, blit_text=True, enabled_color=Static.LIGHT_RED):
         mouse = pygame.mouse.get_pos()
@@ -145,7 +145,7 @@ def start_screen_setup(update_status=""):
         rela = picture_size[0] / picture_size[0]
         picture = pygame.transform.scale(picture, (int(SCREEN_WIDTH / 4), int((SCREEN_WIDTH / 4) * rela)))
         SCREEN.blit(picture, picture.get_rect(center=(int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 3))))
-        text_surf, text_rect = text_objects('Press any key or <u> to update Buzzinga', SMALL_TEXT)
+        text_surf, text_rect = text_objects('Drücke eine beliebige Taste, <u> für ein Update oder <w> für die WLAN-Einstellungen', SMALL_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 2), int(SCREEN_HEIGHT / 10*7))
         SCREEN.blit(text_surf, text_rect)
         if not type(update_status) == str:
@@ -166,10 +166,12 @@ def start_screen(update_status=""):
         running = True
         while running:
                 for event in pygame.event.get():
-                        if event.type == KEYDOWN:
-                                if event.key == K_u:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_u:
                                         update_status = subprocess.check_output("python3 update_buzzinga.py".split())
                                         start_screen(update_status=update_status)
+                                if event.key == pygame.K_w:
+                                        subprocess.run("python3 wifi_settings.py")
                                 else:
                                         players_names_menu()
                 pygame.display.update()
@@ -189,16 +191,17 @@ def players_names_menu():
         players_names_menu_setup()
         playerNameInputsActive = [False, False, False, False]
         running = True
+        pressed_keys = pygame.key.get_pressed()
         while running:
                 click = False
                 pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                        event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_BACKSPACE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_BACKSPACE:
                                         try:
                                                 active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
                                                 config['playerNames'][active[0]] = config['playerNames'][active[0]][:-1]
@@ -212,7 +215,7 @@ def players_names_menu():
                                                 print_player_name(active[0], config['playerNames'][active[0]])
                                         except:
                                                 pass
-                        elif event.type == MOUSEBUTTONDOWN:
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
                 x1, y1, w1, h1 = button_layout_28[7]
                 x2, y2, w2, h2 = button_layout_28[8]
@@ -256,14 +259,15 @@ def choose_game_menu_setup():
 def choose_game_menu():
         choose_game_menu_setup()
         choose_game_menu_running = True
+        pressed_keys = pygame.key.get_pressed()
         while choose_game_menu_running:
                 click = False
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                        event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == MOUSEBUTTONDOWN:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
 
                 x2, y2, w2, h2 = button_layout_28[7]
@@ -350,18 +354,19 @@ def choose_category(import_status=""):
         choose_category_menu = True
         game_options = []
         page_counter = 1
+        pressed_keys = pygame.key.get_pressed()
         while choose_category_menu:
                 click = False
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_ESCAPE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
                                         delete_modus = False
                                         choose_game_menu_running = False
-                        elif event.type == MOUSEBUTTONDOWN:
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
                 if page_counter <= pages:
                         for game in buttons['page ' + str(page_counter)]:
@@ -380,7 +385,7 @@ def choose_category(import_status=""):
                                                 [game[0], button(game[0], game[1], game[2], game[3], game[4], click),
                                                  game[1], game[2], game[3], game[4]])
                 x, y, w, h = button_layout_28[25]
-                if delete_modus == False:
+                if not delete_modus:
                         if button('delete.bmp', x, y, w / 3, h, click, inactive_color=Static.ORANGE, image=True):
                                 categories_to_delete = []
                                 delete_modus = True
@@ -419,8 +424,8 @@ def choose_category(import_status=""):
                         choose_category_menu = False
                         choose_game_menu()
                 for game_option in game_options:
-                        if game_option[1] == True:
-                                if delete_modus == False:
+                        if game_option[1]:
+                                if not delete_modus:
                                         # category has been chosen and settings menu opens
                                         config['game choosen'] = True
                                         # differentiate between images & Sounds and json; done
@@ -474,18 +479,19 @@ def settings_menu():
 
         settings_menu_setup()
         settings_menu_running = True
-        start_game = False#view_choose_game =
+        start_game = False
+        pressed_keys = pygame.key.get_pressed()
         while settings_menu_running:
                 click = False
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_ESCAPE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
                                         settings_menu_running = False
-                        if event.type == MOUSEBUTTONDOWN:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
 
                 x2, y2, w2, h2 = button_layout_28[8]
@@ -500,7 +506,7 @@ def settings_menu():
                 if toggle_btn('Punkte', 'Alle Dateien', x8, y8, w8, h8, click, enabled=config['game modus']):
                         config['game modus'] = not config['game modus']
                         draw_bg_toggle = True
-                if config['game modus'] == False:
+                if not config['game modus']:
                         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x9,y9,w9/2,h9))
                         text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                         text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
@@ -518,7 +524,7 @@ def settings_menu():
                                         text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                                         text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
                                         SCREEN.blit(text_surf, text_rect)
-                if config['game modus'] == True:
+                if config['game modus']:
                         pygame.draw.rect(SCREEN, Static.WHITE, (x9,y9,w9,h9))
                 if button(u'Spiel starten', x10, y10, w10, h10, click):
                         try:
@@ -555,7 +561,7 @@ if __name__ == "__main__":
         pygame.init()
 
         SCREEN_WIDTH, SCREEN_HEIGHT = int(pygame.display.Info().current_w), int(pygame.display.Info().current_h)
-        SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN)
+        SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 
         BUTTON_WIDTH = int(SCREEN_WIDTH * 0.625 // 3)
         BUTTON_HEIGHT = int(SCREEN_HEIGHT * 5 // 81)
