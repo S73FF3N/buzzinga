@@ -7,7 +7,7 @@ def run_wifi_settings():
         os.system("sudo raspi-config")
         return
     except:
-        return "Update nicht erfolgreich."
+        return "Wifi Settings nicht erreichbar."
 
 
 if __name__ == '__main__':
