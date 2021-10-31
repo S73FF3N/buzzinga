@@ -340,6 +340,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if buttonpressed == pygame.K_RETURN:
                         for n in range(1, players+1):
                             if player_answers[n] == random_val["solution"]:
+                                player_buzzer_container = pygame.Rect(picture_container_width, (
+                                        game_label_container_height + player_label_container_height + (n-1) * player_container_height),
+                                                                      player_buzzer_container_width,
+                                                                      player_buzzer_container_height)
+                                pygame.draw.rect(screen, Static.GREEN, player_buzzer_container)
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
                                                 game_label_container_height + player_label_container_height + (n-1) * player_container_height),
