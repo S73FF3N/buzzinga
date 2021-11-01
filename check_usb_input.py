@@ -4,19 +4,16 @@
 import subprocess
 import time
 import os
-import sys
+
 
 def get_mountedlist():
 	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
-done = []
-files_imported = False
-time_consumed = 0
 
-def usb_input_check(done, images_imported, time_consumed):
+def usb_input_check(done=[], files_imported=False, time_consumed=0):
 	while True:
 		mounted = get_mountedlist()
-		newly_mounted = [dev for dev in mounted if not dev in done]
+		newly_mounted = [dev for dev in mounted if dev not in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 
 		# get files from usb and copy them to raspberry
@@ -26,22 +23,27 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:  # type: bytes
-						if os.path.isdir(item+b'/Bilder/'+category) == False:
+						c_renamed = category.replace(b' ', b'_')
+						path_old = item + b'/Bilder/' + category
+						path_new = item+b'/Bilder/'+ c_renamed
+						if category != c_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
+						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
-							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
+							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
-						for f in os.listdir(item + b'/Bilder/' + category):
-							file = item + b'/Bilder/' + category + b'/' + f
+						for f in os.listdir(item + b'/Bilder/' + c_renamed):
+							file = item + b'/Bilder/' + c_renamed + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
-							file_renamed = item + b'/Bilder/' + category + b'/' + f_renamed
+							file_renamed = item + b'/Bilder/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
-						for f in os.listdir(item + b'/Bilder/' + category):
-							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
-								file_to_copy = item+b'/Bilder/'+category+b'/'+f
-								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+category+b'/'+f
+						for f in os.listdir(item + b'/Bilder/' + c_renamed):
+							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
+								file_to_copy = item+b'/Bilder/'+c_renamed+b'/'+f
+								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 								os.popen("sudo chmod 777 {}".format(file_to_create.decode('utf-8')))
 					files_imported = True
@@ -49,22 +51,27 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Audio'):
 					categories = os.listdir(item+b'/Audio')
 					for category in categories:
-						if os.path.isdir(item+b'/Audio/'+category) == False:
+						c_renamed = category.replace(b' ', b'_')
+						path_old = item + b'/Bilder/' + category
+						path_new = item + b'/Bilder/' + c_renamed
+						if category != c_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
+						if not os.path.isdir(item+b'/Audio/'+c_renamed):
 							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
-							dir_name = b'/home/pi/Desktop/SdR/Audio/' + category
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+c_renamed):
+							dir_name = b'/home/pi/Desktop/SdR/Audio/' + c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
-						for f in os.listdir(item + b'/Audio/' + category):
+						for f in os.listdir(item + b'/Audio/' + c_renamed):
 							file = item + b'/Audio/' + category + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
-							file_renamed = item + b'/Audio/' + category + b'/' + f_renamed
+							file_renamed = item + b'/Audio/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
-						for f in os.listdir(item+b'/Audio/'+category):
-							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
-								file_to_copy = item+b'/Audio/'+category+b'/'+f
+						for f in os.listdir(item+b'/Audio/'+c_renamed):
+							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+c_renamed+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
+								file_to_copy = item+b'/Audio/'+c_renamed+b'/'+f
 								os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
+								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+c_renamed+b'/'+f
 								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 								os.popen('cp "$file_to_copy" "$file_to_create"')
 								os.popen('sudo chmod 777 "$file_to_create"')
@@ -83,11 +90,13 @@ def usb_input_check(done, images_imported, time_consumed):
 					files_imported = True
 
 			# unmount usb and print message
-			if files_imported == True:
-				os.system("umount item")
+			if files_imported:
+				os.putenv("item", item.decode('utf-8').strip())
+				os.system('sudo umount "$item"')
 				return "Dateien erfolgreich importiert"
 			else:
-				os.system("umount item")
+				os.putenv("item", item.decode('utf-8').strip())
+				os.system('sudo umount "$item"')
 				return "Keine Dateien importiert"
 
 		done = mounted
@@ -95,7 +104,8 @@ def usb_input_check(done, images_imported, time_consumed):
 		time_consumed += 2
 		if time_consumed >= 4:
 			return "keine Dateien importiert"
-			break
+			#break
+
 
 if __name__ == '__main__':
-	print(usb_input_check([], False, 0))
+	usb_input_check(done=[], files_imported=False, time_consumed=0)

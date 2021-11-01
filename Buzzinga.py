@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import os, pygame, sys
+import os, sys
+import pygame
+from pygame import gfxdraw
 import subprocess
 from game_utilities import load_image
-from pygame.locals import *
-from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_u
+#from pygame.locals import *
+#from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_u
 from BuzzerGame import buzzer_game
 from MultipleChoiceGame import multiple_choice_game
 from static import Static
@@ -23,10 +25,12 @@ def game(screen, screenx, screeny):
         elif config['game_type'] == "questions":
                 multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
                             config['game sounds'], config['game modus'], config['points_to_win'])
-	
+
+
 def text_objects(text, font, color=Static.BLACK):
         text_surface = font.render(text, 1, color)
         return text_surface, text_surface.get_rect()
+
 
 def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Static.LIGHT_RED, text_color=Static.WHITE, image=False):
         mouse = pygame.mouse.get_pos()
@@ -166,8 +170,8 @@ def start_screen(update_status=""):
         running = True
         while running:
                 for event in pygame.event.get():
-                        if event.type == KEYDOWN:
-                                if event.key == K_u:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_u:
                                         update_status = subprocess.check_output("python3 update_buzzinga.py".split())
                                         start_screen(update_status=update_status)
                                 else:
@@ -193,12 +197,12 @@ def players_names_menu():
                 click = False
                 pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                        event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_BACKSPACE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_BACKSPACE:
                                         try:
                                                 active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
                                                 config['playerNames'][active[0]] = config['playerNames'][active[0]][:-1]
@@ -212,7 +216,7 @@ def players_names_menu():
                                                 print_player_name(active[0], config['playerNames'][active[0]])
                                         except:
                                                 pass
-                        elif event.type == MOUSEBUTTONDOWN:
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
                 x1, y1, w1, h1 = button_layout_28[7]
                 x2, y2, w2, h2 = button_layout_28[8]
@@ -258,12 +262,13 @@ def choose_game_menu():
         choose_game_menu_running = True
         while choose_game_menu_running:
                 click = False
+                pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                        event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                        event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == MOUSEBUTTONDOWN:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
 
                 x2, y2, w2, h2 = button_layout_28[7]
@@ -299,7 +304,7 @@ def choose_category_setup(import_status="", no_categories=False):
         text_surf, text_rect = text_objects(import_status[:-1], SMALL_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 8), int(SCREEN_HEIGHT / 18 * 17))
         SCREEN.blit(text_surf, text_rect)
-        if no_categories == True:
+        if no_categories:
                 text_surf, text_rect = text_objects('Keine Kategorien vorhanden!', SMALL_TEXT)
                 x, y, w, h = button_layout_28[7]
                 text_rect.center = (int(x + w / 2), int(y + h / 2))
@@ -327,6 +332,7 @@ def choose_category(import_status=""):
                 game_nr = 1
                 page_nr = 1
                 for item in os.listdir(game_folder):
+                        item_renamed = item.replace('_', ' ')
                         x, y, w, h = button_layout_28[int(game_nr - 1)]
                         if item.lower().endswith('.json'):
                                 if item.lower().startswith('.'):
@@ -334,7 +340,7 @@ def choose_category(import_status=""):
                                 else:
                                         buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
                         else:
-                                buttons['page ' + str(page_nr)].append([item, x, y, w, h])
+                                buttons['page ' + str(page_nr)].append([item_renamed, x, y, w, h])
                         game_nr += 1
                         if game_nr == 26:
                                 game_nr = 1
@@ -352,16 +358,17 @@ def choose_category(import_status=""):
         page_counter = 1
         while choose_category_menu:
                 click = False
+                pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_ESCAPE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
                                         delete_modus = False
                                         choose_game_menu_running = False
-                        elif event.type == MOUSEBUTTONDOWN:
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
                 if page_counter <= pages:
                         for game in buttons['page ' + str(page_counter)]:
@@ -380,7 +387,7 @@ def choose_category(import_status=""):
                                                 [game[0], button(game[0], game[1], game[2], game[3], game[4], click),
                                                  game[1], game[2], game[3], game[4]])
                 x, y, w, h = button_layout_28[25]
-                if delete_modus == False:
+                if not delete_modus:
                         if button('delete.bmp', x, y, w / 3, h, click, inactive_color=Static.ORANGE, image=True):
                                 categories_to_delete = []
                                 delete_modus = True
@@ -399,7 +406,7 @@ def choose_category(import_status=""):
                                                 delete_category(game_folder + category, multiple_files=False)
                         categories_to_delete = []
                         delete_modus = False
-                        choose_category_menu = False #test
+                        choose_category_menu = False
                         choose_category()
                 if button('flash-drive.bmp', x + (w / 3) * 2, y, w / 3, h, click, inactive_color=Static.ORANGE,
                           image=True):
@@ -420,17 +427,18 @@ def choose_category(import_status=""):
                         choose_game_menu()
                 for game_option in game_options:
                         if game_option[1] == True:
-                                if delete_modus == False:
+                                if not delete_modus:
                                         # category has been chosen and settings menu opens
                                         config['game choosen'] = True
+                                        category_folder = game_option[0].replace(' ', '_')
                                         # differentiate between images & Sounds and json; done
                                         if config['game_type'] in ["images", "sounds"]:
-                                                config['game dir'] = game_folder + game_option[0] + "/"
+                                                config['game dir'] = game_folder + category_folder + "/"
                                         else:
-                                                config['game dir'] = game_folder + game_option[0] + ".json"
+                                                config['game dir'] = game_folder + category_folder + ".json"
                                         settings_menu()
                                 else:
-                                        # categories to selected are deleted
+                                        # categories to delete ar selected
                                         pygame.draw.rect(SCREEN, Static.ORANGE, (
                                         game_option[2], game_option[3], game_option[4], game_option[5]))
                                         text_surf, text_rect = text_objects(game_option[0], SMALL_TEXT,
@@ -438,12 +446,13 @@ def choose_category(import_status=""):
                                         text_rect.center = (int(game_option[2] + game_option[4] / 2),
                                                             int(game_option[3] + game_option[5] / 2))
                                         SCREEN.blit(text_surf, text_rect)
-                                        if game_option[0] not in categories_to_delete:
+                                        category_folder = game_option[0].replace(' ', '_')
+                                        if category_folder not in categories_to_delete:
                                                 # differentiate between images & Sounds and json
                                                 if config['game_type'] in ["images", "sounds"]:
-                                                        categories_to_delete.append(game_option[0])
+                                                        categories_to_delete.append(category_folder)
                                                 else:
-                                                        categories_to_delete.append(game_option[0]+".json")
+                                                        categories_to_delete.append(category_folder+".json")
                 pygame.display.update()
                 clock.tick(100)
 
@@ -474,18 +483,19 @@ def settings_menu():
 
         settings_menu_setup()
         settings_menu_running = True
-        start_game = False#view_choose_game =
+        start_game = False
         while settings_menu_running:
                 click = False
+                pressed_keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
-                        alt_f4 = (event.type == KEYDOWN and (
-                                event.key == K_F4 and (pressed_keys[K_LALT] or pressed_keys[K_RALT])))
+                        alt_f4 = (event.type == pygame.KEYDOWN and (
+                                event.key == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT])))
                         if alt_f4:
                                 sys.exit()
-                        if event.type == KEYDOWN:
-                                if event.key == K_ESCAPE:
+                        if event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
                                         settings_menu_running = False
-                        if event.type == MOUSEBUTTONDOWN:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
                                 click = True
 
                 x2, y2, w2, h2 = button_layout_28[8]
@@ -500,7 +510,7 @@ def settings_menu():
                 if toggle_btn('Punkte', 'Alle Dateien', x8, y8, w8, h8, click, enabled=config['game modus']):
                         config['game modus'] = not config['game modus']
                         draw_bg_toggle = True
-                if config['game modus'] == False:
+                if not config['game modus']:
                         pygame.draw.rect(SCREEN, Static.LIGHT_RED, (x9,y9,w9/2,h9))
                         text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                         text_rect.center = (int(x9 +w9/4), int(y9 + h9/2))
@@ -555,7 +565,7 @@ if __name__ == "__main__":
         pygame.init()
 
         SCREEN_WIDTH, SCREEN_HEIGHT = int(pygame.display.Info().current_w), int(pygame.display.Info().current_h)
-        SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN)
+        SCREEN=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 
         BUTTON_WIDTH = int(SCREEN_WIDTH * 0.625 // 3)
         BUTTON_HEIGHT = int(SCREEN_HEIGHT * 5 // 81)
