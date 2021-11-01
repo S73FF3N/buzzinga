@@ -4,16 +4,18 @@
 import subprocess
 import time
 import os
-import sys
+
 
 def get_mountedlist():
 	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
-done = []
-files_imported = False
-time_consumed = 0
 
-def usb_input_check(done, images_imported, time_consumed):
+"""done = []
+files_imported = False
+time_consumed = 0"""
+
+
+def usb_input_check(done=[], files_imported=False, time_consumed=0):
 	while True:
 		mounted = get_mountedlist()
 		newly_mounted = [dev for dev in mounted if not dev in done]
@@ -84,7 +86,7 @@ def usb_input_check(done, images_imported, time_consumed):
 					files_imported = True
 
 			# unmount usb and print message
-			if files_imported == True:
+			if files_imported:
 				os.system("umount item")
 				return "Dateien erfolgreich importiert"
 			else:
@@ -98,5 +100,6 @@ def usb_input_check(done, images_imported, time_consumed):
 			return "keine Dateien importiert"
 			break
 
+
 if __name__ == '__main__':
-	print(usb_input_check([], False, 0))
+	print(usb_input_check(done=[], files_imported=False, time_consumed=0))
