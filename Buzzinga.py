@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os, pygame, sys
+import os, sys
+import pygame
+from pygame import gfxdraw
 import subprocess
 from game_utilities import load_image
 #from pygame.locals import *
@@ -63,8 +65,8 @@ def player_name_input(x, y, w, h, click, inactive_color=Static.RED, active_color
         return return_value
 
 def draw_circle(surface, x, y, radius, color):
-        pygame.gfxdraw.aacircle(surface, x, y, radius, color)
-        pygame.gfxdraw.filled_circle(surface, x, y, radius, color)
+        gfxdraw.aacircle(surface, x, y, radius, color)
+        gfxdraw.filled_circle(surface, x, y, radius, color)
 
 def toggle_btn(text, text2, x, y, w, h, click, text_color=Static.RED, enabled=True, draw_toggle=True, blit_text=True, enabled_color=Static.LIGHT_RED):
         mouse = pygame.mouse.get_pos()
