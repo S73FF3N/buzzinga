@@ -24,9 +24,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:  # type: bytes
 						c_renamed = category.replace(b' ', b'_')
-						print(c_renamed)
-						#if category != c_renamed:
-						#	c_renamed = c_renamed.decode('utf-8')
+						print(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed)
 						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
