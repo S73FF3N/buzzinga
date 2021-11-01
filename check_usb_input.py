@@ -26,10 +26,11 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:  # type: bytes
-						if os.path.isdir(item+b'/Bilder/'+category) == False:
+						c_renamed = category.replace(b' ', b'_')
+						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+category):
-							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+category
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
+							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
 						for f in os.listdir(item + b'/Bilder/' + category):
@@ -49,7 +50,7 @@ def usb_input_check(done, images_imported, time_consumed):
 				if os.path.exists(item+b'/Audio'):
 					categories = os.listdir(item+b'/Audio')
 					for category in categories:
-						if os.path.isdir(item+b'/Audio/'+category) == False:
+						if not os.path.isdir(item+b'/Audio/'+category):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
 							dir_name = b'/home/pi/Desktop/SdR/Audio/' + category
