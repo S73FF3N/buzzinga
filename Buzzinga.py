@@ -447,7 +447,7 @@ def choose_category(import_status=""):
                                                             int(game_option[3] + game_option[5] / 2))
                                         SCREEN.blit(text_surf, text_rect)
                                         category_folder = game_option[0].replace(' ', '_')
-                                        if game_option[0] not in categories_to_delete:
+                                        if category_folder not in categories_to_delete:
                                                 # differentiate between images & Sounds and json
                                                 if config['game_type'] in ["images", "sounds"]:
                                                         categories_to_delete.append(category_folder)
