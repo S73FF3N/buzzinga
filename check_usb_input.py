@@ -27,7 +27,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
-							print(b'/home/pi/Desktop/SdR/Bilder/' + c_renamed)
+							print("Test")
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
