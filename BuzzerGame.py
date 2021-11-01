@@ -51,7 +51,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	picture_length = int(picture_container_height/10*9)
 	
 	# text displayed at the beginning
-	game_name = os.path.basename(os.path.dirname(content_dir))
+	game_name = os.path.basename(os.path.dirname(content_dir)).replace('_', ' ')
 	welcome = u"Willkommen zu " + game_name
 	
 	# build content dictionary from content directory
