@@ -438,7 +438,7 @@ def choose_category(import_status=""):
                                                 config['game dir'] = game_folder + category_folder + ".json"
                                         settings_menu()
                                 else:
-                                        # categories to selected are deleted
+                                        # categories to delete ar selected
                                         pygame.draw.rect(SCREEN, Static.ORANGE, (
                                         game_option[2], game_option[3], game_option[4], game_option[5]))
                                         text_surf, text_rect = text_objects(game_option[0], SMALL_TEXT,
@@ -446,8 +446,8 @@ def choose_category(import_status=""):
                                         text_rect.center = (int(game_option[2] + game_option[4] / 2),
                                                             int(game_option[3] + game_option[5] / 2))
                                         SCREEN.blit(text_surf, text_rect)
+                                        category_folder = game_option[0].replace(' ', '_')
                                         if game_option[0] not in categories_to_delete:
-                                                category_folder = game_option[0].replace(' ', '_')
                                                 # differentiate between images & Sounds and json
                                                 if config['game_type'] in ["images", "sounds"]:
                                                         categories_to_delete.append(category_folder)
