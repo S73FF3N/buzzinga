@@ -51,22 +51,27 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 				if os.path.exists(item+b'/Audio'):
 					categories = os.listdir(item+b'/Audio')
 					for category in categories:
-						if not os.path.isdir(item+b'/Audio/'+category):
+						c_renamed = category.replace(b' ', b'_')
+						path_old = item + b'/Bilder/' + category
+						path_new = item + b'/Bilder/' + c_renamed
+						if category != c_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
+						if not os.path.isdir(item+b'/Audio/'+c_renamed):
 							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+category):
-							dir_name = b'/home/pi/Desktop/SdR/Audio/' + category
+						if not os.path.exists(b'/home/pi/Desktop/SdR/Audio/'+c_renamed):
+							dir_name = b'/home/pi/Desktop/SdR/Audio/' + c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
-						for f in os.listdir(item + b'/Audio/' + category):
+						for f in os.listdir(item + b'/Audio/' + c_renamed):
 							file = item + b'/Audio/' + category + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
-							file_renamed = item + b'/Audio/' + category + b'/' + f_renamed
+							file_renamed = item + b'/Audio/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
-						for f in os.listdir(item+b'/Audio/'+category):
-							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
-								file_to_copy = item+b'/Audio/'+category+b'/'+f
+						for f in os.listdir(item+b'/Audio/'+c_renamed):
+							if not os.path.isfile(b'/home/pi/Desktop/SdR/Audio/'+c_renamed+b'/'+f) and f.lower().endswith((b'.mp3', b'.wav')):
+								file_to_copy = item+b'/Audio/'+c_renamed+b'/'+f
 								os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+category+b'/'+f
+								file_to_create = b'/home/pi/Desktop/SdR/Audio/'+c_renamed+b'/'+f
 								os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 								os.popen('cp "$file_to_copy" "$file_to_create"')
 								os.popen('sudo chmod 777 "$file_to_create"')
