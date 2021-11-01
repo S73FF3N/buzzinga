@@ -10,15 +10,10 @@ def get_mountedlist():
 	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
 
 
-"""done = []
-files_imported = False
-time_consumed = 0"""
-
-
 def usb_input_check(done=[], files_imported=False, time_consumed=0):
 	while True:
 		mounted = get_mountedlist()
-		newly_mounted = [dev for dev in mounted if not dev in done]
+		newly_mounted = [dev for dev in mounted if dev not in done]
 		valid = sum([[drive for drive in newly_mounted]], [])
 
 		# get files from usb and copy them to raspberry
@@ -28,9 +23,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 				if os.path.exists(item+b'/Bilder'):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:  # type: bytes
-						print("category: ", category)
 						c_renamed = category.replace(b' ', b'_')
-						print("c_renamed: ", c_renamed)
 						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
@@ -100,8 +93,8 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 		time_consumed += 2
 		if time_consumed >= 4:
 			return "keine Dateien importiert"
-			break
+			#break
 
 
 if __name__ == '__main__':
-	print(usb_input_check(done=[], files_imported=False, time_consumed=0))
+	usb_input_check(done=[], files_imported=False, time_consumed=0)
