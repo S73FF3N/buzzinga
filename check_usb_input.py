@@ -27,7 +27,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 						path_old = item + b'/Bilder/' + category
 						path_new = item+b'/Bilder/'+ c_renamed
 						if category != c_renamed:
-							os.rename(path_old, path_new)
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
 						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
@@ -37,7 +37,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 						for f in os.listdir(item + b'/Bilder/' + c_renamed):
 							file = item + b'/Bilder/' + c_renamed + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
-							file_renamed = item + b'/Bilder/' + c_renamde + b'/' + f_renamed
+							file_renamed = item + b'/Bilder/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
 						for f in os.listdir(item + b'/Bilder/' + c_renamed):
