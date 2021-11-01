@@ -82,10 +82,12 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 
 			# unmount usb and print message
 			if files_imported:
-				os.system("umount item")
+				os.putenv("item", item.decode('utf-8').strip())
+				os.system('umount "$item"')
 				return "Dateien erfolgreich importiert"
 			else:
-				os.system("umount item")
+				os.putenv("item", item.decode('utf-8').strip())
+				os.system('umount "$item"')
 				return "Keine Dateien importiert"
 
 		done = mounted

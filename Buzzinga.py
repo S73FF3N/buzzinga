@@ -23,10 +23,12 @@ def game(screen, screenx, screeny):
         elif config['game_type'] == "questions":
                 multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
                             config['game sounds'], config['game modus'], config['points_to_win'])
-	
+
+
 def text_objects(text, font, color=Static.BLACK):
         text_surface = font.render(text, 1, color)
         return text_surface, text_surface.get_rect()
+
 
 def button(text, x, y, w, h, click, inactive_color=Static.RED, active_color=Static.LIGHT_RED, text_color=Static.WHITE, image=False):
         mouse = pygame.mouse.get_pos()
@@ -300,7 +302,7 @@ def choose_category_setup(import_status="", no_categories=False):
         text_surf, text_rect = text_objects(import_status[:-1], SMALL_TEXT)
         text_rect.center = (int(SCREEN_WIDTH / 8), int(SCREEN_HEIGHT / 18 * 17))
         SCREEN.blit(text_surf, text_rect)
-        if no_categories == True:
+        if no_categories:
                 text_surf, text_rect = text_objects('Keine Kategorien vorhanden!', SMALL_TEXT)
                 x, y, w, h = button_layout_28[7]
                 text_rect.center = (int(x + w / 2), int(y + h / 2))
