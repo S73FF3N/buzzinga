@@ -25,10 +25,10 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 					for category in categories:  # type: bytes
 						c_renamed = category.replace(b' ', b'_')
 						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
+							print(os.path.isdir(item+b'/Bilder/'+c_renamed))
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed
-							print(dir_name)
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
 						for f in os.listdir(item + b'/Bilder/' + category):
