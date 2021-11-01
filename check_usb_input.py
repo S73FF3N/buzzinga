@@ -24,21 +24,25 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 					categories = os.listdir(item+b'/Bilder')
 					for category in categories:  # type: bytes
 						c_renamed = category.replace(b' ', b'_')
-						if not os.path.isdir(item+b'/Bilder/'+category):
+						path_old = item + b'/Bilder/' + category
+						path_new = item+b'/Bilder/'+ c_renamed
+						if category != c_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
+						if not os.path.isdir(item+b'/Bilder/'+c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed):
 							dir_name = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
-						for f in os.listdir(item + b'/Bilder/' + category):
-							file = item + b'/Bilder/' + category + b'/' + f
+						for f in os.listdir(item + b'/Bilder/' + c_renamed):
+							file = item + b'/Bilder/' + c_renamed + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
-							file_renamed = item + b'/Bilder/' + category + b'/' + f_renamed
+							file_renamed = item + b'/Bilder/' + c_renamde + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
-						for f in os.listdir(item + b'/Bilder/' + category):
+						for f in os.listdir(item + b'/Bilder/' + c_renamed):
 							if not os.path.isfile(b'/home/pi/Desktop/SdR/Bilder/'+c_renamed+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
-								file_to_copy = item+b'/Bilder/'+category+b'/'+f
+								file_to_copy = item+b'/Bilder/'+c_renamed+b'/'+f
 								file_to_create = b'/home/pi/Desktop/SdR/Bilder/'+c_renamed+b'/'+f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 								os.popen("sudo chmod 777 {}".format(file_to_create.decode('utf-8')))
