@@ -72,8 +72,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			base = os.path.basename(content_dir+content)
 			name_o = os.path.splitext(base)[0]
 			name = name_o.replace("_"," ")
-			name = name.replace("<<", "(")
-			name = name.replace(">>", ")")
+			name = name.replace("zzz", "(")
+			name = name.replace("uuu", ")")
 			content_dict[name] = content_dir+content
 
 	#loading info
