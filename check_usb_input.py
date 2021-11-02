@@ -37,6 +37,8 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 						for f in os.listdir(item + b'/Bilder/' + c_renamed):
 							file = item + b'/Bilder/' + c_renamed + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
+							f_renamed = f_renamed.replace(b'(', b'<<')
+							f_renamed = f_renamed.replace(b')', b'>>')
 							file_renamed = item + b'/Bilder/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
@@ -64,6 +66,8 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 						for f in os.listdir(item + b'/Audio/' + c_renamed):
 							file = item + b'/Audio/' + category + b'/' + f
 							f_renamed = f.replace(b' ', b'_')
+							f_renamed = f_renamed.replace(b'(', b'<<')
+							f_renamed = f_renamed.replace(b')', b'>>')
 							file_renamed = item + b'/Audio/' + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
