@@ -338,7 +338,7 @@ def choose_category(import_status=""):
                                 if item.lower().startswith('.'):
                                         continue
                                 else:
-                                        buttons['page ' + str(page_nr)].append([os.path.splitext(item)[0], x, y, w, h])
+                                        buttons['page ' + str(page_nr)].append([os.path.splitext(item_renamed)[0], x, y, w, h])
                         else:
                                 buttons['page ' + str(page_nr)].append([item_renamed, x, y, w, h])
                         game_nr += 1
@@ -426,7 +426,7 @@ def choose_category(import_status=""):
                         choose_category_menu = False
                         choose_game_menu()
                 for game_option in game_options:
-                        if game_option[1] == True:
+                        if game_option[1]:
                                 if not delete_modus:
                                         # category has been chosen and settings menu opens
                                         config['game choosen'] = True
