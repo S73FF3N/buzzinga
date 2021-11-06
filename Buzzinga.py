@@ -416,7 +416,8 @@ def choose_category(import_status=""):
                                          (text_rect[0], text_rect[1], text_rect[2] + SCREEN_WIDTH / 3, text_rect[3]), 0)
                         SCREEN.blit(text_surf, text_rect)
                         pygame.display.update()
-                        usb_input = subprocess.check_output("python3 check_usb_input.py".split())
+                        command_list = ["python3", "check_usb_input.py", config['game_type']]
+                        usb_input = subprocess.check_output(command_list)
                         choose_category_menu = False
                         choose_category(import_status=usb_input)
                         click = False
