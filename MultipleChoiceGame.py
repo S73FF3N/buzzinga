@@ -65,7 +65,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # text displayed at the beginning
     head, tail = os.path.split(content_dir)
-    game_name = tail[:-5]
+    game_name = tail[:-5].replace('_', ' ')
     welcome = u"Willkommen zu " + game_name
 
     logo = "BuzzingaLogo.bmp"

@@ -83,11 +83,16 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0):
 
 				if os.path.exists(item + b'/Questions'):
 					for f in os.listdir(item + b'/Questions/'):
+						f_renamed = f.replace(b' ', b'_')
+						path_old = item + b'/Questions/' + f
+						path_new = item + b'/Questions/' + f_renamed
+						if f != f_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
 						if not os.path.isfile(
-								b'/home/pi/Desktop/SdR/Questions/' + b'/' + f) and f.lower().endswith(b'.json'):
-							file_to_copy = item + b'/Questions/' + b'/' + f
+								b'/home/pi/Desktop/SdR/Questions/' + b'/' + f_renamed) and f_renamed.lower().endswith(b'.json'):
+							file_to_copy = item + b'/Questions/' + b'/' + f_renamed
 							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-							file_to_create = b'/home/pi/Desktop/SdR/Questions/' + b'/' + f
+							file_to_create = b'/home/pi/Desktop/SdR/Questions/' + b'/' + f_renamed
 							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
 							os.popen('cp "$file_to_copy" "$file_to_create"')
 							os.popen('sudo chmod 777 "$file_to_create"')
