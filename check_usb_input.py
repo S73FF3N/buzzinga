@@ -47,7 +47,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 							f_renamed = f.replace(b' ', b'_')
 							f_renamed = f_renamed.replace(b'(', b'zzz')
 							f_renamed = f_renamed.replace(b')', b'uuu')
-							file_renamed = item + b'/home/pi/Desktop/SdR' + folder + c_renamed + b'/' + f_renamed
+							file_renamed = item + folder + c_renamed + b'/' + f_renamed
 							print(file_renamed)
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
