@@ -24,13 +24,13 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 		else:
 			folder = b'/Questions'
 
-		print(folder)
 		# get files from usb and copy them to raspberry
 		for item in valid:
 			if item not in [b'/boot', b'/']:
 				os.chdir(item)
 				if os.path.exists(item + folder) and game_type in ["images", "sounds"]:
 					categories = os.listdir(item + folder)
+					print(categories)
 					for category in categories:  # type: bytes
 						c_renamed = category.replace(b' ', b'_')
 						path_old = item + folder + category
