@@ -18,11 +18,11 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 		valid = sum([[drive for drive in newly_mounted]], [])
 
 		if game_type == "images":
-			folder = b'/Bilder'
+			folder = b'/Bilder/'
 		elif game_type == "sounds":
-			folder = b'/Audio'
+			folder = b'/Audio/'
 		else:
-			folder = b'/Questions'
+			folder = b'/Questions/'
 
 		# get files from usb and copy them to raspberry
 		for item in valid:
