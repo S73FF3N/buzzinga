@@ -12,7 +12,7 @@ def get_mountedlist():
 
 
 def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sys.argv[1]):
-	print("usb_input_check started")
+	print(game_type)
 	while True:
 		mounted = get_mountedlist()
 		newly_mounted = [dev for dev in mounted if dev not in done]
