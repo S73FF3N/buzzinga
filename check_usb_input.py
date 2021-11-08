@@ -30,7 +30,6 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 				os.chdir(item)
 				if os.path.exists(item + folder) and game_type in ["images", "sounds"]:
 					categories = os.listdir(item + folder)
-					print(categories)
 					for category in categories:  # type: bytes
 						c_renamed = category.replace(b' ', b'_')
 						path_old = item + folder + category
@@ -40,6 +39,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 						if not os.path.isdir(item + folder + c_renamed):
 							continue
 						if not os.path.exists(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed):
+							print(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed)
 							dir_name = b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
