@@ -12,7 +12,6 @@ def get_mountedlist():
 
 
 def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sys.argv[1]):
-	print(type(game_type))
 	while True:
 		mounted = get_mountedlist()
 		newly_mounted = [dev for dev in mounted if dev not in done]
@@ -25,6 +24,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 		else:
 			folder = b'/Questions'
 
+		print(folder)
 		# get files from usb and copy them to raspberry
 		for item in valid:
 			if item not in [b'/boot', b'/']:
