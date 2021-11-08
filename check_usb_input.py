@@ -94,4 +94,4 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 
 
 if __name__ == '__main__':
-	usb_input_check(done=[], files_imported=False, time_consumed=0, game_type="images")
+	usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sys.argv[1])
