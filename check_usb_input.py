@@ -21,7 +21,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 			folder = b'/Bilder/'
 		elif game_type == "sounds":
 			folder = b'/Audio/'
-		else:
+		elif game_type == "questions":
 			folder = b'/Questions/'
 
 		# get files from usb and copy them to raspberry
@@ -34,13 +34,12 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 						c_renamed = category.replace(b' ', b'_')
 						path_old = item + folder + category
 						path_new = item + folder + c_renamed
-						print(path_old, " ", path_new)
 						if category != c_renamed:
 							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
 						if not os.path.isdir(item + folder + c_renamed):
 							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed):
-							dir_name = b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed
+						if not os.path.exists(b'/home/pi/Desktop/SdR' + folder + c_renamed):
+							dir_name = b'/home/pi/Desktop/SdR' + folder + c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
 						for f in os.listdir(item + folder + c_renamed):
@@ -48,11 +47,11 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 							f_renamed = f.replace(b' ', b'_')
 							f_renamed = f_renamed.replace(b'(', b'zzz')
 							f_renamed = f_renamed.replace(b')', b'uuu')
-							file_renamed = item + b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed + c_renamed + b'/' + f_renamed
+							file_renamed = item + b'/home/pi/Desktop/SdR' + folder + c_renamed + b'/' + f_renamed
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
 						for f in os.listdir(item + folder + c_renamed):
-							if not os.path.isfile(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
+							if not os.path.isfile(b'/home/pi/Desktop/SdR' + folder + c_renamed+b'/'+f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp')):
 								file_to_copy = item + folder + c_renamed + b'/' + f
 								file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed + b'/' + f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
