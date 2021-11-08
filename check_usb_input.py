@@ -51,9 +51,9 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 							if f != f_renamed:
 								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
 						for f in os.listdir(item + folder + c_renamed):
-							print(f)
 							if not os.path.isfile(b'/home/pi/Desktop/SdR' + folder + c_renamed + b'/' + f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp', b'.mp3')):
 								file_to_copy = item + folder + c_renamed + b'/' + f
+								print(file_to_copy)
 								file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed + b'/' + f
 								os.popen("cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
 								os.popen("sudo chmod 777 {}".format(file_to_create.decode('utf-8')))
