@@ -147,6 +147,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		return random_key, winner_found
 
 	def show_winner():
+		sound_channel.stop()
 		pygame.draw.rect(screen, Static.WHITE, picture_container)
 		pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
 		pygame.draw.rect(screen, Static.WHITE, solution_container)
