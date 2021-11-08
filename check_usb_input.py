@@ -34,13 +34,12 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 						c_renamed = category.replace(b' ', b'_')
 						path_old = item + folder + category
 						path_new = item + folder + c_renamed
+						print(path_old, " ", path_new)
 						if category != c_renamed:
 							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
 						if not os.path.isdir(item + folder + c_renamed):
 							continue
-						print(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed)
 						if not os.path.exists(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed):
-							print(b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed)
 							dir_name = b'/home/pi/Desktop/SdR' + folder + b'/' + c_renamed
 							os.mkdir(dir_name.decode('utf-8'))
 						# remove whitespaces from file names
