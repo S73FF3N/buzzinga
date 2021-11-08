@@ -24,6 +24,7 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 		elif game_type == "questions":
 			folder = b'/Questions/'
 
+		print(folder)
 		# get files from usb and copy them to raspberry
 		for item in valid:
 			if item not in [b'/boot', b'/']:
