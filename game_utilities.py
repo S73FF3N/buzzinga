@@ -53,7 +53,6 @@ def mp3_to_wav(mp3_file):
     if mp3_file[-3:] == "wav":
         file_out = mp3_file
     else:
-        print(mp3_file)
         conversion = subprocess.Popen('ffmpeg -i ' + mp3_file + ' ' + mp3_file[:-3] + 'wav', shell=True)
         subprocess.Popen.wait(conversion)
         os.remove(mp3_file)
