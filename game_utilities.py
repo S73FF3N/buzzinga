@@ -54,6 +54,6 @@ def mp3_to_wav(mp3_file):
         pass
     else:
         print(mp3_file)
-        conversion = subprocess.Popen('sox -v 0.98 '+mp3_file+' '+mp3_file[:-3]+'wav', shell=True)
+        conversion = subprocess.Popen('ffmpeg -i ' + mp3_file + ' ' + mp3_file[:-3] + 'wav', shell=True)
         subprocess.Popen.wait(conversion)
         os.remove(mp3_file)
