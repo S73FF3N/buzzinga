@@ -223,6 +223,7 @@ def players_names_menu():
                 x3, y3, w3, h3 = button_layout_28[9]
                 x4, y4, w4, h4 = button_layout_28[10]
                 x11, y11, w11, h11 = button_layout_28[17]
+                x12, y12, w12, h12 = button_layout_28[18]
 
                 if player_name_input(x1, y1, w1, h1, click):
                         playerNameInputsActive = [True, False, False, False]
@@ -246,6 +247,8 @@ def players_names_menu():
                         print_player_name(active[0], config['playerNames'][active[0]])
                 elif button(u'Spiel wählen', x11, y11, w11, h11, click):
                         choose_game_menu()
+                elif button(u'Herunterfahren', x12, y12, w12, h12, click):
+                        os.popen("sudo poweroff")
                 pygame.display.update(button_layout_28)
                 clock.tick(100)
 
