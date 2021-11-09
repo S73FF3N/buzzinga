@@ -3,7 +3,7 @@
 import os, pygame, random, sys
 #from pygame.locals import *
 #from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_r, K_f, K_F4, K_LALT, K_RALT
-from game_utilities import convert_image_to, load_image
+from game_utilities import convert_image_to, load_image, mp3_to_wav
 from static import Static
 
 def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_type, game_sounds, game_modus, points_to_win):
@@ -94,6 +94,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					file_in = convert_image_to(file_in, "bmp")
 				except:
 					print("{} could not be converted to .bmp format.".format(file_in))
+			elif game_type == "sounds":
+				try:
+					# sounds in sound directory are converted into .wav
+					file_in = mp3_to_wav(file_in)
+					print(file_in)
+				except:
+					print("{} could not be converted to .wav format.".format(file_in))
 			build_content_dict(file_in)
 		else:
 			print("{} has no suitable format.".format(file_in))
@@ -147,6 +154,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		return random_key, winner_found
 
 	def show_winner():
+		sound_channel.stop()
 		pygame.draw.rect(screen, Static.WHITE, picture_container)
 		pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
 		pygame.draw.rect(screen, Static.WHITE, solution_container)
