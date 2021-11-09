@@ -95,10 +95,10 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				except:
 					print("{} could not be converted to .bmp format.".format(file_in))
 			elif game_type == "sounds":
-				print(file_in)
 				try:
 					# sounds in sound directory are converted into .wav
 					file_in = mp3_to_wav(file_in)
+					print(file_in)
 				except:
 					print("{} could not be converted to .wav format.".format(file_in))
 			build_content_dict(file_in)
