@@ -196,7 +196,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	pygame.display.set_caption(game_name)
 	
 	# Created Variable for the text on the screen
-	#picture = pygame.transform.scale(picture, (picture_width, picture_length))
 	game_label = myfont.render(game_name, 1, Static.RED)
 	solution_label = myfont.render(welcome, 1, Static.RED)
 	nr = 1
@@ -303,7 +302,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				# now go to the reset code
 		# loop waiting until the 'button' are reset
 		
-		while first and not winner_found  and not break_flag:
+		while first and not winner_found and not break_flag:
 			for event in pygame.event.get():
 				# User pressed down on a key
 				if event.type == pygame.KEYDOWN:
