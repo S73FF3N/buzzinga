@@ -9,6 +9,7 @@ time_consumed = 0
 
 def run_update_buzzinga():
     try:
+        os.system("sudo add-apt-repository universe")
         os.system("sudo apt -qq update")
         os.system("sudo apt -qq autoremove")
         os.system("sudo apt -qq --yes --assume-yes install ffmpeg")
