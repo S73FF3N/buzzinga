@@ -233,8 +233,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				sys.exit()
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
-					if game_type == "sounds":
-						sound_channel.quit()
+					sound_channel.quit()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
 					running = False
 				if event.key == pygame.K_RETURN and winner_found:
@@ -245,8 +244,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
-						if game_type == "sounds":
-							sound_channel.quit()
+						sound_channel.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						running = False
 					if event.key == pygame.K_RETURN:
@@ -257,8 +255,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							random_pick_content()
 							pygame.display.flip()
 						except Exception as e:
-							if game_type == "sounds":
-								sound_channel.quit()
+							sound_channel.quit()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
 							running = False
 						initialize = False
@@ -267,8 +264,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
-						if game_type == "sounds":
-							sound_channel.quit()
+						sound_channel.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						running = False
 					if event.key == pygame.K_RETURN:
@@ -287,8 +283,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					buttonpressed = event.button
 					for n in range (0,players):
 						if buttonpressed == playerKeys[n]:
-							if game_type == "sounds":
-								sound_channel.pause()
+							sound_channel.pause()
 							first_buzz = playerKeys.index(buttonpressed)
 							player_buzzer_container = pygame.Rect(picture_container_width, (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_buzzer_container_width, player_buzzer_container_height)
 							pygame.draw.rect(screen, Static.RED, player_buzzer_container)
@@ -309,8 +304,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.type == pygame.KEYDOWN:
 					keypressed = event.key
 					if event.key == pygame.K_ESCAPE:
-						if game_type == "sounds":
-							sound_channel.quit()
+						sound_channel.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						running = False
 					# Check if Key Pressed to increase score
@@ -327,8 +321,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						points_reached()
 
 					if keypressed == pygame.K_RETURN and show_solution_var == 2:
-						if game_type == "sounds":
-							sound_channel.stop()
+						sound_channel.stop()
 						pygame.draw.rect(screen, Static.WHITE, solution_container)
 						pygame.display.flip()
 						# reset the buzzers to black
@@ -341,8 +334,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
 					# solution is shown
 					if keypressed == pygame.K_RETURN and show_solution_var == 1:
-						if game_type == "sounds":
-							sound_channel.unpause()
+						sound_channel.unpause()
 						pygame.draw.rect(screen, Static.WHITE, solution_container)
 						show_solution()
 						pygame.display.flip()
@@ -357,8 +349,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							random_pick_content()
 							pygame.display.flip()
 						except:
-							if game_type == "sounds":
-								sound_channel.quit()
+							sound_channel.quit()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
 							running = False
 						show_solution_var = 1
