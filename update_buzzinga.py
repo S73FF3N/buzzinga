@@ -12,7 +12,7 @@ def run_update_buzzinga():
         #os.system("sudo add-apt-repository universe")
         os.system("sudo apt-get -qq update")
         os.system("sudo apt-get -qq upgrade")
-        os.system("sudo apt-get install lame")
+        os.system("sudo apt-get --yes --assume-yes install lame")
         #os.system("sudo apt -qq autoremove")
         #os.system("sudo apt-get -qq install libwebpmux3")
         #os.system("sudo apt-get -qq install libavdevice58")
