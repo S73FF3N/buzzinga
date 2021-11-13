@@ -12,9 +12,9 @@ def run_update_buzzinga():
         #os.system("sudo add-apt-repository universe")
         #os.system("sudo apt -qq update")
         #os.system("sudo apt -qq autoremove")
-        os.system("sudo apt -qq install libwebpmux3")
-        os.system("sudo apt -qq install libavcodec58")
-        os.system("sudo apt -qq --yes --assume-yes install ffmpeg")
+        os.system("sudo apt-get install libwebpmux3")
+        os.system("sudo apt-get install libavcodec58")
+        os.system("sudo apt-get --yes --assume-yes install ffmpeg")
         os.chdir("/home/pi/Desktop/venv/mycode/")
         os.system("git pull origin master")
         return
