@@ -224,6 +224,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 	initialize = True
 
 	running = True
+	break_flag = False
 	while running:
 		pressed_keys = pygame.key.get_pressed()
 		for event in pygame.event.get():
