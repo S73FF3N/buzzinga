@@ -235,6 +235,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.key == pygame.K_ESCAPE:
 					sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
+					running = False
 					break
 				if event.key == pygame.K_RETURN and winner_found:
 					show_winner()
@@ -257,6 +258,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						except Exception as e:
 							sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
+							running = False
 							break
 						initialize = False
 
@@ -266,6 +268,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
+						running = False
 						break
 					if event.key == pygame.K_RETURN:
 						first = True
@@ -306,6 +309,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
+						running = False
 						break
 					# Check if Key Pressed to increase score
 					if keypressed in answer:
