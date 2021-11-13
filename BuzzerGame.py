@@ -235,7 +235,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.key == pygame.K_ESCAPE:
 					sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
-					running = False
 					break
 				if event.key == pygame.K_RETURN and winner_found:
 					show_winner()
@@ -247,6 +246,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
+						break_flag = True
 						break
 					if event.key == pygame.K_RETURN:
 						if game_type == "images":
@@ -258,17 +258,17 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						except Exception as e:
 							sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							running = False
+							break_flag = True
 							break
 						initialize = False
 
-		while not first and not winner_found:
+		while not first and not winner_found and not break_flag:
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
 						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						running = False
+						break_flag = True
 						break
 					if event.key == pygame.K_RETURN:
 						first = True
@@ -301,7 +301,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				# now go to the reset code
 		# loop waiting until the 'button' are reset
 		
-		while first and not winner_found:
+		while first and not winner_found  and not break_flag:
 			for event in pygame.event.get():
 				# User pressed down on a key
 				if event.type == pygame.KEYDOWN:
@@ -309,7 +309,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						running = False
+						break_flag = True
 						break
 					# Check if Key Pressed to increase score
 					if keypressed in answer:
@@ -355,8 +355,11 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						except:
 							sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
+							break_flag = True
 							break
 						show_solution_var = 1
+		if break_flag:
+			break
 
 if __name__ == "__main__":
 	buzzer_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)
