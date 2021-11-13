@@ -235,6 +235,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.key == pygame.K_ESCAPE:
 					sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
+					break_flag = True
 					break
 				if event.key == pygame.K_RETURN and winner_found:
 					show_winner()
