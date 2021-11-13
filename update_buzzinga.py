@@ -9,8 +9,8 @@ time_consumed = 0
 
 def run_update_buzzinga():
     try:
-        os.system("sudo apt-get update")
-        os.system("sudo apt-get --yes --force-yes install ffmpeg")
+        os.system("sudo apt-get -qq update")
+        os.system("sudo apt-get --q --yes --assume-yes install ffmpeg")
         os.chdir("/home/pi/Desktop/venv/mycode/")
         os.system("git pull origin master")
         return
