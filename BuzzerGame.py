@@ -154,7 +154,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 		return random_key, winner_found
 
 	def show_winner():
-		pygame.mixer.quit()
+		sound_channel.stop()
 		pygame.draw.rect(screen, Static.WHITE, picture_container)
 		pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
 		pygame.draw.rect(screen, Static.WHITE, solution_container)
@@ -233,7 +233,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				sys.exit()
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
-					pygame.mixer.quit()
+					sound_channel.stop()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
 					break
 				if event.key == pygame.K_RETURN and winner_found:
@@ -244,7 +244,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
-						pygame.mixer.quit()
+						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						break
 					if event.key == pygame.K_RETURN:
@@ -255,7 +255,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							random_pick_content()
 							pygame.display.flip()
 						except Exception as e:
-							pygame.mixer.quit()
+							sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
 							break
 						initialize = False
@@ -264,7 +264,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 			for event in pygame.event.get():
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_ESCAPE:
-						pygame.mixer.quit()
+						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						break
 					if event.key == pygame.K_RETURN:
@@ -304,7 +304,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.type == pygame.KEYDOWN:
 					keypressed = event.key
 					if event.key == pygame.K_ESCAPE:
-						pygame.mixer.quit()
+						sound_channel.stop()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
 						break
 					# Check if Key Pressed to increase score
@@ -349,7 +349,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 							random_pick_content()
 							pygame.display.flip()
 						except:
-							pygame.mixer.quit()
+							sound_channel.stop()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
 							break
 						show_solution_var = 1
