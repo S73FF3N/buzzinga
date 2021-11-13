@@ -235,7 +235,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 				if event.key == pygame.K_ESCAPE:
 					pygame.mixer.quit()
 					os.chdir("/home/pi/Desktop/venv/mycode/")
-					running = False
+					break
 				if event.key == pygame.K_RETURN and winner_found:
 					show_winner()
 					pygame.display.flip()
@@ -246,7 +246,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						pygame.mixer.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						running = False
+						break
 					if event.key == pygame.K_RETURN:
 						if game_type == "images":
 							pygame.draw.rect(screen, Static.WHITE, picture_container)
@@ -257,7 +257,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						except Exception as e:
 							pygame.mixer.quit()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							running = False
+							break
 						initialize = False
 
 		while not first and not winner_found:
@@ -266,7 +266,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						pygame.mixer.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						running = False
+						break
 					if event.key == pygame.K_RETURN:
 						first = True
 						try:
@@ -306,7 +306,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 					if event.key == pygame.K_ESCAPE:
 						pygame.mixer.quit()
 						os.chdir("/home/pi/Desktop/venv/mycode/")
-						running = False
+						break
 					# Check if Key Pressed to increase score
 					if keypressed in answer:
 						player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (game_label_container_height + player_label_container_height + first_buzz*player_container_height), player_score_container_width, player_score_container_height)
@@ -351,7 +351,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 						except:
 							pygame.mixer.quit()
 							os.chdir("/home/pi/Desktop/venv/mycode/")
-							running = False
+							break
 						show_solution_var = 1
 
 if __name__ == "__main__":
