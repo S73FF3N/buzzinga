@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, pygame, random, sys
-from game_utilities import convert_image_to, load_image, mp3_to_wav
+from game_utilities import load_image
 from static import Static
 import json
 
@@ -10,6 +10,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
                 points_to_win):
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.mixer.init()
+    sound_channel = pygame.mixer.Channel(0)
+    game_sound_channel = pygame.mixer.Channel(1)
 
     # declare and array for player names and initial score
     playerNames = playerNamesList
@@ -105,21 +107,19 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
     amount_of_content = len(content_dict)
 
-    global winner_found
     winner_found = False
 
     # randomly chosing content from content dictionary and updating solution label
-    sound_channel = pygame.mixer.Channel(0)
-    game_sound_channel = pygame.mixer.Channel(1)
-
     def random_pick_content():
         global random_key
         global random_val
         global winner_found
+        global hint_n
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
             del content_dict[random_key]
+            hint_n = 1
         except:
             winner_found = True
         if not winner_found:
@@ -169,6 +169,13 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
         if not game_modus:
             if points_to_win == max(playerScore):
                 winner_found = True
+
+    def print_hint(n):
+        global random_val
+        #exec("hint%s = %d" % (str, 5000))
+        pygame.draw.rect(screen, Static.BLUE, hint1_container)
+        hint1 = myfont.render(random_val["hint1"], 1, Static.RED)
+        screen.blit(hint1, hint1.get_rect(center=hint1_container.center))
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
@@ -267,6 +274,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
                             pygame.display.flip()
                         except:
                             show_solution_var = 2
+                    if event.key == pygame.K_n:
+                        print_hint(hint_n)
+                        hint_n += 1
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
