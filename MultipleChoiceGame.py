@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os, pygame, random, sys
-#from pygame.locals import *
-#from pygame import gfxdraw, KEYDOWN, MOUSEBUTTONDOWN, K_ESCAPE, K_RETURN, K_BACKSPACE, K_F4, K_LALT, K_RALT
 from game_utilities import load_image
 from static import Static
 import json
 
-def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_type, game_sounds, game_modus,
-                points_to_win):
+
+def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_modus, points_to_win):
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.mixer.init()
 
@@ -34,15 +32,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
     question_container_width = game_label_container_width
     question_container_height = screeny / 10 * 3
-    question_container = pygame.Rect(0, game_label_container_height, question_container_width, question_container_height)
-    option_container_width = (game_label_container_width / 2)-10
-    option_container_height = (screeny / 10 * 2.5)-10
-    option1_container = pygame.Rect(10, game_label_container_height + question_container_height, option_container_width, option_container_height)
-    option2_container = pygame.Rect(10+option_container_width, game_label_container_height + question_container_height, option_container_width,
+    question_container = pygame.Rect(0, game_label_container_height, question_container_width,
+                                     question_container_height)
+    option_container_width = (game_label_container_width / 2) - 10
+    option_container_height = (screeny / 10 * 2.5) - 10
+    option1_container = pygame.Rect(10, game_label_container_height + question_container_height, option_container_width,
                                     option_container_height)
-    option3_container = pygame.Rect(10, game_label_container_height + question_container_height + option_container_height, option_container_width,
+    option2_container = pygame.Rect(10 + option_container_width,
+                                    game_label_container_height + question_container_height, option_container_width,
                                     option_container_height)
-    option4_container = pygame.Rect(10+option_container_width, game_label_container_height + question_container_height + option_container_height, option_container_width,
+    option3_container = pygame.Rect(10,
+                                    game_label_container_height + question_container_height + option_container_height,
+                                    option_container_width,
+                                    option_container_height)
+    option4_container = pygame.Rect(10 + option_container_width,
+                                    game_label_container_height + question_container_height + option_container_height,
+                                    option_container_width,
                                     option_container_height)
     solution_container_width = picture_container_width
     solution_container_height = screeny / 10
@@ -75,7 +80,10 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
     with open(content_dir) as json_file:
         data = json.load(json_file)
     for q in data:
-        content_dict[q["fields"]["quiz_question"]] = {'solution': q["fields"]["solution"], 'option1': q["fields"]["option1"], 'option2': q["fields"]["option2"], 'option3': q["fields"]["option3"]}
+        content_dict[q["fields"]["quiz_question"]] = {'solution': q["fields"]["solution"],
+                                                      'option1': q["fields"]["option1"],
+                                                      'option2': q["fields"]["option2"],
+                                                      'option3': q["fields"]["option3"]}
 
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
@@ -115,7 +123,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             winner_found = True
         if not winner_found:
             player1_locked = player2_locked = player3_locked = player4_locked = False
-            player_answers = {1:False, 2:False, 3:False, 4:False}
+            player_answers = {1: False, 2: False, 3: False, 4: False}
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             question = myfont.render(random_key, 1, Static.RED)
             screen.blit(question, question.get_rect(center=question_container.center))
@@ -161,7 +169,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
         for line in range(len(winners)):
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
-                                                    line * scorefont_height) + (15 * line)))
+                                                line * scorefont_height) + (15 * line)))
 
     # show solution
     def show_solution():
@@ -201,12 +209,12 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                              player_label_container_width, player_label_container_height)
         screen.blit(player_label, player_label.get_rect(center=player_label_container.center))
         player_buzzer_container = pygame.Rect(picture_container_width, (
-                    game_label_container_height + player_label_container_height + n * player_container_height),
+                game_label_container_height + player_label_container_height + n * player_container_height),
                                               player_buzzer_container_width, player_buzzer_container_height)
         pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
         player_score = scorefont.render(str(playerScore[n]), 1, Static.BLACK)
         player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (
-                    game_label_container_height + player_label_container_height + n * player_container_height),
+                game_label_container_height + player_label_container_height + n * player_container_height),
                                              player_score_container_width, player_score_container_height)
         screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
 
@@ -264,7 +272,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         solution_shown = "Prepared"
                         for n in range(0, players):
                             player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                    game_label_container_height + player_label_container_height + n * player_container_height),
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             buzzer_blocked = scorefont.render("X", 1, Static.RED)
@@ -278,13 +286,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         player1_locked = True
                         player_answers[1] = solution_dict[buttonpressed]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
-                                    game_label_container_height + player_label_container_height + 0 * player_container_height),
+                                game_label_container_height + player_label_container_height + 0 * player_container_height),
                                                               player_buzzer_container_width,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                     elif buttonpressed in player2Keys and not player2_locked:
                         player2_locked = True
-                        player_answers[2] = solution_dict[buttonpressed-5]
+                        player_answers[2] = solution_dict[buttonpressed - 5]
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + 1 * player_container_height),
                                                               player_buzzer_container_width,
@@ -331,12 +339,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         solution_shown = "Done"
                         pygame.display.flip()
 
-            #solution has been displayed
+            # solution has been displayed
             while solution_shown == "Done" and not break_flag:
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
-                        if buttonpressed == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
+                        if buttonpressed == pygame.K_F4 and (
+                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
                             sys.exit()
                         if buttonpressed == pygame.K_ESCAPE:
                             os.chdir("/home/pi/Desktop/venv/mycode/")
@@ -344,20 +353,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             running = False
                     # Check if answer is correct to increase score
                     if buttonpressed == pygame.K_RETURN:
-                        for n in range(1, players+1):
+                        for n in range(1, players + 1):
                             if player_answers[n] == random_val["solution"]:
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + (n-1) * player_container_height),
+                                        game_label_container_height + player_label_container_height + (
+                                        n - 1) * player_container_height),
                                                                       player_buzzer_container_width,
                                                                       player_buzzer_container_height)
                                 pygame.draw.rect(screen, Static.GREEN, player_buzzer_container)
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
-                                                game_label_container_height + player_label_container_height + (n-1) * player_container_height),
+                                            game_label_container_height + player_label_container_height + (
+                                            n - 1) * player_container_height),
                                     player_score_container_width, player_score_container_height)
                                 pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                                playerScore[(n-1)] = playerScore[(n-1)] + 1
-                                player_score = scorefont.render(str(playerScore[(n-1)]), 1, Static.BLACK)
+                                playerScore[(n - 1)] = playerScore[(n - 1)] + 1
+                                player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                                 points_reached()
                         solution_shown = "Reset"
@@ -367,7 +378,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
-                        if buttonpressed == pygame.K_F4 and (pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
+                        if buttonpressed == pygame.K_F4 and (
+                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
                             sys.exit()
                         if buttonpressed == pygame.K_ESCAPE:
                             os.chdir("/home/pi/Desktop/venv/mycode/")
@@ -379,7 +391,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         # reset the buzzers to black
                         for n in range(0, players):
                             player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                    game_label_container_height + player_label_container_height + n * player_container_height),
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
@@ -397,4 +409,4 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
 
 if __name__ == "__main__":
-    multiple_choice_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)
+    multiple_choice_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_modus, points_to_win)
