@@ -119,7 +119,6 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
             del content_dict[random_key]
-            hint_n = 1
         except:
             winner_found = True
         if not winner_found:
@@ -170,12 +169,23 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
             if points_to_win == max(playerScore):
                 winner_found = True
 
+    hint_match_dict = {
+        1: [hint1_container, "hint1"],
+        2: [hint2_container, "hint2"],
+        3: [hint3_container, "hint3"],
+        4: [hint4_container, "hint4"],
+        5: [hint5_container, "hint5"],
+        6: [hint6_container, "hint6"],
+        7: [hint7_container, "hint7"],
+        8: [hint8_container, "hint8"],
+        9: [hint9_container, "hint9"],
+        10: [hint10_container, "hint10"],
+    }
     def print_hint(n):
         global random_val
-        #exec("hint%s = %d" % (str, 5000))
-        pygame.draw.rect(screen, Static.BLUE, hint1_container)
-        hint1 = myfont.render(random_val["hint1"], 1, Static.RED)
-        screen.blit(hint1, hint1.get_rect(center=hint1_container.center))
+        pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n[0]])
+        hint1 = myfont.render(random_val[hint_match_dict[n[1]]], 1, Static.RED)
+        screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n[0]].center))
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
@@ -215,6 +225,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
     running = True
     break_flag = False
+    hint_n = 0
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -272,6 +283,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
                                 screen.blit(buzzer_blocked,
                                             buzzer_blocked.get_rect(center=player_buzzer_container.center))
                             pygame.display.flip()
+                            hint_n = 0
                         except:
                             show_solution_var = 2
                     if event.key == pygame.K_n:
@@ -296,6 +308,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
                             first = True
                             countdown(5)
                     pygame.display.flip()
+                    hint_n = 0
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
         # loop waiting until the 'button' are reset
