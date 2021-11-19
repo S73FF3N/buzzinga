@@ -6,7 +6,7 @@ from static import Static
 import json
 
 
-def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_sounds, game_modus,
+def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, game_sounds, game_modus,
                 points_to_win):
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.mixer.init()
