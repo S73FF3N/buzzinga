@@ -354,8 +354,10 @@ def choose_category(import_status=""):
             game_folder = "/home/pi/Desktop/SdR/Bilder/"
         elif config['game_type'] == "sounds":
             game_folder = "/home/pi/Desktop/SdR/Audio/"
-        else:
+        elif config['game_type'] == "questions":
             game_folder = "/home/pi/Desktop/SdR/Questions/"
+        elif config['game_type'] == "hints":
+            game_folder = "/home/pi/Desktop/SdR/Hints/"
         global pages
         pages = (len(os.listdir(game_folder)) // 26) + 1
         global buttons

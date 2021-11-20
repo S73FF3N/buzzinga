@@ -23,6 +23,8 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 			folder = b'/Audio/'
 		elif game_type == "questions":
 			folder = b'/Questions/'
+		elif game_type == "hints":
+			folder = b'/Hints/'
 
 		# get files from usb and copy them to raspberry
 		for item in valid:
@@ -67,6 +69,24 @@ def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sy
 							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
 						if not os.path.isfile(
 								b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed) and f_renamed.lower().endswith(b'.json'):
+							file_to_copy = item + folder + b'/' + f_renamed
+							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
+							file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed
+							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
+							os.popen('sudo cp "$file_to_copy" "$file_to_create"')
+							os.popen('sudo chmod 777 "$file_to_create"')
+					files_imported = True
+
+				if os.path.exists(item + folder) and game_type in ["hints"]:
+					for f in os.listdir(item + folder):
+						f_renamed = f.replace(b' ', b'_')
+						path_old = item + folder + f
+						path_new = item + folder + f_renamed
+						if f != f_renamed:
+							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
+						if not os.path.isfile(
+								b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed) and f_renamed.lower().endswith(
+							b'.json'):
 							file_to_copy = item + folder + b'/' + f_renamed
 							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
 							file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed
