@@ -263,6 +263,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             break_flag = True
                             break
+                        print("initialize: ", initialize)
                         initialize = False
 
         while not first and not winner_found and not break_flag:
