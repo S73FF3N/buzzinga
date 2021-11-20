@@ -99,6 +99,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                  'hint10': q["fields"]["hint10"]
                                                  }
 
+    print(content_dict)
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
     screen.fill(Static.WHITE)
