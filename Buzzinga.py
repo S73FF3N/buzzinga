@@ -595,7 +595,7 @@ def settings_menu():
 
 if __name__ == "__main__":
     # create folders for images, sounds and questions on raspberry
-    required_folders = [b"Bilder/", b"Audio/", b"Questions/"]
+    required_folders = [b"Bilder/", b"Audio/", b"Questions/", b"Hints/"]
     for f in required_folders:
         if not os.path.exists(b'/home/pi/Desktop/SdR/' + f):
             dir_name = b'/home/pi/Desktop/SdR/' + f
