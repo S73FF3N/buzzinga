@@ -117,11 +117,9 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         global hint_n
         try:
             random_key = random.choice(list(content_dict.keys()))
-            print(random_key)
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
-            print("winner_found")
             winner_found = True
         if not winner_found:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
@@ -227,7 +225,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
 
     running = True
     break_flag = False
-    hint_n = 0
+    hint_n = 1
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -256,7 +254,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                     if event.key == pygame.K_RETURN:
                         initialize = False
                         try:
-                            print("initialize: random_pick_content")
                             random_pick_content()
                             pygame.display.flip()
                         except Exception as e:
@@ -286,7 +283,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                 screen.blit(buzzer_blocked,
                                             buzzer_blocked.get_rect(center=player_buzzer_container.center))
                             pygame.display.flip()
-                            hint_n = 0
+                            hint_n = 1
                         except:
                             show_solution_var = 2
                     if event.key == pygame.K_n:
@@ -311,7 +308,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             first = True
                             countdown(5)
                     pygame.display.flip()
-                    hint_n = 0
+                    hint_n = 1
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
         # loop waiting until the 'button' are reset
