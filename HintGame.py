@@ -121,6 +121,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
+            print("winner_found")
             winner_found = True
         if not winner_found:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
