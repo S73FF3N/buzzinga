@@ -99,7 +99,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                  'hint10': q["fields"]["hint10"]
                                                  }
 
-    print(content_dict)
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
     screen.fill(Static.WHITE)
@@ -118,6 +117,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         global hint_n
         try:
             random_key = random.choice(list(content_dict.keys()))
+            print(random_key)
             random_val = content_dict[random_key]
             del content_dict[random_key]
         except:
@@ -254,6 +254,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break
                     if event.key == pygame.K_RETURN:
                         try:
+                            print("initialize: random_pick_content")
                             random_pick_content()
                             pygame.display.flip()
                         except Exception as e:
