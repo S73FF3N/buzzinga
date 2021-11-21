@@ -108,6 +108,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     amount_of_content = len(content_dict)
 
     winner_found = False
+    hint_n = 1
 
     # randomly chosing content from content dictionary and updating solution label
     def random_pick_content():
@@ -229,7 +230,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
 
     running = True
     break_flag = False
-    hint_n = 1
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
