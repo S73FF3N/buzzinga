@@ -114,7 +114,8 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     def random_pick_content():
         global random_key
         global random_val
-        global winner_found = False
+        global winner_found
+        winner_found = False
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
