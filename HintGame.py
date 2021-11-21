@@ -262,6 +262,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             break_flag = True
                             break
                         initialize = False
+                        print("winner found ", winner_found)
                         print("initialize ", initialize)
 
         while not first and not winner_found and not break_flag:
