@@ -188,9 +188,9 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     }
     def print_hint(n):
         global random_val
-        pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n[0]])
-        hint1 = myfont.render(random_val[hint_match_dict[n[1]]], 1, Static.RED)
-        screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n[0]].center))
+        pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n][0])
+        hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.RED)
+        screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n][0].center))
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
