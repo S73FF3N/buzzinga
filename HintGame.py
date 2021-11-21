@@ -275,6 +275,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break
                     if event.key == pygame.K_RETURN:
                         first = True
+                        print("first ", first)
                         try:
                             show_solution_var = 1
                             for n in range(0, players):
