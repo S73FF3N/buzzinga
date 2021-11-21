@@ -252,8 +252,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break_flag = True
                         break
                     if event.key == pygame.K_RETURN:
-                        initialize = False
-                        print("initialize ", initialize)
                         try:
                             random_pick_content()
                             print("random pick content")
@@ -263,6 +261,8 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             break_flag = True
                             break
+                        initialize = False
+                        print("initialize ", initialize)
 
         while not first and not winner_found and not break_flag:
             for event in pygame.event.get():
