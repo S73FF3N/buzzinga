@@ -122,6 +122,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         except:
             winner_found = True
         if not winner_found:
+            print("random pick content: winner not found")
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
@@ -240,6 +241,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                     break_flag = True
                     break
                 if event.key == pygame.K_RETURN and winner_found:
+                    print("Enter")
                     show_winner()
                     pygame.display.flip()
 
