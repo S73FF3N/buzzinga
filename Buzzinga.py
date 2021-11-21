@@ -124,21 +124,31 @@ def delete_category(game_dir, multiple_files=True):
         os.chdir(game_dir)
         for f in os.listdir(game_dir):
             if not os.path.isdir(game_dir + "/" + f):
-                os.chmod(game_dir + "/" + f, 0o777)
-                os.remove(game_dir + "/" + f)
+                try:
+                    os.chmod(game_dir + "/" + f, 0o777)
+                    os.remove(game_dir + "/" + f)
+                except:
+                    os.chdir(current_dir)
+                    return "Löschen fehlgeschlagen!"
             else:
                 pass
         try:
             os.rmdir(game_dir)
+            os.chdir(current_dir)
+            return "Löschen erfolgreich!"
         except:
-            pass
+            os.chdir(current_dir)
+            return "Löschen fehlgeschlagen!"
     else:
         os.chdir(game_dir[:game_dir.rfind("/")])
         try:
+            os.chmod(game_dir, 0o777)
             os.remove(game_dir)
+            os.chdir(current_dir)
+            return "Löschen erfolgreich!"
         except:
-            pass
-    os.chdir(current_dir)
+            os.chdir(current_dir)
+            return "Löschen fehlgeschlagen!"
 
 
 def print_player_name(x, playerName):
@@ -426,13 +436,13 @@ def choose_category(import_status=""):
                 # differentiate between images & Sounds and json; done
                 for category in categories_to_delete:
                     if config['game_type'] in ["images", "sounds"]:
-                        delete_category(game_folder + category, multiple_files=True)
+                        delete_status = delete_category(game_folder + category, multiple_files=True)
                     else:
-                        delete_category(game_folder + category, multiple_files=False)
+                        delete_status = delete_category(game_folder + category, multiple_files=False)
             categories_to_delete = []
             delete_modus = False
             choose_category_menu = False
-            choose_category()
+            choose_category(import_status=delete_status)
         if button('flash-drive.bmp', x + (w / 3) * 2, y, w / 3, h, click, inactive_color=Static.ORANGE,
                   image=True):
             text_surf, text_rect = text_objects('Importiere Dateien', SMALL_TEXT)
