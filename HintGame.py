@@ -222,6 +222,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     pygame.display.flip()
 
     first = False  # used to signify the first key pressed and stops other being used
+    no_points = False
     show_solution_var = 1
     initialize = True
 
@@ -241,7 +242,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                     break_flag = True
                     break
                 if event.key == pygame.K_RETURN and winner_found:
-                    print("Enter")
                     show_winner()
                     pygame.display.flip()
 
@@ -274,7 +274,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break
                     if event.key == pygame.K_RETURN:
                         first = True
-                        print("first ", first)
+                        no_points = True
                         try:
                             show_solution_var = 1
                             for n in range(0, players):
@@ -328,7 +328,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break_flag = True
                         break
                     # Check if Key Pressed to increase score
-                    if keypressed in answer:
+                    if not no_points and keypressed in answer:
                         player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
                                                              (
                                                                          game_label_container_height + player_label_container_height + first_buzz * player_container_height),
@@ -356,6 +356,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                         first = False
+                        no_points = False
                         pygame.display.flip()
                         show_solution_var = 0
 
