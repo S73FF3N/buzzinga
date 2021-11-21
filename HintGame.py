@@ -119,17 +119,13 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
-            print(random_val)
-            print(winner_found)
             del content_dict[random_key]
         except:
             winner_found = True
         if not winner_found:
-            print("random pick content: winner not found")
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
-            print("random print content: winner found!")
             show_winner()
         return random_key, random_val, winner_found
 
@@ -259,7 +255,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                     if event.key == pygame.K_RETURN:
                         try:
                             random_pick_content()
-                            print("random pick content")
                             pygame.display.flip()
                         except Exception as e:
                             sound_channel.stop()
@@ -267,8 +262,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             break_flag = True
                             break
                         initialize = False
-                        print("winner found ", winner_found)
-                        print("initialize ", initialize)
 
         while not first and not winner_found and not break_flag:
             for event in pygame.event.get():
@@ -296,6 +289,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         except:
                             show_solution_var = 2
                     if event.key == pygame.K_n:
+                        print("n pressed!")
                         print_hint(hint_n)
                         hint_n += 1
 
