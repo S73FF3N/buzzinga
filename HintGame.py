@@ -115,12 +115,10 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         global random_key
         global random_val
         global winner_found
-        global hint_n
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
             print(random_val)
-            print(hint_n)
             del content_dict[random_key]
         except:
             winner_found = True
