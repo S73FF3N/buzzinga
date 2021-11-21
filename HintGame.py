@@ -118,6 +118,8 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
+            print(random_val)
+            print(hint_n)
             del content_dict[random_key]
         except:
             winner_found = True
@@ -126,6 +128,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
+            print("random print content: winner found!")
             show_winner()
         return random_key, random_val, winner_found
 
