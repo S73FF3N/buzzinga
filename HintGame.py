@@ -253,8 +253,10 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         break
                     if event.key == pygame.K_RETURN:
                         initialize = False
+                        print("initialize ", initialize)
                         try:
                             random_pick_content()
+                            print("random pick content")
                             pygame.display.flip()
                         except Exception as e:
                             sound_channel.stop()
