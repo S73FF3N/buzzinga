@@ -38,19 +38,19 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     hint3_container = pygame.Rect(0, game_label_container_height + hint_container_height + 5, hint_container_width, hint_container_height)
     hint4_container = pygame.Rect(hint_container_width + 5, game_label_container_height + hint_container_height + 5, hint_container_width,
                                   hint_container_height)
-    hint5_container = pygame.Rect(0, game_label_container_height + hint_container_height + 10, hint_container_width,
+    hint5_container = pygame.Rect(0, game_label_container_height + 2*hint_container_height + 10, hint_container_width,
                                   hint_container_height)
-    hint6_container = pygame.Rect(hint_container_width + 5, game_label_container_height + hint_container_height + 10,
+    hint6_container = pygame.Rect(hint_container_width + 5, game_label_container_height + 2*hint_container_height + 10,
                                   hint_container_width,
                                   hint_container_height)
-    hint7_container = pygame.Rect(0, game_label_container_height + hint_container_height + 15, hint_container_width,
+    hint7_container = pygame.Rect(0, game_label_container_height + 3*hint_container_height + 15, hint_container_width,
                                   hint_container_height)
-    hint8_container = pygame.Rect(hint_container_width + 5, game_label_container_height + hint_container_height + 15,
+    hint8_container = pygame.Rect(hint_container_width + 5, game_label_container_height + 3*hint_container_height + 15,
                                   hint_container_width,
                                   hint_container_height)
-    hint9_container = pygame.Rect(0, game_label_container_height + hint_container_height + 20, hint_container_width,
+    hint9_container = pygame.Rect(0, game_label_container_height + 4*hint_container_height + 20, hint_container_width,
                                   hint_container_height)
-    hint10_container = pygame.Rect(hint_container_width + 5, game_label_container_height + hint_container_height + 20,
+    hint10_container = pygame.Rect(hint_container_width + 5, game_label_container_height + 4*hint_container_height + 20,
                                   hint_container_width,
                                   hint_container_height)
     solution_container_width = picture_container_width
@@ -290,9 +290,9 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         except:
                             show_solution_var = 2
                     if event.key == pygame.K_n:
-                        print("n pressed!")
                         print_hint(hint_n)
-                        hint_n += 1
+                        if hint_n != 10:
+                            hint_n += 1
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
