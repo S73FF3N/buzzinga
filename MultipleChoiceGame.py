@@ -133,22 +133,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
             pygame.draw.rect(screen, Static.BLUE, option1_container)
             pygame.draw.rect(screen, Static.RED, option1_container, 10)
             option1 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[4] = options[0]
+            solution_dict[4] = [options[0], Static.BLUE]
             del options[0]
             pygame.draw.rect(screen, Static.ORANGE, option2_container)
             pygame.draw.rect(screen, Static.RED, option2_container, 10)
             option2 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[3] = options[0]
+            solution_dict[3] = [options[0], Static.ORANGE]
             del options[0]
             pygame.draw.rect(screen, Static.GREEN, option3_container)
             pygame.draw.rect(screen, Static.RED, option3_container, 10)
             option3 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[2] = options[0]
+            solution_dict[2] = [options[0], Static.GREEN]
             del options[0]
             pygame.draw.rect(screen, Static.YELLOW, option4_container)
             pygame.draw.rect(screen, Static.RED, option4_container, 10)
             option4 = myfont.render(options[0], 1, Static.RED)
-            solution_dict[1] = options[0]
+            solution_dict[1] = [options[0], Static.YELLOW]
             screen.blit(option1, option1.get_rect(center=option1_container.center))
             screen.blit(option2, option2.get_rect(center=option2_container.center))
             screen.blit(option3, option3.get_rect(center=option3_container.center))
@@ -173,13 +173,13 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
 
     # show solution
     def show_solution():
-        if solution_dict[4] == random_val["solution"]:
+        if solution_dict[4][0] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option1_container, 20)
-        elif solution_dict[3] == random_val["solution"]:
+        elif solution_dict[3][0] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option2_container, 20)
-        elif solution_dict[2] == random_val["solution"]:
+        elif solution_dict[2][0] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option3_container, 20)
-        elif solution_dict[1] == random_val["solution"]:
+        elif solution_dict[1][0] == random_val["solution"]:
             pygame.draw.rect(screen, Static.LIGHT_GREEN, option4_container, 20)
 
     def points_reached():
@@ -354,23 +354,30 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     # Check if answer is correct to increase score
                     if buttonpressed == pygame.K_RETURN:
                         for n in range(1, players + 1):
-                            if player_answers[n] == random_val["solution"]:
-                                player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + (
-                                        n - 1) * player_container_height),
-                                                                      player_buzzer_container_width,
-                                                                      player_buzzer_container_height)
-                                pygame.draw.rect(screen, Static.GREEN, player_buzzer_container)
-                                player_score_container = pygame.Rect(
-                                    (picture_container_width + player_buzzer_container_width), (
-                                            game_label_container_height + player_label_container_height + (
-                                            n - 1) * player_container_height),
-                                    player_score_container_width, player_score_container_height)
-                                pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                                playerScore[(n - 1)] = playerScore[(n - 1)] + 1
-                                player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
-                                screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                                points_reached()
+                            player_buzzer_container = pygame.Rect(picture_container_width, (
+                                    game_label_container_height + player_label_container_height + (
+                                    n - 1) * player_container_height),
+                                                                  player_buzzer_container_width,
+                                                                  player_buzzer_container_height)
+                            if not player_answers[n]:
+                                continue
+                            else:
+                                if player_answers[n][0] == random_val["solution"]:
+                                    pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container)
+                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container.inflate(-50, -50))
+                                    player_score_container = pygame.Rect(
+                                        (picture_container_width + player_buzzer_container_width), (
+                                                game_label_container_height + player_label_container_height + (
+                                                n - 1) * player_container_height),
+                                        player_score_container_width, player_score_container_height)
+                                    pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                                    playerScore[(n - 1)] = playerScore[(n - 1)] + 1
+                                    player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
+                                    screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+                                    points_reached()
+                                else:
+                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+
                         solution_shown = "Reset"
                         pygame.display.flip()
 
