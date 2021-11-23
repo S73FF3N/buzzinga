@@ -364,7 +364,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             else:
                                 if player_answers[n][0] == random_val["solution"]:
                                     pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
-                                    pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container.inflate(-5, -5))
+                                    pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container.inflate(-25, -25))
                                     player_score_container = pygame.Rect(
                                         (picture_container_width + player_buzzer_container_width), (
                                                 game_label_container_height + player_label_container_height + (
