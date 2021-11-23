@@ -318,7 +318,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if player1_locked and player2_locked and player3_locked and player4_locked:
                         solution_shown = "Prepared"
                         question_answered = True
-                        print(player_answers)
                     pygame.display.flip()
 
         # all player have given an answer or game coordinator has closed the question
@@ -362,7 +361,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             if player_answers[n][0] == random_val["solution"]:
-                                pygame.draw.rect(screen, Static.GREEN, player_buzzer_container)
+                                pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+                                pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container, 8)
                                 player_score_container = pygame.Rect(
                                     (picture_container_width + player_buzzer_container_width), (
                                             game_label_container_height + player_label_container_height + (
@@ -374,7 +374,11 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                                 points_reached()
                             else:
-                                pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+                                if not player_answers[n]:
+                                    continue
+                                else:
+                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+
                         solution_shown = "Reset"
                         pygame.display.flip()
 
