@@ -360,22 +360,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                     n - 1) * player_container_height),
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
-                            if player_answers[n][0] == random_val["solution"]:
-                                pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
-                                pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container, 8)
-                                player_score_container = pygame.Rect(
-                                    (picture_container_width + player_buzzer_container_width), (
-                                            game_label_container_height + player_label_container_height + (
-                                            n - 1) * player_container_height),
-                                    player_score_container_width, player_score_container_height)
-                                pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                                playerScore[(n - 1)] = playerScore[(n - 1)] + 1
-                                player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
-                                screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                                points_reached()
+                            if not player_answers[n]:
+                                continue
                             else:
-                                if not player_answers[n]:
-                                    continue
+                                if player_answers[n][0] == random_val["solution"]:
+                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+                                    pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container, 8)
+                                    player_score_container = pygame.Rect(
+                                        (picture_container_width + player_buzzer_container_width), (
+                                                game_label_container_height + player_label_container_height + (
+                                                n - 1) * player_container_height),
+                                        player_score_container_width, player_score_container_height)
+                                    pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                                    playerScore[(n - 1)] = playerScore[(n - 1)] + 1
+                                    player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
+                                    screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+                                    points_reached()
                                 else:
                                     pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
 
