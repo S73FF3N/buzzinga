@@ -7,6 +7,7 @@ import subprocess
 from game_utilities import load_image
 from BuzzerGame import buzzer_game
 from MultipleChoiceGame import multiple_choice_game
+from HintGame import hint_game
 from static import Static
 
 config = {'game_type': "images",
@@ -25,6 +26,9 @@ def game(screen, screenx, screeny):
     elif config['game_type'] == "questions":
         multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny,
                              config['game modus'], config['points_to_win'])
+    elif config['game_type'] == "hints":
+        hint_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny,
+                             config['game sounds'], config['game modus'], config['points_to_win'])
 
 
 def text_objects(text, font, color=Static.BLACK):
@@ -307,6 +311,7 @@ def choose_game_menu():
         x2, y2, w2, h2 = button_layout_28[7]
         x8, y8, w8, h8 = button_layout_28[8]
         x9, y9, w9, h9 = button_layout_28[9]
+        x3, y3, w3, h3 = button_layout_28[10]
         x7, y7, w7, h7 = button_layout_28[17]
 
         if button(u'Bilder', x2, y2, w2, h2, click):
@@ -317,6 +322,9 @@ def choose_game_menu():
             choose_category()
         elif button(u'Multiple Choice Quiz', x9, y9, w9, h9, click):
             config['game_type'] = "questions"
+            choose_category()
+        elif button(u'Hinweise', x3, y3, w3, h3, click):
+            config['game_type'] = "hints"
             choose_category()
         elif button(u'Zurück', x7, y7, w7, h7, click):
             choose_game_menu_running = False
@@ -356,8 +364,10 @@ def choose_category(import_status=""):
             game_folder = "/home/pi/Desktop/SdR/Bilder/"
         elif config['game_type'] == "sounds":
             game_folder = "/home/pi/Desktop/SdR/Audio/"
-        else:
+        elif config['game_type'] == "questions":
             game_folder = "/home/pi/Desktop/SdR/Questions/"
+        elif config['game_type'] == "hints":
+            game_folder = "/home/pi/Desktop/SdR/Hints/"
         global pages
         pages = (len(os.listdir(game_folder)) // 26) + 1
         global buttons
@@ -595,7 +605,7 @@ def settings_menu():
 
 if __name__ == "__main__":
     # create folders for images, sounds and questions on raspberry
-    required_folders = [b"Bilder/", b"Audio/", b"Questions/"]
+    required_folders = [b"Bilder/", b"Audio/", b"Questions/", b"Hints/"]
     for f in required_folders:
         if not os.path.exists(b'/home/pi/Desktop/SdR/' + f):
             dir_name = b'/home/pi/Desktop/SdR/' + f
