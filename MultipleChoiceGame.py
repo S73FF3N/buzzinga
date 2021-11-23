@@ -317,6 +317,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                     if player1_locked and player2_locked and player3_locked and player4_locked:
                         solution_shown = "Prepared"
                         question_answered = True
+                        print(player_answers)
                     pygame.display.flip()
 
         # all player have given an answer or game coordinator has closed the question
