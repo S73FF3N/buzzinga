@@ -225,7 +225,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     no_points = False
     show_solution_var = 1
     initialize = True
-
     running = True
     break_flag = False
     while running:
@@ -272,7 +271,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN and hint_n == 10:
                         first = True
                         no_points = True
                         try:
@@ -312,7 +311,6 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             first = True
                             countdown(5)
                     pygame.display.flip()
-                    hint_n = 1
                 # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
         # loop waiting until the 'button' are reset
@@ -339,10 +337,25 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             playerScore[first_buzz] = playerScore[first_buzz] + 1
                         if keypressed == answer[1]:
                             playerScore[first_buzz] = playerScore[first_buzz] - 1
+                            first = False
                         player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
                         screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                         pygame.display.flip()
+                        if not first:
+                            for n in range(0, players):
+                                player_buzzer_container = pygame.Rect(picture_container_width, (
+                                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                      player_buzzer_container_width,
+                                                                      player_buzzer_container_height)
+                                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                            pygame.display.flip()
+                            break
                         points_reached()
+
+                    if keypressed == pygame.K_n:
+                        print_hint(hint_n)
+                        if hint_n != 10:
+                            hint_n += 1
 
                     if keypressed == pygame.K_RETURN and show_solution_var == 2:
                         sound_channel.stop()
@@ -373,6 +386,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         nr += 1
                         progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
                         pygame.display.flip()
+                        hint_n = 1
                         try:
                             random_pick_content()
                             pygame.display.flip()
