@@ -380,13 +380,13 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         show_solution()
                         pygame.display.flip()
                         show_solution_var = 2
-                        hint_n = 1
 
                     if keypressed == pygame.K_RETURN and show_solution_var == 0:
                         pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                         nr += 1
                         progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
                         pygame.display.flip()
+                        hint_n = 1
                         try:
                             random_pick_content()
                             pygame.display.flip()
