@@ -341,7 +341,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                         player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
                         screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                         pygame.display.flip()
-                        if first == False:
+                        if not first:
                             for n in range(0, players):
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
                                         game_label_container_height + player_label_container_height + n * player_container_height),
@@ -351,6 +351,11 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                             pygame.display.flip()
                             break
                         points_reached()
+
+                    if keypressed == pygame.K_n:
+                        print_hint(hint_n)
+                        if hint_n != 10:
+                            hint_n += 1
 
                     if keypressed == pygame.K_RETURN and show_solution_var == 2:
                         sound_channel.stop()
