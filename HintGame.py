@@ -306,7 +306,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                            solution_link = scorefont.render(random_val["solution_link"], 1, Static.WHITE)
+                            solution_link = myfont.render(random_val["solution_link"], 1, Static.WHITE)
                             screen.blit(solution_link,
                                         solution_link.get_rect(center=player_buzzer_container.center))
                             # buzzer sound
