@@ -87,6 +87,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     with open(content_dir) as json_file:
         data = json.load(json_file)
     for q in data:
+        solution_link = "4/" + str(q["pk"])
         content_dict[q["fields"]["solution"]] = {'hint1': q["fields"]["hint1"],
                                                 'hint2': q["fields"]["hint2"],
                                                 'hint3': q["fields"]["hint3"],
@@ -96,7 +97,8 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                  'hint7': q["fields"]["hint7"],
                                                  'hint8': q["fields"]["hint8"],
                                                  'hint9': q["fields"]["hint9"],
-                                                 'hint10': q["fields"]["hint10"]
+                                                 'hint10': q["fields"]["hint10"],
+                                                 'solution_link': solution_link,
                                                  }
 
     # loading info
@@ -304,6 +306,9 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
                                                                   player_buzzer_container_width,
                                                                   player_buzzer_container_height)
                             pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                            solution_link = myfont.render(random_val["solution_link"], 1, Static.WHITE)
+                            screen.blit(solution_link,
+                                        solution_link.get_rect(center=player_buzzer_container.center))
                             # buzzer sound
                             if game_sounds:
                                 buzzerHit = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/buzzer_hit.wav")
