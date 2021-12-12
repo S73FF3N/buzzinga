@@ -187,7 +187,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     def print_hint(n):
         global random_val
         pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n][0])
-        hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.RED)
+        hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
         screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n][0].center))
         pygame.display.flip()
 
