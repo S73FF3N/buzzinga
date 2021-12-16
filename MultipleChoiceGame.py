@@ -258,6 +258,8 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             break_flag = True
                             running = False
                         initialize = False
+                        pygame.draw.rect(screen, Static.WHITE, solution_container)
+                        pygame.display.flip()
 
         # player provide answer, game coordinator closes question eventually
         while not question_answered and not winner_found and not break_flag:
@@ -344,8 +346,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             break_flag = True
                             running = False
                         if buttonpressed == pygame.K_RETURN:
-                            #pygame.draw.rect(screen, Static.WHITE, solution_container)
-                            #pygame.display.flip()
                             # reset the buzzers to black
                             for n in range(0, players):
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
