@@ -333,7 +333,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
 
             while solution_shown == "Reset" and not break_flag:
-                pygame.event.clear()
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
@@ -406,6 +405,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                             center=player_score_container.center))
                                         points_reached()
                             solution_shown = "Reset"
+                            pygame.event.clear()
                             pygame.display.flip()
 
             # Show answers of players
@@ -424,6 +424,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         if buttonpressed == pygame.K_RETURN:
                             if player_answers == {1: False, 2: False, 3:False, 4:False}:
                                 solution_shown = "Reset"
+                                pygame.event.clear()
                             else:
                                 for n in range(1, players + 1):
                                     player_buzzer_container = pygame.Rect(picture_container_width, (
