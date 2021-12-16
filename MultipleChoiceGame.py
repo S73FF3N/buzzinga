@@ -333,6 +333,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
                     # Show solution
                     if buttonpressed == pygame.K_RETURN and solution_shown == "playersAnswers":
+                        print("color buzzer with answer")
                         for n in range(1, players + 1):
                             player_buzzer_container = pygame.Rect(picture_container_width, (
                                     game_label_container_height + player_label_container_height + (
@@ -344,6 +345,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             else:
                                 pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
                         solution_shown = "Prepared"
+                        print(solution_shown)
                         pygame.display.flip()
 
             # solution has been displayed
