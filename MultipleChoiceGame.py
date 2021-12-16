@@ -332,6 +332,51 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         break_flag = True
                         running = False
 
+            # solution has been displayed
+            while solution_shown == "Prepared" and not break_flag:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        buttonpressed = event.key
+                        if buttonpressed == pygame.K_F4 and (
+                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
+                            sys.exit()
+                        if buttonpressed == pygame.K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
+                            break_flag = True
+                            running = False
+                        # Check if answer is correct to increase score
+                        if buttonpressed == pygame.K_RETURN:
+                            show_solution()
+                            for n in range(1, players + 1):
+                                player_buzzer_container = pygame.Rect(picture_container_width, (
+                                        game_label_container_height + player_label_container_height + (
+                                        n - 1) * player_container_height),
+                                                                      player_buzzer_container_width,
+                                                                      player_buzzer_container_height)
+                                if not player_answers[n]:
+                                    continue
+                                else:
+                                    if player_answers[n][0] == random_val["solution"]:
+                                        pygame.draw.rect(screen, Static.LIGHT_GREEN,
+                                                         player_buzzer_container)
+                                        pygame.draw.rect(screen, player_answers[n][1],
+                                                         player_buzzer_container.inflate(-50, -50))
+                                        player_score_container = pygame.Rect(
+                                            (picture_container_width + player_buzzer_container_width), (
+                                                    game_label_container_height + player_label_container_height + (
+                                                    n - 1) * player_container_height),
+                                            player_score_container_width, player_score_container_height)
+                                        pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                                        playerScore[(n - 1)] = playerScore[(n - 1)] + 1
+                                        player_score = scorefont.render(str(playerScore[(n - 1)]), 1,
+                                                                        Static.BLACK)
+                                        screen.blit(player_score, player_score.get_rect(
+                                            center=player_score_container.center))
+                                        points_reached()
+                            question_answered = False
+                            solution_shown = "Reset"
+                            pygame.display.flip()
+
             # Show answers of players
             while solution_shown == "playersAnswers" and not break_flag:
                 for event in pygame.event.get():
@@ -360,47 +405,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             question_answered = False
                             solution_shown = "Prepared"
                             pygame.display.flip()
-
-            # solution has been displayed
-            while solution_shown == "Prepared" and not break_flag:
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        buttonpressed = event.key
-                        if buttonpressed == pygame.K_F4 and (
-                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
-                            sys.exit()
-                        if buttonpressed == pygame.K_ESCAPE:
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
-                            break_flag = True
-                            running = False
-                    # Check if answer is correct to increase score
-                    if buttonpressed == pygame.K_RETURN:
-                        show_solution()
-                        for n in range(1, players + 1):
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                    game_label_container_height + player_label_container_height + (
-                                    n - 1) * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            if not player_answers[n]:
-                                continue
-                            else:
-                                if player_answers[n][0] == random_val["solution"]:
-                                    pygame.draw.rect(screen, Static.LIGHT_GREEN, player_buzzer_container)
-                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container.inflate(-50, -50))
-                                    player_score_container = pygame.Rect(
-                                        (picture_container_width + player_buzzer_container_width), (
-                                                game_label_container_height + player_label_container_height + (
-                                                n - 1) * player_container_height),
-                                        player_score_container_width, player_score_container_height)
-                                    pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                                    playerScore[(n - 1)] = playerScore[(n - 1)] + 1
-                                    player_score = scorefont.render(str(playerScore[(n - 1)]), 1, Static.BLACK)
-                                    screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                                    points_reached()
-                        question_answered = False
-                        solution_shown = "Reset"
-                        pygame.display.flip()
 
             while solution_shown == "Reset" and not break_flag:
                 for event in pygame.event.get():
