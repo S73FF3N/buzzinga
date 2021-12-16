@@ -358,6 +358,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             else:
                                 pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
                                 print(player_answers[n][1])
+                        question_answered = False
                         solution_shown = "Prepared"
                         print(solution_shown)
                         pygame.display.flip()
