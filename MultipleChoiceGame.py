@@ -344,24 +344,22 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             break_flag = True
                             running = False
-                    # Check if answer is correct to increase score
-                    if buttonpressed == pygame.K_RETURN:
-                        print("color buzzer with answer")
-                        for n in range(1, players + 1):
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                    game_label_container_height + player_label_container_height + (
-                                    n - 1) * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            if not player_answers[n]:
-                                continue
-                            else:
-                                pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
-                                print(player_answers[n][1])
-                        question_answered = False
-                        solution_shown = "Prepared"
-                        print(solution_shown)
-                        pygame.display.flip()
+                        # Check if answer is correct to increase score
+                        if buttonpressed == pygame.K_RETURN:
+                            print("color buzzer with answer")
+                            for n in range(1, players + 1):
+                                player_buzzer_container = pygame.Rect(picture_container_width, (
+                                        game_label_container_height + player_label_container_height + (
+                                        n - 1) * player_container_height),
+                                                                      player_buzzer_container_width,
+                                                                      player_buzzer_container_height)
+                                if not player_answers[n]:
+                                    continue
+                                else:
+                                    pygame.draw.rect(screen, player_answers[n][1], player_buzzer_container)
+                            question_answered = False
+                            solution_shown = "Prepared"
+                            pygame.display.flip()
 
             # solution has been displayed
             while solution_shown == "Prepared" and not break_flag:
