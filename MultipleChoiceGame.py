@@ -331,8 +331,21 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         running = False
-                    # Show solution
-                    if buttonpressed == pygame.K_RETURN and solution_shown == "playersAnswers":
+
+            # Show answers of players
+            while solution_shown == "playersAnswers" and not break_flag:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        buttonpressed = event.key
+                        if buttonpressed == pygame.K_F4 and (
+                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
+                            sys.exit()
+                        if buttonpressed == pygame.K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
+                            break_flag = True
+                            running = False
+                    # Check if answer is correct to increase score
+                    if buttonpressed == pygame.K_RETURN:
                         print("color buzzer with answer")
                         for n in range(1, players + 1):
                             player_buzzer_container = pygame.Rect(picture_container_width, (
