@@ -422,7 +422,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             running = False
                         # Check if answer is correct to increase score
                         if buttonpressed == pygame.K_RETURN:
-                            if player_answers == {1: False, 2: False, 3:False, 4:False}
+                            if player_answers == {1: False, 2: False, 3:False, 4:False}:
                                 solution_shown = "Reset"
                             else:
                                 for n in range(1, players + 1):
