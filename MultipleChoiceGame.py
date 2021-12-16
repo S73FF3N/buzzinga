@@ -333,6 +333,7 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         running = False
 
             while solution_shown == "Reset" and not break_flag:
+                pygame.event.clear()
                 for event in pygame.event.get():
                     if event.type == pygame.KEYDOWN:
                         buttonpressed = event.key
