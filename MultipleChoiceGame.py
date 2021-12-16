@@ -332,6 +332,37 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                         break_flag = True
                         running = False
 
+            while solution_shown == "Reset" and not break_flag:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        buttonpressed = event.key
+                        if buttonpressed == pygame.K_F4 and (
+                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
+                            sys.exit()
+                        if buttonpressed == pygame.K_ESCAPE:
+                            os.chdir("/home/pi/Desktop/venv/mycode/")
+                            break_flag = True
+                            running = False
+                    if buttonpressed == pygame.K_RETURN:
+                        pygame.draw.rect(screen, Static.WHITE, solution_container)
+                        pygame.display.flip()
+                        # reset the buzzers to black
+                        for n in range(0, players):
+                            player_buzzer_container = pygame.Rect(picture_container_width, (
+                                    game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                  player_buzzer_container_width,
+                                                                  player_buzzer_container_height)
+                            pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                        pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
+                        nr += 1
+                        progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
+                        pygame.display.flip()
+                        random_pick_content()
+                        pygame.display.flip()
+                        question_answered = False
+                        solution_shown = "Waiting"
+                        pygame.display.flip()
+
             # solution has been displayed
             while solution_shown == "Prepared" and not break_flag:
                 for event in pygame.event.get():
@@ -373,7 +404,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                                         screen.blit(player_score, player_score.get_rect(
                                             center=player_score_container.center))
                                         points_reached()
-                            question_answered = False
                             solution_shown = "Reset"
                             pygame.display.flip()
 
@@ -405,36 +435,6 @@ def multiple_choice_game(players, playerNamesList, content_dir, screen, screenx,
                             solution_shown = "Prepared"
                             pygame.display.flip()
 
-            while solution_shown == "Reset" and not break_flag:
-                for event in pygame.event.get():
-                    if event.type == pygame.KEYDOWN:
-                        buttonpressed = event.key
-                        if buttonpressed == pygame.K_F4 and (
-                                pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]):
-                            sys.exit()
-                        if buttonpressed == pygame.K_ESCAPE:
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
-                            break_flag = True
-                            running = False
-                    if buttonpressed == pygame.K_RETURN:
-                        pygame.draw.rect(screen, Static.WHITE, solution_container)
-                        pygame.display.flip()
-                        # reset the buzzers to black
-                        for n in range(0, players):
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                    game_label_container_height + player_label_container_height + n * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                        pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
-                        nr += 1
-                        progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
-                        pygame.display.flip()
-                        random_pick_content()
-                        pygame.display.flip()
-                        question_answered = False
-                        solution_shown = "Waiting"
-                        pygame.display.flip()
         if break_flag:
             break
 
