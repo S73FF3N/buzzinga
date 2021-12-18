@@ -1,4 +1,6 @@
 *.pyc
+*.bmp
+*.png
 **/.idea
 .idea/
 **/images/*
