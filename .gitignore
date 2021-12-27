@@ -1,4 +1,7 @@
 *.pyc
+*.bmp
+*.png
+*.wav
 **/.idea
 .idea/
 **/images/*
