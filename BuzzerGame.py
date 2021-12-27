@@ -213,6 +213,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
+    pygame.display.flip()
 
     # Created Variable for the text on the screen
     game_label = myfont.render(game_name, 1, Static.RED)
