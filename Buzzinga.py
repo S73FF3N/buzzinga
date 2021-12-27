@@ -123,6 +123,8 @@ def get_free_disk_space():
 
 def delete_category(game_dir, multiple_files=True):
     current_dir = os.getcwd()
+    permission_fail_counter = 0
+    remove_fail_counter = 0
     # differentiate between images & Sounds and json; done
     if multiple_files:
         os.chdir(game_dir)
@@ -130,29 +132,37 @@ def delete_category(game_dir, multiple_files=True):
             if not os.path.isdir(game_dir + "/" + f):
                 try:
                     os.chmod(game_dir + "/" + f, 0o777)
+                except:
+                    permission_fail_counter += 1
+                try:
                     os.remove(game_dir + "/" + f)
                 except:
                     os.chdir(current_dir)
-                    return "Löschen fehlgeschlagen!"
+                    remove_fail_counter += 1
             else:
                 pass
         try:
             os.rmdir(game_dir)
             os.chdir(current_dir)
-            return "Löschen erfolgreich!"
+            return str(permission_fail_counter)+"|"+str(remove_fail_counter)+" Löschen erfolgreich!"
         except:
             os.chdir(current_dir)
-            return "Löschen fehlgeschlagen!"
+            return str(permission_fail_counter)+"|"+str(remove_fail_counter)+" Löschen fehlgeschlagen!"
     else:
         os.chdir(game_dir[:game_dir.rfind("/")])
         try:
             os.chmod(game_dir, 0o777)
+        except:
+            status_str = "Berechtigungsfehler: "
+        try:
             os.remove(game_dir)
             os.chdir(current_dir)
-            return "Löschen erfolgreich!"
+            status_str += "Löschen erfolgreich!"
+            return status_str
         except:
             os.chdir(current_dir)
-            return "Löschen fehlgeschlagen!"
+            status_str += "Löschen fehlgeschlagen!"
+            return status_str
 
 
 def print_player_name(x, playerName):
