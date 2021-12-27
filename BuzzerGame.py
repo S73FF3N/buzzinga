@@ -67,12 +67,17 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
 
     os.chdir(content_dir)
 
+    def print_status(status_str):
+        status = myfont.render(status_str, 1, Static.RED)
+        screen.fill(Static.WHITE)
+        screen.blit(status, status.get_rect(center=picture_container.center))
+        pygame.display.flip()
+
     content_dict = {}
 
-    def build_content_dict(content):
+    def build_content_dict(content, file_counter):
         if not file_in.lower().endswith(('.bmp', '.wav')):
-            print(
-                "{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(
+            print_status("{} has not been added to the content directory because it could not be converted to .bmp or .wav.".format(
                     content))
         else:
             base = os.path.basename(content_dir + content)
@@ -81,35 +86,38 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
             name = name.replace("zzz", "(")
             name = name.replace("uuu", ")")
             content_dict[name] = content_dir + content
+            print_status("added file #{}".format(file_counter))
 
     # loading info
-    loading = myfont.render("loading...", 1, Static.RED)
-    screen.fill(Static.WHITE)
-    screen.blit(loading, loading.get_rect(center=picture_container.center))
-    pygame.display.flip()
+    print_status("loading...")
 
+    file_counter = 1
     for file_in in content_list:
         if os.path.isdir(file_in):
-            print("{} is a directory.".format(file_in))
+            print_status("{} is a directory.".format(file_in))
         if file_in.startswith("."):
-            print("{} starts with '.'. That's not allowed.".format(file_in))
+            print_status("{} starts with '.'. That's not allowed.".format(file_in))
         elif file_in.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav')):
             if game_type == "images":
                 try:
                     # images in image directory are converted into .bmp
+                    print_status("converting file #{}".format(file_counter))
                     file_in = convert_image_to(file_in, "bmp")
                 except:
-                    print("{} could not be converted to .bmp format.".format(file_in))
+                    print_status("{} could not be converted to .bmp format.".format(file_in))
             elif game_type == "sounds":
                 try:
                     # sounds in sound directory are converted into .wav
+                    print_status("converting file #{}".format(file_counter))
                     file_in = mp3_to_wav(file_in)
-                    print(file_in)
                 except:
-                    print("{} could not be converted to .wav format.".format(file_in))
-            build_content_dict(file_in)
+                    print_status("{} could not be converted to .wav format.".format(file_in))
+            build_content_dict(file_in, file_counter)
         else:
-            print("{} has no suitable format.".format(file_in))
+            print_status("{} has no suitable format.".format(file_in))
+        file_counter += 1
+
+    print_status("content dictionary build!")
 
     amount_of_content = len(content_dict)
 
@@ -119,6 +127,8 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
     # randomly chosing content from content dictionary and updating solution label
     sound_channel = pygame.mixer.Channel(0)
     game_sound_channel = pygame.mixer.Channel(1)
+
+    print_status("sound channels initialized")
 
     def random_pick_content():
         global random_key
