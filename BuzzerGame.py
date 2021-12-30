@@ -133,6 +133,7 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
     def random_pick_content():
         global random_key
         global random_val
+        global random_sound
         global winner_found
         try:
             random_key = random.choice(list(content_dict.keys()))
@@ -312,6 +313,9 @@ def buzzer_game(players, playerNamesList, content_dir, screen, screenx, screeny,
                             pygame.display.flip()
                         except:
                             show_solution_var = 2
+                    if event.key == pygame.K_p:
+                        sound_channel.stop()
+                        sound_channel.play(random_sound)
 
                 if event.type == pygame.JOYBUTTONDOWN:
                     buttonpressed = event.button
