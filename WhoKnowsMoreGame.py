@@ -63,9 +63,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         data = json.load(json_file)
     for q in data:
         solution_link = "5/" + str(q["id"])
-        content_dict[q["fields"]["solution"]] = {'solution_link': solution_link, 'answers':{}}
-        for a in q["fields"]["answers"]:
-            content_dict[q["fields"]["solution"]]["answers"][a["fields"]["count_id"]] = a["fields"]["answer"]
+        content_dict[q["solution"] = {'solution_link': solution_link, 'answers':{}}
+        for a in q["answers"]:
+            content_dict[q["solution"]]["answers"][a["count_id"]] = a["answer"]
 
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
