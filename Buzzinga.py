@@ -606,17 +606,20 @@ def settings_menu():
         if config['game modus']:
             pygame.draw.rect(SCREEN, Static.WHITE, (x9, y9, w9, h9))
         if button(u'Spiel starten', x10, y10, w10, h10, click):
-            try:
-                pygame.joystick.quit()
-                pygame.joystick.init()
-                if pygame.joystick.get_count() == 1:
-                    js = pygame.joystick.Joystick(0)
-                    js.init()
-                    start_game = True
-                else:
+            if config["game_type"] == "who-knows-more":
+                start_game = True
+            else:
+                try:
+                    pygame.joystick.quit()
+                    pygame.joystick.init()
+                    if pygame.joystick.get_count() == 1:
+                        js = pygame.joystick.Joystick(0)
+                        js.init()
+                        start_game = True
+                    else:
+                        no_buzzer_connected()
+                except Exception as e:
                     no_buzzer_connected()
-            except:
-                no_buzzer_connected()
         elif button(u'Zurück', x7, y7, w7, h7, click):
             settings_menu_running = False
             choose_category(import_status="")
