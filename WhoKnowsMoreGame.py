@@ -230,7 +230,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                         pygame.display.flip()
+                        active_player += 1
                         # start countdown
+                        countdown(30)
 
         while not winner_found and not break_flag and not first_element_of_question:
             for event in pygame.event.get():
@@ -248,6 +250,10 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             # print answer on screen
                             # if answers left:
                                 # activate next player
+                                """if active_player + 1 == players:
+                                    active_player = 0
+                                else:
+                                    active_player += 1"""
                                 # start countdown
                             # else:
                                 # set variable to start next round (first_element_of_question = True)
