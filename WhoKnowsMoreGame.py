@@ -78,7 +78,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     winner_found = False
     hint_n = 1
 
-    # randomly chosing content from content dictionary and updating solution label
+    # randomly chosing content from content dictionary
     def random_pick_content():
         global random_key
         global random_val
@@ -96,7 +96,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         if not winner_found:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             pygame.draw.rect(screen, Static.WHITE, game_label_container)
-            game_label = myfont.render(random_key, 1, Static.RED)
+            game_label = myfont.render(random_key+" ("+random_val["solution_link"]+")", 1, Static.RED)
             screen.blit(game_label, game_label.get_rect(center=game_label_container.center))
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
@@ -115,7 +115,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
 
-    # countdown printed in solution label
+    # countdown printed
     def countdown(count_from):
         for i in range(1, count_from):
             time_left = count_from - i
@@ -179,6 +179,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     initialize = True
     running = True
     break_flag = False
+    first_element_of_question = True
+    active_player = 0
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -212,7 +214,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             break
                         initialize = False
 
-        while not winner_found and not break_flag:
+        while not winner_found and not break_flag and first_element_of_question:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -220,29 +222,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         break_flag = True
                         break
                     if event.key == pygame.K_RETURN:
-                        no_points = True
-                        try:
-                            show_solution_var = 1
-                            for n in range(0, players):
-                                player_buzzer_container = pygame.Rect(picture_container_width, (
-                                            game_label_container_height + player_label_container_height + n * player_container_height),
-                                                                      player_buzzer_container_width,
-                                                                      player_buzzer_container_height)
-                                buzzer_blocked = scorefont.render("X", 1, Static.RED)
-                                screen.blit(buzzer_blocked,
-                                            buzzer_blocked.get_rect(center=player_buzzer_container.center))
-                            pygame.display.flip()
-                        except:
-                            show_solution_var = 2
-                    if event.key == pygame.K_n:
-                        print_answer(hint_n)
-                        if hint_n != 10:
-                            hint_n += 1
+                        first_element_of_question = False
+                        # mark player to give answer
+                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                              player_buzzer_container_width,
+                                                              player_buzzer_container_height)
+                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                        pygame.display.flip()
+                        # start countdown
 
-            # now go to the reset code
-        # loop waiting until the 'button' are reset
-
-        while not winner_found and not break_flag:
+        while not winner_found and not break_flag and not first_element_of_question:
             for event in pygame.event.get():
                 # User pressed down on a key
                 if event.type == pygame.KEYDOWN:
@@ -251,6 +241,24 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
+
+                        # decide if answer is correct
+                        # stop countdown
+                        # if answer is correct:
+                            # print answer on screen
+                            # if answers left:
+                                # activate next player
+                                # start countdown
+                            # else:
+                                # set variable to start next round (first_element_of_question = True)
+                                # assign point to winning player
+                        # else: answer is incorrect:
+                            # exlude player from round
+                            # if only one player is left in round
+                                # set variable to start next round (first_element_of_question = True)
+                                # print all answers left
+                                # assign point to winning player
+
                     # Check if Key Pressed to increase score
                     if not no_points and keypressed in answer:
                         player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
@@ -259,11 +267,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                              player_score_container_width,
                                                              player_score_container_height)
                         pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                        if keypressed == answer[0]:
-                            playerScore[first_buzz] = playerScore[first_buzz] + 1
-                        if keypressed == answer[1]:
-                            playerScore[first_buzz] = playerScore[first_buzz] - 1
-                            first = False
                         player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
                         screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                         pygame.display.flip()
@@ -284,7 +287,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             hint_n += 1
 
                     if keypressed == pygame.K_RETURN and show_solution_var == 2:
-                        pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
                         for n in range(0, players):
@@ -300,8 +302,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
                     # solution is shown
                     if keypressed == pygame.K_RETURN and show_solution_var == 1:
-                        pygame.draw.rect(screen, Static.WHITE, solution_container)
-                        show_solution()
                         pygame.display.flip()
                         show_solution_var = 2
 
