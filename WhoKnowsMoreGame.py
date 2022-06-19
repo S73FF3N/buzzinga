@@ -95,7 +95,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             winner_found = True
         if not winner_found:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
-            pygame.draw.rect(screen, Static.WHITE, solution_container)
+            pygame.draw.rect(screen, Static.WHITE, game_label_container)
             game_label = myfont.render(random_key, 1, Static.RED)
             screen.blit(game_label, game_label.get_rect(center=game_label_container.center))
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
