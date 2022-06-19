@@ -32,6 +32,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
     answer_container_width = (game_label_container_width / 3) - 5
     answer_container_height = (picture_container_height / 7) - 2
+    answer_container = pygame.Rect(0, game_label_container_height, answer_container_width,
+                                            answer_container_height)
 
     picture_counter_container_width = screenx / 10
     picture_counter_container_height = screeny / 10
@@ -233,6 +235,14 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         active_player += 1
                         # start countdown
                         countdown(30)
+                    if event.key == pygame.K_r:
+                        global random_val
+                        #game_sound_channel.stop()
+                        #pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                        pygame.draw.rect(screen, Static.BLUE, answer_container)
+                        answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
+                        screen.blit(answer, answer.get_rect(center=answer_container.center))
+                        pygame.display.flip()
 
         while not winner_found and not break_flag and not first_element_of_question:
             for event in pygame.event.get():
