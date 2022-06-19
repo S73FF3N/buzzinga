@@ -10,8 +10,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 points_to_win):
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.mixer.init()
-    sound_channel = pygame.mixer.Channel(0)
-    game_sound_channel = pygame.mixer.Channel(1)
+    game_sound_channel = pygame.mixer.Channel(0)
 
     # declare and array for player names and initial score
     playerNames = playerNamesList
@@ -25,45 +24,22 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     scorefont = pygame.font.SysFont("Ariel", 100)
 
     # defining the container for the graphical elements
-    game_label_container_width = screenx / 10 * 8
+    game_label_container_width = screenx / 10 * 9
     game_label_container_height = screeny / 10
     game_label_container = pygame.Rect(0, 0, game_label_container_width, game_label_container_height)
     picture_container_width = game_label_container_width
-    picture_container_height = screeny / 10 * 8
+    picture_container_height = screeny / 10 * 9
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
-    hint_container_width = (game_label_container_width / 2) - 10
-    hint_container_height = (picture_container_height / 5) - 5
-    hint1_container = pygame.Rect(5, game_label_container_height, hint_container_width, hint_container_height)
-    hint2_container = pygame.Rect(hint_container_width + 10, game_label_container_height, hint_container_width, hint_container_height)
-    hint3_container = pygame.Rect(5, game_label_container_height + hint_container_height + 5, hint_container_width, hint_container_height)
-    hint4_container = pygame.Rect(hint_container_width + 10, game_label_container_height + hint_container_height + 5, hint_container_width,
-                                  hint_container_height)
-    hint5_container = pygame.Rect(5, game_label_container_height + 2*hint_container_height + 10, hint_container_width,
-                                  hint_container_height)
-    hint6_container = pygame.Rect(hint_container_width + 10, game_label_container_height + 2*hint_container_height + 10,
-                                  hint_container_width,
-                                  hint_container_height)
-    hint7_container = pygame.Rect(5, game_label_container_height + 3*hint_container_height + 15, hint_container_width,
-                                  hint_container_height)
-    hint8_container = pygame.Rect(hint_container_width + 10, game_label_container_height + 3*hint_container_height + 15,
-                                  hint_container_width,
-                                  hint_container_height)
-    hint9_container = pygame.Rect(5, game_label_container_height + 4*hint_container_height + 20, hint_container_width,
-                                  hint_container_height)
-    hint10_container = pygame.Rect(hint_container_width + 10, game_label_container_height + 4*hint_container_height + 20,
-                                  hint_container_width,
-                                  hint_container_height)
-    solution_container_width = picture_container_width
-    solution_container_height = screeny / 10
-    solution_container = pygame.Rect(0, (game_label_container_height + picture_container_height),
-                                     solution_container_width, solution_container_height)
-    picture_counter_container_width = screenx / 10 * 2
+    answer_container_width = (game_label_container_width / 3) - 5
+    answer_container_height = (picture_container_height / 7) - 2
+
+    picture_counter_container_width = screenx / 10
     picture_counter_container_height = screeny / 10
     picture_counter_container = pygame.Rect(game_label_container_width, 0, picture_counter_container_width,
                                             picture_counter_container_height)
     countdown_container_width = picture_counter_container_width
     countdown_container_height = screeny / 10
-    countdown_container = pygame.Rect(solution_container_width,
+    countdown_container = pygame.Rect(picture_container_width,
                                       (game_label_container_height + picture_container_height),
                                       countdown_container_width, countdown_container_height)
     player_container_width = picture_counter_container_width
@@ -78,7 +54,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     # text displayed at the beginning
     head, tail = os.path.split(content_dir)
     game_name = tail[:-5].replace('_', ' ')
-    welcome = u"Willkommen zu " + game_name
 
     logo = "BuzzingaLogo.bmp"
     picture = load_image(logo, 'images')
@@ -87,19 +62,10 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     with open(content_dir) as json_file:
         data = json.load(json_file)
     for q in data:
-        solution_link = "4/" + str(q["pk"])
-        content_dict[q["fields"]["solution"]] = {'hint1': q["fields"]["hint1"],
-                                                'hint2': q["fields"]["hint2"],
-                                                'hint3': q["fields"]["hint3"],
-                                                 'hint4': q["fields"]["hint4"],
-                                                 'hint5': q["fields"]["hint5"],
-                                                 'hint6': q["fields"]["hint6"],
-                                                 'hint7': q["fields"]["hint7"],
-                                                 'hint8': q["fields"]["hint8"],
-                                                 'hint9': q["fields"]["hint9"],
-                                                 'hint10': q["fields"]["hint10"],
-                                                 'solution_link': solution_link,
-                                                 }
+        solution_link = "5/" + str(q["pk"])
+        content_dict[q["fields"]["solution"]] = {'solution_link': solution_link, 'answers':{}}
+        for a in q["fields"]["answers"]:
+            content_dict[q["fields"]["solution"]]["answers"][a["fields"]["count_id"]] = a["fields"]["answer"]
 
     # loading info
     loading = myfont.render("loading...", 1, Static.RED)
@@ -121,6 +87,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
+            if len(random_val["answers"]):
+                answer_container_width = (game_label_container_width / 6) - 5
+                answer_container_height = (picture_container_height / 10) - 2
             del content_dict[random_key]
         except:
             winner_found = True
@@ -132,10 +101,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         return random_key, random_val, winner_found
 
     def show_winner():
-        sound_channel.stop()
         pygame.draw.rect(screen, Static.WHITE, picture_container)
         pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
-        pygame.draw.rect(screen, Static.WHITE, solution_container)
         winner_ix = [i for i, x in enumerate(playerScore) if x == max(playerScore)]
         winners = [scorefont.render("Gewinner:", 1, Static.RED)]
         [winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
@@ -144,11 +111,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
-
-    # print solution in solution label
-    def show_solution():
-        solution = myfont.render(random_key, 1, Static.RED)
-        screen.blit(solution, solution.get_rect(center=solution_container.center))
 
     # countdown printed in solution label
     def countdown(count_from):
@@ -172,19 +134,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             if points_to_win == max(playerScore):
                 winner_found = True
 
-    hint_match_dict = {
-        1: [hint1_container, "hint1"],
-        2: [hint2_container, "hint2"],
-        3: [hint3_container, "hint3"],
-        4: [hint4_container, "hint4"],
-        5: [hint5_container, "hint5"],
-        6: [hint6_container, "hint6"],
-        7: [hint7_container, "hint7"],
-        8: [hint8_container, "hint8"],
-        9: [hint9_container, "hint9"],
-        10: [hint10_container, "hint10"],
-    }
-    def print_hint(n):
+    def print_answer(n):
         global random_val
         pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n][0])
         hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
@@ -196,13 +146,11 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
     # Created Variable for the text on the screen
     game_label = myfont.render(game_name, 1, Static.RED)
-    solution_label = myfont.render(welcome, 1, Static.RED)
     nr = 1
     progress = myfont.render(str(amount_of_content) + " Dateien", 1, Static.RED)
     screen.blit(game_label, game_label.get_rect(center=game_label_container.center))
     screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
     screen.blit(picture, picture.get_rect(center=picture_container.center))
-    screen.blit(solution_label, solution_label.get_rect(center=solution_container.center))
 
     # Draw name of players, 4 empty rectangles and players score
     for n in range(0, players):
@@ -223,7 +171,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
     pygame.display.flip()
 
-    first = False  # used to signify the first key pressed and stops other being used
     no_points = False
     show_solution_var = 1
     initialize = True
@@ -238,7 +185,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    sound_channel.stop()
                     os.chdir("/home/pi/Desktop/venv/mycode/")
                     break_flag = True
                     break
@@ -250,7 +196,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        sound_channel.stop()
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
@@ -259,22 +204,19 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             random_pick_content()
                             pygame.display.flip()
                         except Exception as e:
-                            sound_channel.stop()
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             break_flag = True
                             break
                         initialize = False
 
-        while not first and not winner_found and not break_flag:
+        while not winner_found and not break_flag:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        sound_channel.stop()
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
-                    if event.key == pygame.K_RETURN and hint_n == 10:
-                        first = True
+                    if event.key == pygame.K_RETURN:
                         no_points = True
                         try:
                             show_solution_var = 1
@@ -287,46 +229,22 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 screen.blit(buzzer_blocked,
                                             buzzer_blocked.get_rect(center=player_buzzer_container.center))
                             pygame.display.flip()
-                            hint_n = 1
                         except:
                             show_solution_var = 2
                     if event.key == pygame.K_n:
-                        print_hint(hint_n)
+                        print_answer(hint_n)
                         if hint_n != 10:
                             hint_n += 1
 
-                if event.type == pygame.JOYBUTTONDOWN:
-                    buttonpressed = event.button
-                    for n in range(0, players):
-                        if buttonpressed == playerKeys[n]:
-                            sound_channel.pause()
-                            first_buzz = playerKeys.index(buttonpressed)
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + first_buzz * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                            solution_link = myfont.render(random_val["solution_link"], 1, Static.WHITE)
-                            screen.blit(solution_link,
-                                        solution_link.get_rect(center=player_buzzer_container.center))
-                            # buzzer sound
-                            if game_sounds:
-                                buzzerHit = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/buzzer_hit.wav")
-                                game_sound_channel.play(buzzerHit)
-                            first = True
-                            countdown(5)
-                    pygame.display.flip()
-                # a 'buzzer' was pressed and shown on screen
             # now go to the reset code
         # loop waiting until the 'button' are reset
 
-        while first and not winner_found and not break_flag:
+        while not winner_found and not break_flag:
             for event in pygame.event.get():
                 # User pressed down on a key
                 if event.type == pygame.KEYDOWN:
                     keypressed = event.key
                     if event.key == pygame.K_ESCAPE:
-                        sound_channel.stop()
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
@@ -363,7 +281,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             hint_n += 1
 
                     if keypressed == pygame.K_RETURN and show_solution_var == 2:
-                        sound_channel.stop()
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         pygame.display.flip()
                         # reset the buzzers to black
@@ -380,7 +297,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
                     # solution is shown
                     if keypressed == pygame.K_RETURN and show_solution_var == 1:
-                        sound_channel.unpause()
                         pygame.draw.rect(screen, Static.WHITE, solution_container)
                         show_solution()
                         pygame.display.flip()
@@ -396,7 +312,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             random_pick_content()
                             pygame.display.flip()
                         except:
-                            sound_channel.stop()
                             os.chdir("/home/pi/Desktop/venv/mycode/")
                             break_flag = True
                             break
