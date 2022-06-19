@@ -40,7 +40,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     countdown_container_width = picture_counter_container_width
     countdown_container_height = screeny / 10
     countdown_container = pygame.Rect(picture_container_width,
-                                      (game_label_container_height + picture_container_height),
+                                      picture_container_height,
                                       countdown_container_width, countdown_container_height)
     player_container_width = picture_counter_container_width
     player_container_height = screeny / 10 * 2
