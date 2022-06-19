@@ -250,10 +250,10 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             # print answer on screen
                             # if answers left:
                                 # activate next player
-                                """if active_player + 1 == players:
-                                    active_player = 0
-                                else:
-                                    active_player += 1"""
+                                #if active_player + 1 == players:
+                                #    active_player = 0
+                                #else:
+                                #    active_player += 1
                                 # start countdown
                             # else:
                                 # set variable to start next round (first_element_of_question = True)
