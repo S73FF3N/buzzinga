@@ -118,7 +118,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                     line * scorefont_height) + (15 * line)))
 
     # countdown printed
-    def countdown(count_from):
+    """def countdown(count_from):
         for i in range(1, count_from):
             time_left = count_from - i
             time_left = str(time_left)
@@ -131,7 +131,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 pygame.display.flip()
         if game_sounds:
             countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
-            game_sound_channel.play(countdown_sound)
+            game_sound_channel.play(countdown_sound)"""
 
     def points_reached():
         global winner_found
@@ -183,6 +183,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     break_flag = False
     first_element_of_question = True
     active_player = 0
+    countdown = False
+    countdown_seconds_left = 30
+
     while running:
         pressed_keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -234,8 +237,13 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         pygame.display.flip()
                         active_player += 1
                         # start countdown
-                        countdown(30)
+                        countdown = True
+
+        while countdown:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
+                        countdown = False
                         global random_val
                         #game_sound_channel.stop()
                         #pygame.draw.rect(screen, Static.WHITE, countdown_container)
@@ -243,6 +251,28 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
                         screen.blit(answer, answer.get_rect(center=answer_container.center))
                         pygame.display.flip()
+                    if event.key == pygame.K_f:
+                        # else: answer is incorrect:
+                        # exlude player from round
+                        # if only one player is left in round
+                        # set variable to start next round (first_element_of_question = True)
+                        # print all answers left
+                        # assign point to winning player
+
+                countdown_seconds_left -= 1
+                time_left = str(countdown_seconds_left)
+                time_left_rendered = myfont.render(time_left, 1, Static.RED)
+                screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
+                pygame.display.flip()
+                pygame.time.wait(1000)
+                if countdown_seconds_left != 0:
+                    pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                    pygame.display.flip()
+                else:
+                    countdown_seconds_left = 30
+                    if game_sounds:
+                        countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
+                        game_sound_channel.play(countdown_sound)
 
         while not winner_found and not break_flag and not first_element_of_question:
             for event in pygame.event.get():
@@ -267,12 +297,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 # start countdown
                             # else:
                                 # set variable to start next round (first_element_of_question = True)
-                                # assign point to winning player
-                        # else: answer is incorrect:
-                            # exlude player from round
-                            # if only one player is left in round
-                                # set variable to start next round (first_element_of_question = True)
-                                # print all answers left
                                 # assign point to winning player
 
                     # Check if Key Pressed to increase score
