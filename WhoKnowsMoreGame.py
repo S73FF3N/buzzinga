@@ -15,9 +15,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     # declare and array for player names and initial score
     playerNames = playerNamesList
     playerScore = [0] * players
-    # key definitions
-    playerKeys = [0, 5, 10, 15]
-    answer = [pygame.K_r, pygame.K_f]
+    answer_key = [pygame.K_r, pygame.K_f]
 
     # Set the fonts for the textf
     myfont = pygame.font.SysFont("Ariel", 50)
@@ -117,34 +115,11 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
 
-    # countdown printed
-    """def countdown(count_from):
-        for i in range(1, count_from):
-            time_left = count_from - i
-            time_left = str(time_left)
-            countdown = myfont.render(time_left, 1, Static.RED)
-            screen.blit(countdown, countdown.get_rect(center=countdown_container.center))
-            pygame.display.flip()
-            pygame.time.wait(1000)
-            if time_left != 0:
-                pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                pygame.display.flip()
-        if game_sounds:
-            countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
-            game_sound_channel.play(countdown_sound)"""
-
     def points_reached():
         global winner_found
         if not game_modus:
             if points_to_win == max(playerScore):
                 winner_found = True
-
-    def print_answer(n):
-        global random_val
-        pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n][0])
-        hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
-        screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n][0].center))
-        pygame.display.flip()
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
@@ -252,6 +227,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         screen.blit(answer, answer.get_rect(center=answer_container.center))
                         pygame.display.flip()
                     if event.key == pygame.K_f:
+                        countdown = False
                         # else: answer is incorrect:
                         # exlude player from round
                         # if only one player is left in round
@@ -299,66 +275,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 # set variable to start next round (first_element_of_question = True)
                                 # assign point to winning player
 
-                    # Check if Key Pressed to increase score
-                    if not no_points and keypressed in answer:
-                        player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
-                                                             (
-                                                                         game_label_container_height + player_label_container_height + first_buzz * player_container_height),
-                                                             player_score_container_width,
-                                                             player_score_container_height)
-                        pygame.draw.rect(screen, Static.WHITE, player_score_container)
-                        player_score = scorefont.render(str(playerScore[first_buzz]), 1, Static.BLACK)
-                        screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                        pygame.display.flip()
-                        if not first:
-                            for n in range(0, players):
-                                player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + n * player_container_height),
-                                                                      player_buzzer_container_width,
-                                                                      player_buzzer_container_height)
-                                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                            pygame.display.flip()
-                            break
-                        points_reached()
 
-                    if keypressed == pygame.K_n:
-                        print_hint(hint_n)
-                        if hint_n != 10:
-                            hint_n += 1
-
-                    if keypressed == pygame.K_RETURN and show_solution_var == 2:
-                        pygame.display.flip()
-                        # reset the buzzers to black
-                        for n in range(0, players):
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + n * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                        first = False
-                        no_points = False
-                        pygame.display.flip()
-                        show_solution_var = 0
-
-                    # solution is shown
-                    if keypressed == pygame.K_RETURN and show_solution_var == 1:
-                        pygame.display.flip()
-                        show_solution_var = 2
-
-                    if keypressed == pygame.K_RETURN and show_solution_var == 0:
-                        pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
-                        nr += 1
-                        progress = myfont.render(str(nr) + "/" + str(amount_of_content), 1, Static.RED)
-                        pygame.display.flip()
-                        hint_n = 1
-                        try:
-                            random_pick_content()
-                            pygame.display.flip()
-                        except:
-                            os.chdir("/home/pi/Desktop/venv/mycode/")
-                            break_flag = True
-                            break
-                        show_solution_var = 1
         if break_flag:
             break
 
