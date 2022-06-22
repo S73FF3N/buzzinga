@@ -159,6 +159,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     countdown = False
     countdown_seconds_left = 30
     correct_answer = False
+    incorrect_answer = False
 
     while running:
         pressed_keys = pygame.key.get_pressed()
@@ -228,21 +229,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     # answer is incorrect:
                     if event.key == pygame.K_f:
                         countdown = False
-                        # exlude player from round
-                        # if only one player is left in round
-                        #   set variable to start next round (initialize = True)
-                        #   print all answers left
-                        #   assign point to winning player
-                        # else
-                        #   activate next player
-                        #   if active_player + 1 == players:
-                        #      active_player = 0
-                        #   else:
-                        #       active_player += 1
-                        #   start countdown
-                        #   countdown_seconds_left = 30
-                        #   countdown = True
-
+                        incorrect_answer = True
 
             countdown_seconds_left -= 1
             time_left = str(countdown_seconds_left)
@@ -271,6 +258,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
             pygame.draw.rect(screen, Static.BLUE, answer_container)
+            # let Spielleiter print given answer from pool of answers
             # print answer on screen
             answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
             screen.blit(answer, answer.get_rect(center=answer_container.center))
@@ -299,6 +287,46 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             # else (no answers left)
             #   set variable to start next round (initialize = True)
             #   no points assigned
+
+        while incorrect_answer:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
+                        break_flag = True
+                        break
+
+            global random_val
+            incorrect_answer = False
+            game_sound_channel.stop()
+            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+
+            # exlude player from round
+            # if only one player is left in round
+            #   set variable to start next round (initialize = True)
+            #   print all answers left
+            #   assign point to winning player
+            # else
+            #   mark player to give next answer
+            for n in range(0, players):
+                player_buzzer_container = pygame.Rect(picture_container_width, (
+                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                                      player_buzzer_container_width,
+                                                      player_buzzer_container_height)
+                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+            player_buzzer_container = pygame.Rect(picture_container_width, (
+                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                  player_buzzer_container_width,
+                                                  player_buzzer_container_height)
+            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+            pygame.display.flip()
+            if active_player + 1 == players:
+                active_player = 0
+            else:
+                active_player += 1
+            # start countdown
+            countdown_seconds_left = 30
+            countdown = True
 
         if break_flag:
             break
