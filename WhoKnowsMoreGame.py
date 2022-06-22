@@ -229,13 +229,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         screen.blit(answer, answer.get_rect(center=answer_container.center))
                         pygame.display.flip()
                         # if answers left:
-                        # activate next player
-                        # if active_player + 1 == players:
+                        #   activate next player
+                        #   if active_player + 1 == players:
                         #    active_player = 0
-                        # else:
+                        #   else:
                         #    active_player += 1
-                        # start countdown
+                        #   start countdown
+                        countdown_seconds_left = 30
                         countdown = True
+                        # else (no answers left)
+                        #   set variable to start next round (initialize = True)
+                        #   no points assigned
                     # answer is incorrect:
                     if event.key == pygame.K_f:
                         countdown = False
@@ -245,14 +249,14 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         #   print all answers left
                         #   assign point to winning player
                         # else
-                        #   if answers left:
-                        #       activate next player
-                        #       if active_player + 1 == players:
-                        #           active_player = 0
-                        #       else:
-                        #           active_player += 1
-                        #       start countdown
-                        #       countdown = True
+                        #   activate next player
+                        #   if active_player + 1 == players:
+                        #      active_player = 0
+                        #   else:
+                        #       active_player += 1
+                        #   start countdown
+                        #   countdown_seconds_left = 30
+                        #   countdown = True
 
 
             countdown_seconds_left -= 1
@@ -261,10 +265,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
             pygame.display.flip()
             pygame.time.wait(1000)
-            if countdown_seconds_left != 0:
-                pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                pygame.display.flip()
-            else:
+            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+            pygame.display.flip()
+            if countdown_seconds_left == 0:
                 countdown_seconds_left = 30
                 if game_sounds:
                     countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
