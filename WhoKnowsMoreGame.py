@@ -217,6 +217,11 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         while countdown:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        os.chdir("/home/pi/Desktop/venv/mycode/")
+                        countdown = False
+                        break_flag = True
+                        break
                     # answer is correct:
                     if event.key == pygame.K_r:
                         countdown = False
