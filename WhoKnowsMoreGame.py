@@ -235,20 +235,20 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         # print all answers left
                         # assign point to winning player
 
-                countdown_seconds_left -= 1
-                time_left = str(countdown_seconds_left)
-                time_left_rendered = myfont.render(time_left, 1, Static.RED)
-                screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
+            countdown_seconds_left -= 1
+            time_left = str(countdown_seconds_left)
+            time_left_rendered = myfont.render(time_left, 1, Static.RED)
+            screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
+            pygame.display.flip()
+            pygame.time.wait(1000)
+            if countdown_seconds_left != 0:
+                pygame.draw.rect(screen, Static.WHITE, countdown_container)
                 pygame.display.flip()
-                pygame.time.wait(1000)
-                if countdown_seconds_left != 0:
-                    pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                    pygame.display.flip()
-                else:
-                    countdown_seconds_left = 30
-                    if game_sounds:
-                        countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
-                        game_sound_channel.play(countdown_sound)
+            else:
+                countdown_seconds_left = 30
+                if game_sounds:
+                    countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
+                    game_sound_channel.play(countdown_sound)
 
         while not winner_found and not break_flag and not first_element_of_question:
             for event in pygame.event.get():
