@@ -151,8 +151,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
     pygame.display.flip()
 
-    no_points = False
-    show_solution_var = 1
     initialize = True
     running = True
     break_flag = False
@@ -160,6 +158,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     active_player = 0
     countdown = False
     countdown_seconds_left = 30
+    correct_answer = False
 
     while running:
         pressed_keys = pygame.key.get_pressed()
@@ -225,26 +224,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     # answer is correct:
                     if event.key == pygame.K_r:
                         countdown = False
-                        global random_val
-                        game_sound_channel.stop()
-                        pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                        pygame.draw.rect(screen, Static.BLUE, answer_container)
-                        # print answer on screen
-                        answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
-                        screen.blit(answer, answer.get_rect(center=answer_container.center))
-                        pygame.display.flip()
-                        # if answers left:
-                        #   activate next player
-                        #   if active_player + 1 == players:
-                        #    active_player = 0
-                        #   else:
-                        #    active_player += 1
-                        #   start countdown
-                        countdown_seconds_left = 30
-                        countdown = True
-                        # else (no answers left)
-                        #   set variable to start next round (initialize = True)
-                        #   no points assigned
+                        correct_answer = True
                     # answer is incorrect:
                     if event.key == pygame.K_f:
                         countdown = False
@@ -278,26 +258,40 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
                     game_sound_channel.play(countdown_sound)
 
-        while not winner_found and not break_flag and not first_element_of_question:
+        while correct_answer:
             for event in pygame.event.get():
-                # User pressed down on a key
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
-                    if event.key == pygame.K_RETURN:
-                        # mark player to give answer
-                        player_buzzer_container = pygame.Rect(picture_container_width, (
-                                game_label_container_height + player_label_container_height + active_player * player_container_height),
-                                                              player_buzzer_container_width,
-                                                              player_buzzer_container_height)
-                        pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                        pygame.display.flip()
-                        active_player += 1
-                        # start countdown
-                        countdown_seconds_left = 30
-                        countdown = True
+
+            global random_val
+            game_sound_channel.stop()
+            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+            pygame.draw.rect(screen, Static.BLUE, answer_container)
+            # print answer on screen
+            answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
+            screen.blit(answer, answer.get_rect(center=answer_container.center))
+            pygame.display.flip()
+            # if answers left:
+            #   mark player to give next answer
+            player_buzzer_container = pygame.Rect(picture_container_width, (
+                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                  player_buzzer_container_width,
+                                                  player_buzzer_container_height)
+            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+            pygame.display.flip()
+            if active_player + 1 == players:
+                active_player = 0
+            else:
+                active_player += 1
+            # start countdown
+            countdown_seconds_left = 30
+            countdown = True
+            # else (no answers left)
+            #   set variable to start next round (initialize = True)
+            #   no points assigned
 
         if break_flag:
             break
