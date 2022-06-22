@@ -267,6 +267,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         break
 
             global random_val
+            correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
             pygame.draw.rect(screen, Static.BLUE, answer_container)
