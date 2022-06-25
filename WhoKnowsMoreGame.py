@@ -76,7 +76,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     amount_of_content = len(content_dict)
 
     winner_found = False
-    hint_n = 1
 
     # randomly chosing content from content dictionary
     def random_pick_content():
@@ -114,6 +113,13 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
+
+    def print_answer_id(x, playerName):
+        x, y, w, h = button_layout_28[x + 7]
+        text_surf, text_rect = text_objects(playerName, SMALL_TEXT, Static.RED)
+        text_rect.center = (int(x + w / 2), int(y + h / 2))
+        SCREEN.blit(text_surf, text_rect)
+        pygame.display.update()
 
     def points_reached():
         global winner_found
@@ -160,6 +166,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     countdown_seconds_left = 30
     correct_answer = False
     incorrect_answer = False
+    answer_id = ""
+    number_keys = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
 
     while running:
         pressed_keys = pygame.key.get_pressed()
@@ -252,8 +260,26 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         os.chdir("/home/pi/Desktop/venv/mycode/")
                         break_flag = True
                         break
+                    if event.key == pygame.K_BACKSPACE:
+                        try:
+                            answer_id = answer_id[:-1]
+                            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                            answer_id_input = myfont.render(answer_id, 1, Static.RED)
+                            screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
+                            pygame.display.flip()
+                        except:
+                            pass
+                    if event.key in number_keys:
+                        try:
+                            answer_id += event.unicode
+                            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                            answer_id_input = myfont.render(answer_id, 1, Static.RED)
+                            screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
+                            pygame.display.flip()
+                        except:
+                            pass
 
-            global random_val
+            """global random_val
             correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
@@ -286,7 +312,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             countdown = True
             # else (no answers left)
             #   set variable to start next round (initialize = True)
-            #   no points assigned
+            #   no points assigned"""
 
         while incorrect_answer:
             for event in pygame.event.get():
