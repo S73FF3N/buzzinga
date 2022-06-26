@@ -286,7 +286,31 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer = myfont.render(random_val["answers"][answer_id_int-1], 1, Static.WHITE)
                             screen.blit(answer, answer.get_rect(center=answer_container.center))
                             pygame.display.flip()
+                            # if answers left:
+                            #   mark player to give next answer
+                            for n in range(0, players):
+                                player_buzzer_container = pygame.Rect(picture_container_width, (
+                                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                      player_buzzer_container_width,
+                                                                      player_buzzer_container_height)
+                                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                            player_buzzer_container = pygame.Rect(picture_container_width, (
+                                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                                  player_buzzer_container_width,
+                                                                  player_buzzer_container_height)
+                            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                            pygame.display.flip()
+                            if active_player + 1 == players:
+                                active_player = 0
+                            else:
+                                active_player += 1
+                            # start countdown
                             correct_answer = False
+                            countdown_seconds_left = 30
+                            countdown = True
+                            # else (no answers left)
+                            #   set variable to start next round (initialize = True)
+                            #   no points assigned"""
                         except Exception as e:
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
                             incorrect_input = myfont.render('Falsche ID', 1, Static.RED)
@@ -297,30 +321,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             #correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-            """# if answers left:
-            #   mark player to give next answer
-            for n in range(0, players):
-                player_buzzer_container = pygame.Rect(picture_container_width, (
-                        game_label_container_height + player_label_container_height + n * player_container_height),
-                                                      player_buzzer_container_width,
-                                                      player_buzzer_container_height)
-                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-            player_buzzer_container = pygame.Rect(picture_container_width, (
-                    game_label_container_height + player_label_container_height + active_player * player_container_height),
-                                                  player_buzzer_container_width,
-                                                  player_buzzer_container_height)
-            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-            pygame.display.flip()
-            if active_player + 1 == players:
-                active_player = 0
-            else:
-                active_player += 1
-            # start countdown
-            countdown_seconds_left = 30
-            countdown = True
-            # else (no answers left)
-            #   set variable to start next round (initialize = True)
-            #   no points assigned"""
 
         while incorrect_answer:
             for event in pygame.event.get():
