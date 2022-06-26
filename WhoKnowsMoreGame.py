@@ -317,7 +317,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             incorrect_input = myfont.render('Falsche ID', 1, Static.RED)
                             screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
-                            correct_answer = False
 
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
