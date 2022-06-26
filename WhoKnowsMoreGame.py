@@ -285,7 +285,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 skip_print_answer = True
                             if not skip_print_answer:
                                 answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
-                                # todo: store solved answers to avoid that id can be accidentally used again
+                                # store solved answers to avoid that id can be accidentally used again
                                 answers_solved.append(random_val["answers"][answer_id_int])
                                 if len(random_val["answers"]) > 28:
                                     answer_container_width = (game_label_container_width / 6) - 5
@@ -329,6 +329,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 # no answers left
                                 else:
                                 #   set variable to start next round (initialize = True)
+                                correct_answer = False
                                     initialize = True
                                 #   no points assigned"""
                             skip_print_answer = False
