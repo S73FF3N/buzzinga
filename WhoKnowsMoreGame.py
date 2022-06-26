@@ -270,6 +270,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         try:
                             # print answer on screen
                             answer_id_int = int(answer_id)
+                            answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                             if len(random_val["answers"]) > 28:
                                 answer_container_width = (game_label_container_width / 6) - 5
                                 answer_container_height = (picture_container_height / 10) - 2
@@ -283,9 +284,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer_container = pygame.Rect(x, y, answer_container_width,
                                                            answer_container_height)
                             pygame.draw.rect(screen, Static.BLUE, answer_container)
-                            answer = myfont.render(random_val["answers"][answer_id_int-1], 1, Static.WHITE)
                             screen.blit(answer, answer.get_rect(center=answer_container.center))
                             pygame.display.flip()
+                            answer_id = ""
                             # if answers left:
                             #   mark player to give next answer
                             for n in range(0, players):
@@ -318,7 +319,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             pygame.display.flip()
                             correct_answer = False
 
-            #correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
 
