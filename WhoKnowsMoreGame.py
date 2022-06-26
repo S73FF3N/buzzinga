@@ -343,6 +343,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     initialize = True
                                     first_element_of_question = True
                                     answers_solved = []
+                                    countdown_seconds_left = 30
                                 #   no points assigned
                             skip_print_answer = False
                         except Exception as e:
