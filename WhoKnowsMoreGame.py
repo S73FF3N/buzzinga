@@ -153,6 +153,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     correct_answer = False
     incorrect_answer = False
     answer_id = ""
+    answers_solved = []
+    skip_print_answer = False
     number_keys = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
 
     while running:
@@ -251,7 +253,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         try:
                             answer_id = answer_id[:-1]
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            answer_id_input = myfont.render(answer_id, 1, Static.RED)
+                            answer_id_input = myfont.render(answer_id, 1, Static.BLUE)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                         except Exception as e:
@@ -261,7 +263,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             # let game master provide id of given answer from pool of answers
                             answer_id += event.unicode
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            answer_id_input = myfont.render(answer_id, 1, Static.RED)
+                            answer_id_input = myfont.render(answer_id, 1, Static.BLUE)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                         except Exception as e:
@@ -270,56 +272,66 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         try:
                             # print answer on screen
                             answer_id_int = int(answer_id)
-                            answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
-                            # todo: store solved answers to avoid that id can be accidentally used again
-                            if len(random_val["answers"]) > 28:
-                                answer_container_width = (game_label_container_width / 6) - 5
-                                answer_container_height = (picture_container_height / 10) - 2
-                                x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
-                                y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container_height
-                            else:
-                                answer_container_width = (game_label_container_width / 4) - 5
-                                answer_container_height = (picture_container_height / 7) - 2
-                                x = ((answer_id_int - 1) % 4) * (answer_container_width + 5)
-                                y = ((answer_id_int - 1) // 4) * (answer_container_height + 2) + game_label_container_height
-                            answer_container = pygame.Rect(x, y, answer_container_width,
-                                                           answer_container_height)
-                            pygame.draw.rect(screen, Static.BLUE, answer_container)
-                            screen.blit(answer, answer.get_rect(center=answer_container.center))
-                            pygame.display.flip()
-                            answer_id = ""
-                            # todo: if answers left:
-                            #   mark player to give next answer
-                            for n in range(0, players):
+                            if random_val["answers"][answer_id_int] in answers_solved:
+                                pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                                incorrect_input = myfont.render('Gelöst!', 1, Static.BLUE)
+                                screen.blit(incorrect_input,
+                                            incorrect_input.get_rect(center=countdown_container.center))
+                                pygame.display.flip()
+                                skip_print_answer = True
+                            if not skip_print_answer:
+                                answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                # todo: store solved answers to avoid that id can be accidentally used again
+                                answers_solved.append(random_val["answers"][answer_id_int])
+                                if len(random_val["answers"]) > 28:
+                                    answer_container_width = (game_label_container_width / 6) - 5
+                                    answer_container_height = (picture_container_height / 10) - 2
+                                    x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
+                                    y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container_height
+                                else:
+                                    answer_container_width = (game_label_container_width / 4) - 5
+                                    answer_container_height = (picture_container_height / 7) - 2
+                                    x = ((answer_id_int - 1) % 4) * (answer_container_width + 5)
+                                    y = ((answer_id_int - 1) // 4) * (answer_container_height + 2) + game_label_container_height
+                                answer_container = pygame.Rect(x, y, answer_container_width,
+                                                               answer_container_height)
+                                pygame.draw.rect(screen, Static.BLUE, answer_container)
+                                screen.blit(answer, answer.get_rect(center=answer_container.center))
+                                pygame.display.flip()
+                                answer_id = ""
+                                # todo: if answers left:
+                                #   mark player to give next answer
+                                for n in range(0, players):
+                                    player_buzzer_container = pygame.Rect(picture_container_width, (
+                                            game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                          player_buzzer_container_width,
+                                                                          player_buzzer_container_height)
+                                    pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                                 player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                        game_label_container_height + player_label_container_height + active_player * player_container_height),
                                                                       player_buzzer_container_width,
                                                                       player_buzzer_container_height)
-                                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                            player_buzzer_container = pygame.Rect(picture_container_width, (
-                                    game_label_container_height + player_label_container_height + active_player * player_container_height),
-                                                                  player_buzzer_container_width,
-                                                                  player_buzzer_container_height)
-                            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                            pygame.display.flip()
-                            if active_player + 1 == players:
-                                active_player = 0
-                            else:
-                                active_player += 1
-                            # start countdown
-                            correct_answer = False
-                            countdown_seconds_left = 30
-                            countdown = True
-                            # todo: else (no answers left)
-                            #   set variable to start next round (initialize = True)
-                            #   no points assigned"""
+                                pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                                pygame.display.flip()
+                                if active_player + 1 == players:
+                                    active_player = 0
+                                else:
+                                    active_player += 1
+                                # start countdown
+                                correct_answer = False
+                                countdown_seconds_left = 30
+                                countdown = True
+                                # todo: else (no answers left)
+                                #   set variable to start next round (initialize = True)
+                                #   no points assigned"""
+                            skip_print_answer = False
                         except Exception as e:
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            incorrect_input = myfont.render('Falsche ID', 1, Static.RED)
+                            incorrect_input = myfont.render('Falsche ID', 1, Static.BLUE)
                             screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                             answer_id = ""
-                            correct_answer = True
+                            #correct_answer = True
 
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
