@@ -311,6 +311,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 answer_id = ""
                                 # if answers left:
                                 if len(random_val["answers"]) != len(answers_solved):
+                                    print(active_player)
                                     #   mark player to give next answer
                                     for n in range(0, players):
                                         player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -334,12 +335,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     countdown = True
                                 # no answers left
                                 else:
-                                #   set variable to start next round (initialize = True)
+                                #   set variable to start next round
                                     correct_answer = False
                                     initialize = True
                                     first_element_of_question = True
                                     answers_solved = []
-                                #   no points assigned"""
+                                #   no points assigned
                             skip_print_answer = False
                         except Exception as e:
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
@@ -347,7 +348,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                             answer_id = ""
-                            #correct_answer = True
 
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
