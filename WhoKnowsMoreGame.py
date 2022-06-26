@@ -303,30 +303,33 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 screen.blit(answer, answer.get_rect(center=answer_container.center))
                                 pygame.display.flip()
                                 answer_id = ""
-                                # todo: if answers left:
-                                #   mark player to give next answer
-                                for n in range(0, players):
+                                # if answers left:
+                                if len(random_val["answers"]) != len(answers_solved):
+                                    #   mark player to give next answer
+                                    for n in range(0, players):
+                                        player_buzzer_container = pygame.Rect(picture_container_width, (
+                                                game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                              player_buzzer_container_width,
+                                                                              player_buzzer_container_height)
+                                        pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                                     player_buzzer_container = pygame.Rect(picture_container_width, (
-                                            game_label_container_height + player_label_container_height + n * player_container_height),
+                                            game_label_container_height + player_label_container_height + active_player * player_container_height),
                                                                           player_buzzer_container_width,
                                                                           player_buzzer_container_height)
-                                    pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                                player_buzzer_container = pygame.Rect(picture_container_width, (
-                                        game_label_container_height + player_label_container_height + active_player * player_container_height),
-                                                                      player_buzzer_container_width,
-                                                                      player_buzzer_container_height)
-                                pygame.draw.rect(screen, Static.RED, player_buzzer_container)
-                                pygame.display.flip()
-                                if active_player + 1 == players:
-                                    active_player = 0
+                                    pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                                    pygame.display.flip()
+                                    if active_player + 1 == players:
+                                        active_player = 0
+                                    else:
+                                        active_player += 1
+                                    # start countdown
+                                    correct_answer = False
+                                    countdown_seconds_left = 30
+                                    countdown = True
+                                # no answers left
                                 else:
-                                    active_player += 1
-                                # start countdown
-                                correct_answer = False
-                                countdown_seconds_left = 30
-                                countdown = True
-                                # todo: else (no answers left)
                                 #   set variable to start next round (initialize = True)
+                                    initialize = True
                                 #   no points assigned"""
                             skip_print_answer = False
                         except Exception as e:
