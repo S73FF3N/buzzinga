@@ -332,13 +332,13 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     correct_answer = False
                                     countdown_seconds_left = 30
                                     countdown = True
-                                    answers_solved = []
                                 # no answers left
                                 else:
                                 #   set variable to start next round (initialize = True)
                                     correct_answer = False
                                     initialize = True
                                     first_element_of_question = True
+                                    answers_solved = []
                                 #   no points assigned"""
                             skip_print_answer = False
                         except Exception as e:
