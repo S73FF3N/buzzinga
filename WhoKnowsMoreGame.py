@@ -276,12 +276,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 answer_container_width = (game_label_container_width / 6) - 5
                                 answer_container_height = (picture_container_height / 10) - 2
                                 x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
-                                y = ((answer_id_int - 1) % 10) * (answer_container_height + 2) + game_label_container_height
+                                y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container_height
                             else:
                                 answer_container_width = (game_label_container_width / 4) - 5
                                 answer_container_height = (picture_container_height / 7) - 2
                                 x = ((answer_id_int - 1) % 4) * (answer_container_width + 5)
-                                y = ((answer_id_int - 1) % 7) * (answer_container_height + 2) + game_label_container_height
+                                y = ((answer_id_int - 1) // 4) * (answer_container_height + 2) + game_label_container_height
                             answer_container = pygame.Rect(x, y, answer_container_width,
                                                            answer_container_height)
                             pygame.draw.rect(screen, Static.BLUE, answer_container)
