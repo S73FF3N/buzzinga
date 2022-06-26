@@ -240,6 +240,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     game_sound_channel.play(countdown_sound)
 
         while correct_answer:
+            global random_val
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -285,14 +286,15 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer = myfont.render(random_val["answers"][answer_id_int-1], 1, Static.WHITE)
                             screen.blit(answer, answer.get_rect(center=answer_container.center))
                             pygame.display.flip()
+                            correct_answer = False
                         except Exception as e:
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
                             incorrect_input = myfont.render('Falsche ID', 1, Static.RED)
                             screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
+                            correct_answer = False
 
-            global random_val
-            correct_answer = False
+            #correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
             """# if answers left:
