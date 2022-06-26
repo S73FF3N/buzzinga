@@ -277,7 +277,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer_id_int = int(answer_id)
                             if random_val["answers"][answer_id_int] in answers_solved:
                                 pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                                incorrect_input = myfont.render('Schon Gelöst!', 1, Static.BLUE)
+                                incorrect_input = myfont.render('Gelöst!', 1, Static.BLUE)
                                 screen.blit(incorrect_input,
                                             incorrect_input.get_rect(center=countdown_container.center))
                                 pygame.display.flip()
@@ -329,7 +329,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 # no answers left
                                 else:
                                 #   set variable to start next round (initialize = True)
-                                correct_answer = False
+                                    correct_answer = False
                                     initialize = True
                                 #   no points assigned"""
                             skip_print_answer = False
