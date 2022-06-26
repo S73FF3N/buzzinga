@@ -332,6 +332,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     correct_answer = False
                                     countdown_seconds_left = 30
                                     countdown = True
+                                    answers_solved = []
                                 # no answers left
                                 else:
                                 #   set variable to start next round (initialize = True)
