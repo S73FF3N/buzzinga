@@ -146,7 +146,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     initialize = True
     running = True
     break_flag = False
-    first_element_of_question = True
+    #first_element_of_question = True
     active_player = 0
     countdown = False
     countdown_seconds_left = 30
@@ -191,7 +191,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             break
                         initialize = False
 
-        while not winner_found and not break_flag and first_element_of_question:
+        while not winner_found and not break_flag:# and first_element_of_question:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -199,7 +199,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         break_flag = True
                         break
                     if event.key == pygame.K_RETURN:
-                        first_element_of_question = False
+                        #first_element_of_question = False
                         # mark player to give answer
                         player_buzzer_container = pygame.Rect(picture_container_width, (
                                 game_label_container_height + player_label_container_height + active_player * player_container_height),
