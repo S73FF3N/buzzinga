@@ -28,10 +28,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     picture_container_width = game_label_container_width
     picture_container_height = screeny / 10 * 9
     picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
-    answer_container_width = (game_label_container_width / 3) - 5
-    answer_container_height = (picture_container_height / 7) - 2
-    answer_container = pygame.Rect(0, game_label_container_height, answer_container_width,
-                                            answer_container_height)
 
     picture_counter_container_width = screenx / 10
     picture_counter_container_height = screeny / 10
@@ -86,9 +82,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         try:
             random_key = random.choice(list(content_dict.keys()))
             random_val = content_dict[random_key]
-            if len(random_val["answers"]):
-                answer_container_width = (game_label_container_width / 6) - 5
-                answer_container_height = (picture_container_height / 10) - 2
             del content_dict[random_key]
         except:
             winner_found = True
@@ -113,13 +106,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(winners[line], (0 + picture_container_width / 3,
                                         game_label_container_height + picture_container_height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
-
-    def print_answer_id(x, playerName):
-        x, y, w, h = button_layout_28[x + 7]
-        text_surf, text_rect = text_objects(playerName, SMALL_TEXT, Static.RED)
-        text_rect.center = (int(x + w / 2), int(y + h / 2))
-        SCREEN.blit(text_surf, text_rect)
-        pygame.display.update()
 
     def points_reached():
         global winner_found
@@ -267,29 +253,49 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer_id_input = myfont.render(answer_id, 1, Static.RED)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
-                        except:
+                        except Exception as e:
                             pass
                     if event.key in number_keys:
                         try:
+                            # let game master provide id of given answer from pool of answers
                             answer_id += event.unicode
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
                             answer_id_input = myfont.render(answer_id, 1, Static.RED)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
-                        except:
+                        except Exception as e:
                             pass
+                    if event.key == pygame.K_RETURN:
+                        try:
+                            # print answer on screen
+                            answer_id_int = int(answer_id)
+                            if len(random_val["answers"]) > 28:
+                                answer_container_width = (game_label_container_width / 6) - 5
+                                answer_container_height = (picture_container_height / 10) - 2
+                                x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
+                                y = ((answer_id_int - 1) % 10) * (answer_container_height + 2)
+                            else:
+                                answer_container_width = (game_label_container_width / 4) - 5
+                                answer_container_height = (picture_container_height / 7) - 2
+                                x = ((answer_id_int-1)%4) * (answer_container_width + 5)
+                                y = ((answer_id_int-1)%7) * (answer_container_height + 2)
+                            answer_container = pygame.Rect(x, y, answer_container_width,
+                                                           answer_container_height)
+                            pygame.draw.rect(screen, Static.BLUE, answer_container)
+                            answer = myfont.render(random_val["answers"][answer_id_int-1], 1, Static.WHITE)
+                            screen.blit(answer, answer.get_rect(center=answer_container.center))
+                            pygame.display.flip()
+                        except Exception as e:
+                            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+                            incorrect_input = myfont.render('Falsche ID', 1, Static.RED)
+                            screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
+                            pygame.display.flip()
 
-            """global random_val
+            global random_val
             correct_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-            pygame.draw.rect(screen, Static.BLUE, answer_container)
-            # let Spielleiter print given answer from pool of answers
-            # print answer on screen
-            answer = myfont.render(random_val["answers"][1], 1, Static.WHITE)
-            screen.blit(answer, answer.get_rect(center=answer_container.center))
-            pygame.display.flip()
-            # if answers left:
+            """# if answers left:
             #   mark player to give next answer
             for n in range(0, players):
                 player_buzzer_container = pygame.Rect(picture_container_width, (
