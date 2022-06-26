@@ -175,6 +175,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     pygame.display.flip()
 
         while initialize:
+            for n in range(0, players):
+                player_buzzer_container = pygame.Rect(picture_container_width, (
+                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                                      player_buzzer_container_width,
+                                                      player_buzzer_container_height)
+                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
