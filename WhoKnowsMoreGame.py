@@ -150,6 +150,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     active_player = 0
     countdown = False
     countdown_seconds_left = 30
+    countdown_ended = False
     correct_answer = False
     incorrect_answer = False
     answer_id = ""
@@ -227,7 +228,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         countdown = False
                         incorrect_answer = True
 
-            countdown_seconds_left -= 1
+            if not countdown_ended:
+                countdown_seconds_left -= 1
             time_left = str(countdown_seconds_left)
             time_left_rendered = myfont.render(time_left, 1, Static.RED)
             screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
@@ -236,10 +238,10 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
             pygame.display.flip()
             if countdown_seconds_left == 0:
-                countdown_seconds_left = 30
-                if game_sounds:
+                if game_sounds and not countdown_ended:
                     countdown_sound = pygame.mixer.Sound("/home/pi/Desktop/venv/mycode/sounds/wrong-answer.wav")
                     game_sound_channel.play(countdown_sound)
+                countdown_ended = True
 
         while correct_answer:
             global random_val
@@ -274,10 +276,11 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer_id_int = int(answer_id)
                             if random_val["answers"][answer_id_int] in answers_solved:
                                 pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                                incorrect_input = myfont.render('Gelöst!', 1, Static.BLUE)
+                                incorrect_input = myfont.render('Schon Gelöst!', 1, Static.BLUE)
                                 screen.blit(incorrect_input,
                                             incorrect_input.get_rect(center=countdown_container.center))
                                 pygame.display.flip()
+                                answer_id = ""
                                 skip_print_answer = True
                             if not skip_print_answer:
                                 answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
