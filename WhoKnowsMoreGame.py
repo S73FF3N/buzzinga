@@ -157,6 +157,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     answers_solved = []
     skip_print_answer = False
     number_keys = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
+    active_players = [True] * players
 
     while running:
         pressed_keys = pygame.key.get_pressed()
@@ -175,6 +176,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     pygame.display.flip()
 
         while initialize:
+            active_players = [True] * players
             for n in range(0, players):
                 player_buzzer_container = pygame.Rect(picture_container_width, (
                         game_label_container_height + player_label_container_height + n * player_container_height),
@@ -317,11 +319,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     print(active_player)
                                     #   mark player to give next answer
                                     for n in range(0, players):
-                                        player_buzzer_container = pygame.Rect(picture_container_width, (
-                                                game_label_container_height + player_label_container_height + n * player_container_height),
-                                                                              player_buzzer_container_width,
-                                                                              player_buzzer_container_height)
-                                        pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                                        if active_players[n]:
+                                            player_buzzer_container = pygame.Rect(picture_container_width, (
+                                                    game_label_container_height + player_label_container_height + n * player_container_height),
+                                                                                  player_buzzer_container_width,
+                                                                                  player_buzzer_container_height)
+                                            pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                                     player_buzzer_container = pygame.Rect(picture_container_width, (
                                             game_label_container_height + player_label_container_height + active_player * player_container_height),
                                                                           player_buzzer_container_width,
@@ -364,11 +367,20 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         break_flag = True
                         break
 
-            incorrect_answer = False
             game_sound_channel.stop()
             pygame.draw.rect(screen, Static.WHITE, countdown_container)
+            incorrect_answer = False
 
             # exlude player from round
+            active_players[active_player] = False
+            player_buzzer_container = pygame.Rect(picture_container_width, (
+                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                  player_buzzer_container_width,
+                                                  player_buzzer_container_height)
+            buzzer_blocked = scorefont.render("X", 1, Static.RED)
+            screen.blit(buzzer_blocked,
+                        buzzer_blocked.get_rect(center=player_buzzer_container.center))
+            pygame.display.flip()
             # if only one player is left in round
             #   set variable to start next round (initialize = True)
             #   print all answers left
@@ -376,11 +388,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             # else
             #   mark player to give next answer
             for n in range(0, players):
-                player_buzzer_container = pygame.Rect(picture_container_width, (
-                        game_label_container_height + player_label_container_height + n * player_container_height),
-                                                      player_buzzer_container_width,
-                                                      player_buzzer_container_height)
-                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                if active_players[n]:
+                    player_buzzer_container = pygame.Rect(picture_container_width, (
+                            game_label_container_height + player_label_container_height + n * player_container_height),
+                                                          player_buzzer_container_width,
+                                                          player_buzzer_container_height)
+                    pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
             player_buzzer_container = pygame.Rect(picture_container_width, (
                     game_label_container_height + player_label_container_height + active_player * player_container_height),
                                                   player_buzzer_container_width,
