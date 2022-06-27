@@ -409,8 +409,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 answers_solved = []
                 countdown_seconds_left = 30
                 #   print all answers left
-                for a in random_val["answers"]:
-                    answer = myfont.render(a, 1, Static.WHITE)
+                for a in random_val["answers"].keys():
+                    answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
                     if len(random_val["answers"]) > 28:
                         answer_container_width = (game_label_container_width / 6) - 5
                         answer_container_height = (picture_container_height / 10) - 2
