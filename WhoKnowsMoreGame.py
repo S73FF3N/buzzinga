@@ -158,6 +158,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     skip_print_answer = False
     number_keys = [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]
     active_players = [True] * players
+    active_player_found = False
 
     while running:
         pressed_keys = pygame.key.get_pressed()
@@ -316,7 +317,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 answer_id = ""
                                 # if answers left:
                                 if len(random_val["answers"]) != len(answers_solved):
-                                    print(active_player)
                                     #   mark player to give next answer
                                     for n in range(0, players):
                                         if active_players[n]:
@@ -331,10 +331,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                                           player_buzzer_container_height)
                                     pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                                     pygame.display.flip()
-                                    if active_player + 1 == players:
-                                        active_player = 0
-                                    else:
+                                    active_player_found = False
+                                    while not active_player_found:
                                         active_player += 1
+                                        if active_player == players:
+                                            active_player = 0
+                                        if active_players[active_player]:
+                                            active_player_found = True
+                                    #if active_player + 1 == players:
+                                    #    active_player = 0
+                                    #else:
+                                    #    active_player += 1
                                     # start countdown
                                     correct_answer = False
                                     countdown_seconds_left = 30
@@ -400,10 +407,13 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                   player_buzzer_container_height)
             pygame.draw.rect(screen, Static.RED, player_buzzer_container)
             pygame.display.flip()
-            if active_player + 1 == players:
-                active_player = 0
-            else:
+            active_player_found = False
+            while not active_player_found:
                 active_player += 1
+                if active_player == players:
+                    active_player = 0
+                if active_players[active_player]:
+                    active_player_found = True
             # start countdown
             countdown_seconds_left = 30
             countdown = True
