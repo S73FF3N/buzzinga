@@ -216,13 +216,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                         pygame.display.flip()
-                        active_player_found = False
-                        while not active_player_found:
-                            active_player += 1
-                            if active_player == players:
-                                active_player = 0
-                            if active_players[active_player]:
-                                active_player_found = True
                         # start countdown
                         countdown = True
 
