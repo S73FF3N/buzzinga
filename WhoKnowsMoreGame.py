@@ -337,10 +337,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                                           player_buzzer_container_height)
                                     pygame.draw.rect(screen, Static.RED, player_buzzer_container)
                                     pygame.display.flip()
-                                    #if active_player + 1 == players:
-                                    #    active_player = 0
-                                    #else:
-                                    #    active_player += 1
                                     # start countdown
                                     correct_answer = False
                                     countdown_seconds_left = 30
@@ -413,6 +409,23 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 answers_solved = []
                 countdown_seconds_left = 30
                 #   print all answers left
+                for a in random_val["answers"]:
+                    answer = myfont.render(a, 1, Static.WHITE)
+                    if len(random_val["answers"]) > 28:
+                        answer_container_width = (game_label_container_width / 6) - 5
+                        answer_container_height = (picture_container_height / 10) - 2
+                        x = ((a - 1) % 6) * (answer_container_width + 5)
+                        y = ((a - 1) // 6) * (answer_container_height + 2) + game_label_container_height
+                    else:
+                        answer_container_width = (game_label_container_width / 4) - 5
+                        answer_container_height = (picture_container_height / 7) - 2
+                        x = ((a - 1) % 4) * (answer_container_width + 5)
+                        y = ((a - 1) // 4) * (answer_container_height + 2) + game_label_container_height
+                    answer_container = pygame.Rect(x, y, answer_container_width,
+                                                   answer_container_height)
+                    pygame.draw.rect(screen, Static.BLUE, answer_container)
+                    screen.blit(answer, answer.get_rect(center=answer_container.center))
+                    pygame.display.flip()
                 #   assign point to winning player
                 player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
                                                      (
