@@ -388,34 +388,43 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     active_player = 0
                 if active_players[active_player]:
                     active_player_found = True
+            #   mark player to give next answer
+            for n in range(0, players):
+                player_buzzer_container = pygame.Rect(picture_container_width, (
+                        game_label_container_height + player_label_container_height + n * player_container_height),
+                                                      player_buzzer_container_width,
+                                                      player_buzzer_container_height)
+                pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+                if not active_players[n]:
+                    buzzer_blocked = scorefont.render("X", 1, Static.RED)
+                    screen.blit(buzzer_blocked,
+                                buzzer_blocked.get_rect(center=player_buzzer_container.center))
+            player_buzzer_container = pygame.Rect(picture_container_width, (
+                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                  player_buzzer_container_width,
+                                                  player_buzzer_container_height)
+            pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+            pygame.display.flip()
             # only one player is left in round
             if sum(active_players) == 1:
                 #   set variable to start next round
-                incorrect_answer = False
                 initialize = True
                 first_element_of_question = True
                 answers_solved = []
                 countdown_seconds_left = 30
-            #   print all answers left
-            #   assign point to winning player
-            else:
-                #   mark player to give next answer
-                for n in range(0, players):
-                    player_buzzer_container = pygame.Rect(picture_container_width, (
-                            game_label_container_height + player_label_container_height + n * player_container_height),
-                                                          player_buzzer_container_width,
-                                                          player_buzzer_container_height)
-                    pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-                    if not active_players[n]:
-                        buzzer_blocked = scorefont.render("X", 1, Static.RED)
-                        screen.blit(buzzer_blocked,
-                                    buzzer_blocked.get_rect(center=player_buzzer_container.center))
-                player_buzzer_container = pygame.Rect(picture_container_width, (
-                        game_label_container_height + player_label_container_height + active_player * player_container_height),
-                                                      player_buzzer_container_width,
-                                                      player_buzzer_container_height)
-                pygame.draw.rect(screen, Static.RED, player_buzzer_container)
+                #   print all answers left
+                #   assign point to winning player
+                player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
+                                                     (
+                                                             game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                                     player_score_container_width,
+                                                     player_score_container_height)
+                pygame.draw.rect(screen, Static.WHITE, player_score_container)
+                playerScore[active_player] += 1
+                player_score = scorefont.render(str(playerScore[active_player]), 1, Static.BLACK)
+                screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                 pygame.display.flip()
+            else:
                 # start countdown
                 countdown_seconds_left = 30
                 countdown = True
