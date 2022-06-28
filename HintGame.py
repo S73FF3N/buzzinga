@@ -21,6 +21,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     answer = [pygame.K_r, pygame.K_f]
 
     # Set the fonts for the textf
+    smallfont = pygame.font.SysFont("Ariel", 30)
     myfont = pygame.font.SysFont("Ariel", 50)
     scorefont = pygame.font.SysFont("Ariel", 100)
 
@@ -187,7 +188,10 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
     def print_hint(n):
         global random_val
         pygame.draw.rect(screen, Static.BLUE, hint_match_dict[n][0])
-        hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
+        if len(random_val[hint_match_dict[n][1]]) < 22:
+            hint1 = myfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
+        else:
+            hint1 = smallfont.render(random_val[hint_match_dict[n][1]], 1, Static.WHITE)
         screen.blit(hint1, hint1.get_rect(center=hint_match_dict[n][0].center))
         pygame.display.flip()
 
