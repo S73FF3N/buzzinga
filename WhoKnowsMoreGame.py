@@ -18,6 +18,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     answer_key = [pygame.K_r, pygame.K_f]
 
     # Set the fonts for the textf
+    tinyfont = pygame.font.SysFont("Ariel", 20)
     smallfont = pygame.font.SysFont("Ariel", 30)
     myfont = pygame.font.SysFont("Ariel", 50)
     scorefont = pygame.font.SysFont("Ariel", 100)
@@ -178,7 +179,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     show_winner()
                     pygame.display.flip()
 
-        while initialize:
+        while initialize and not winner_found:
             active_players = [True] * players
             for n in range(0, players):
                 player_buzzer_container = pygame.Rect(picture_container_width, (
@@ -186,6 +187,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                       player_buzzer_container_width,
                                                       player_buzzer_container_height)
                 pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
+            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -294,18 +297,24 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 answer_id = ""
                                 skip_print_answer = True
                             if not skip_print_answer:
-                                if len(random_val["answers"][answer_id_int]) < 25:
-                                    answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
-                                else:
-                                    answer = smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                 # store solved answers to avoid that id can be accidentally used again
                                 answers_solved.append(random_val["answers"][answer_id_int])
                                 if len(random_val["answers"]) > 28:
+                                    if len(random_val["answers"][answer_id_int]) < 15:
+                                        answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                    elif len(random_val["answers"][answer_id_int]) < 28:
+                                        answer = smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                    else:
+                                        answer = tinyfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                     answer_container_width = (game_label_container_width / 6) - 5
                                     answer_container_height = (picture_container_height / 10) - 2
                                     x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
                                     y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container_height
                                 else:
+                                    if len(random_val["answers"][answer_id_int]) < 22:
+                                        answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                    else:
+                                        answer = smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                     answer_container_width = (game_label_container_width / 4) - 5
                                     answer_container_height = (picture_container_height / 7) - 2
                                     x = ((answer_id_int - 1) % 4) * (answer_container_width + 5)
@@ -415,7 +424,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 countdown_seconds_left = 30
                 #   print all answers left
                 for a in random_val["answers"].keys():
-                    if len(random_val["answers"][a]) > 25:
+                    if len(random_val["answers"][a]) > 22:
                         answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
                     else:
                         answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
