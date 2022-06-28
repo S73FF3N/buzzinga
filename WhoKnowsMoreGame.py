@@ -187,8 +187,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                                       player_buzzer_container_width,
                                                       player_buzzer_container_height)
                 pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-            pygame.draw.rect(screen, Static.WHITE, countdown_container)
-            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -225,6 +223,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         countdown = True
 
         while countdown and not winner_found:
+            pygame.draw.rect(screen, Static.WHITE, countdown_container)
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -424,16 +424,22 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 countdown_seconds_left = 30
                 #   print all answers left
                 for a in random_val["answers"].keys():
-                    if len(random_val["answers"][a]) > 22:
-                        answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
-                    else:
-                        answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
                     if len(random_val["answers"]) > 28:
+                        if len(random_val["answers"][a]) < 15:
+                            answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
+                        elif len(random_val["answers"][a]) < 28:
+                            answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
+                        else:
+                            answer = tinyfont.render(random_val["answers"][a], 1, Static.WHITE)
                         answer_container_width = (game_label_container_width / 6) - 5
                         answer_container_height = (picture_container_height / 10) - 2
                         x = ((a - 1) % 6) * (answer_container_width + 5)
                         y = ((a - 1) // 6) * (answer_container_height + 2) + game_label_container_height
                     else:
+                        if len(random_val["answers"][a]) < 22:
+                            answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
+                        else:
+                            answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
                         answer_container_width = (game_label_container_width / 4) - 5
                         answer_container_height = (picture_container_height / 7) - 2
                         x = ((a - 1) % 4) * (answer_container_width + 5)
