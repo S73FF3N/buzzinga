@@ -117,7 +117,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         if not game_modus:
             print(points_to_win)
             print(max(playerScore))
-            if points_to_win == max(playerScore):
+            if int(points_to_win) == int(max(playerScore)):
                 winner_found = True
 
     screen.fill(Static.WHITE)
