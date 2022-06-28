@@ -73,6 +73,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
     amount_of_content = len(content_dict)
 
+    global winner_found
     winner_found = False
 
     # randomly chosing content from content dictionary
@@ -113,11 +114,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
 
     def points_reached():
         global winner_found
-        print("game_modus:", game_modus)
         if not game_modus:
-            print(points_to_win)
-            print(max(playerScore))
-            if int(points_to_win) == int(max(playerScore)):
+            if points_to_win == max(playerScore):
                 winner_found = True
 
     screen.fill(Static.WHITE)
