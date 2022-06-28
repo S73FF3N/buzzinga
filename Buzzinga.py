@@ -7,11 +7,13 @@ import subprocess
 from game_utilities import load_image
 from BuzzerGame import buzzer_game
 from MultipleChoiceGame import multiple_choice_game
+from WhoKnowsMoreGame import who_knows_more_game
 from HintGame import hint_game
 from static import Static
 
 config = {'game_type': "images",
           'playerNames': ['Spieler 1', 'Spieler 2', 'Spieler 3', 'Spieler 4'],
+          'amountPlayers': 4,
           'game dir': '/home/pi/Desktop/SdR/Bilder/Tiere/',
           'game choosen': False,
           'game sounds': True,
@@ -21,14 +23,17 @@ config = {'game_type': "images",
 
 def game(screen, screenx, screeny):
     if config['game_type'] in ["images", "sounds"]:
-        buzzer_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
+        buzzer_game(config['amountPlayers'], config['playerNames'], config['game dir'], screen, screenx, screeny, config['game_type'],
                     config['game sounds'], config['game modus'], config['points_to_win'])
     elif config['game_type'] == "questions":
-        multiple_choice_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny,
+        multiple_choice_game(config['amountPlayers'], config['playerNames'], config['game dir'], screen, screenx, screeny,
                              config['game modus'], config['points_to_win'])
     elif config['game_type'] == "hints":
-        hint_game(4, config['playerNames'], config['game dir'], screen, screenx, screeny,
-                             config['game sounds'], config['game modus'], config['points_to_win'])
+        hint_game(config['amountPlayers'], config['playerNames'], config['game dir'], screen, screenx, screeny,
+                  config['game sounds'], config['game modus'], config['points_to_win'])
+    elif config['game_type'] == "who-knows-more":
+        who_knows_more_game(config['amountPlayers'], config['playerNames'], config['game dir'], screen, screenx, screeny,
+                            config['game sounds'], config['game modus'], config['points_to_win'])
 
 
 def text_objects(text, font, color=Static.BLACK):
@@ -144,10 +149,10 @@ def delete_category(game_dir, multiple_files=True):
         try:
             os.rmdir(game_dir)
             os.chdir(current_dir)
-            return str(permission_fail_counter)+"|"+str(remove_fail_counter)+" Löschen erfolgreich!"
+            return str(permission_fail_counter) + "|" + str(remove_fail_counter) + " Löschen erfolgreich!"
         except:
             os.chdir(current_dir)
-            return str(permission_fail_counter)+"|"+str(remove_fail_counter)+" Löschen fehlgeschlagen!"
+            return str(permission_fail_counter) + "|" + str(remove_fail_counter) + " Löschen fehlgeschlagen!"
     else:
         os.chdir(game_dir[:game_dir.rfind("/")])
         try:
@@ -180,6 +185,10 @@ def print_player_name(x, playerName):
     SCREEN.blit(text_surf, text_rect)
     pygame.display.update()
 
+def get_amount_player(playerNames):
+    for p in playerNames:
+        if p == '' and config['amountPlayers'] > 2:
+            config['amountPlayers'] -= 1
 
 def start_screen_setup(update_status=""):
     SCREEN.fill(Static.WHITE)
@@ -246,14 +255,14 @@ def players_names_menu():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
                     try:
-                        active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+                        active = [i for i, x in enumerate(playerNameInputsActive) if x]
                         config['playerNames'][active[0]] = config['playerNames'][active[0]][:-1]
                         print_player_name(active[0], config['playerNames'][active[0]])
                     except:
                         pass
                 else:
                     try:
-                        active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+                        active = [i for i, x in enumerate(playerNameInputsActive) if x]
                         config['playerNames'][active[0]] += event.unicode
                         print_player_name(active[0], config['playerNames'][active[0]])
                     except:
@@ -269,25 +278,26 @@ def players_names_menu():
 
         if player_name_input(x1, y1, w1, h1, click):
             playerNameInputsActive = [True, False, False, False]
-            active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+            active = [i for i, x in enumerate(playerNameInputsActive) if x]
             config['playerNames'][active[0]] = ''
             print_player_name(active[0], config['playerNames'][active[0]])
         elif player_name_input(x2, y2, w2, h2, click):
             playerNameInputsActive = [False, True, False, False]
-            active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+            active = [i for i, x in enumerate(playerNameInputsActive) if x]
             config['playerNames'][active[0]] = ''
             print_player_name(active[0], config['playerNames'][active[0]])
         elif player_name_input(x3, y3, w3, h3, click):
             playerNameInputsActive = [False, False, True, False]
-            active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+            active = [i for i, x in enumerate(playerNameInputsActive) if x]
             config['playerNames'][active[0]] = ''
             print_player_name(active[0], config['playerNames'][active[0]])
         elif player_name_input(x4, y4, w4, h4, click):
             playerNameInputsActive = [False, False, False, True]
-            active = [i for i, x in enumerate(playerNameInputsActive) if x == True]
+            active = [i for i, x in enumerate(playerNameInputsActive) if x]
             config['playerNames'][active[0]] = ''
             print_player_name(active[0], config['playerNames'][active[0]])
         elif button(u'Spiel wählen', x11, y11, w11, h11, click):
+            get_amount_player(config['playerNames'])
             choose_game_menu()
         elif button(u'Herunterfahren', x12, y12, w12, h12, click):
             os.popen("sudo poweroff")
@@ -322,6 +332,7 @@ def choose_game_menu():
         x8, y8, w8, h8 = button_layout_28[8]
         x9, y9, w9, h9 = button_layout_28[9]
         x3, y3, w3, h3 = button_layout_28[10]
+        x4, y4, w4, h4 = button_layout_28[11]
         x7, y7, w7, h7 = button_layout_28[17]
 
         if button(u'Bilder', x2, y2, w2, h2, click):
@@ -333,8 +344,11 @@ def choose_game_menu():
         elif button(u'Multiple Choice Quiz', x9, y9, w9, h9, click):
             config['game_type'] = "questions"
             choose_category()
-        elif button(u'Hinweise', x3, y3, w3, h3, click):
+        elif button(u'10 Hinweise', x3, y3, w3, h3, click):
             config['game_type'] = "hints"
+            choose_category()
+        elif button(u'Wer weiß mehr?', x4, y4, w4, h4, click):
+            config['game_type'] = "who-knows-more"
             choose_category()
         elif button(u'Zurück', x7, y7, w7, h7, click):
             choose_game_menu_running = False
@@ -378,6 +392,8 @@ def choose_category(import_status=""):
             game_folder = "/home/pi/Desktop/SdR/Questions/"
         elif config['game_type'] == "hints":
             game_folder = "/home/pi/Desktop/SdR/Hints/"
+        elif config['game_type'] == "who-knows-more":
+            game_folder = "/home/pi/Desktop/SdR/WhoKnowsMore/"
         global pages
         pages = (len(os.listdir(game_folder)) // 26) + 1
         global buttons
@@ -587,20 +603,23 @@ def settings_menu():
                     text_surf, text_rect = text_objects(str(config['points_to_win']), SMALL_TEXT, Static.WHITE)
                     text_rect.center = (int(x9 + w9 / 4), int(y9 + h9 / 2))
                     SCREEN.blit(text_surf, text_rect)
-        if config['game modus'] == True:
+        if config['game modus']:
             pygame.draw.rect(SCREEN, Static.WHITE, (x9, y9, w9, h9))
         if button(u'Spiel starten', x10, y10, w10, h10, click):
-            try:
-                pygame.joystick.quit()
-                pygame.joystick.init()
-                if pygame.joystick.get_count() == 1:
-                    js = pygame.joystick.Joystick(0)
-                    js.init()
-                    start_game = True
-                else:
+            if config["game_type"] == "who-knows-more":
+                start_game = True
+            else:
+                try:
+                    pygame.joystick.quit()
+                    pygame.joystick.init()
+                    if pygame.joystick.get_count() == 1:
+                        js = pygame.joystick.Joystick(0)
+                        js.init()
+                        start_game = True
+                    else:
+                        no_buzzer_connected()
+                except Exception as e:
                     no_buzzer_connected()
-            except:
-                no_buzzer_connected()
         elif button(u'Zurück', x7, y7, w7, h7, click):
             settings_menu_running = False
             choose_category(import_status="")
