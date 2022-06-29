@@ -3,6 +3,7 @@
 import os, pygame, random, sys
 from game_utilities import load_image
 from static import Static
+from layout import return_layout
 import json
 
 
@@ -15,32 +16,10 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     # declare and array for player names and initial score
     playerNames = playerNamesList
     playerScore = [0] * players
-    answer_key = [pygame.K_r, pygame.K_f]
-
-    # Set the fonts for the textf
-    tinyfont = pygame.font.SysFont("Ariel", 20)
-    smallfont = pygame.font.SysFont("Ariel", 30)
-    myfont = pygame.font.SysFont("Ariel", 50)
-    scorefont = pygame.font.SysFont("Ariel", 100)
 
     # defining the container for the graphical elements
-    game_label_container_width = screenx / 10 * 9
-    game_label_container_height = screeny / 10
-    game_label_container = pygame.Rect(0, 0, game_label_container_width, game_label_container_height)
-    picture_container_width = game_label_container_width
-    picture_container_height = screeny / 10 * 9
-    picture_container = pygame.Rect(0, game_label_container_height, picture_container_width, picture_container_height)
-
-    picture_counter_container_width = screenx / 10
-    picture_counter_container_height = screeny / 10
-    picture_counter_container = pygame.Rect(game_label_container_width, 0, picture_counter_container_width,
-                                            picture_counter_container_height)
-    countdown_container_width = picture_counter_container_width
-    countdown_container_height = screeny / 10
-    countdown_container = pygame.Rect(picture_container_width,
-                                      picture_container_height,
-                                      countdown_container_width, countdown_container_height)
-    player_container_width = picture_counter_container_width
+    game_label_container, picture_container, picture_counter_container, countdown_container = return_layout(screenx, screeny)
+    player_container_width = screenx / 10
     player_container_height = screeny / 10 * 2
     player_label_container_width = player_container_width
     player_label_container_height = player_container_height / 10 * 3
@@ -66,7 +45,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             content_dict[q["solution"]]["answers"][a["count_id"]] = a["answer"]
 
     # loading info
-    loading = myfont.render("loading...", 1, Static.RED)
+    loading = Static.myfont.render("loading...", 1, Static.RED)
     screen.fill(Static.WHITE)
     screen.blit(loading, loading.get_rect(center=picture_container.center))
     pygame.display.flip()
@@ -91,9 +70,9 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         if not winner_found:
             pygame.draw.rect(screen, Static.WHITE, picture_container)
             pygame.draw.rect(screen, Static.WHITE, game_label_container)
-            game_label = myfont.render(random_key, 1, Static.RED)
+            game_label = Static.myfont.render(random_key, 1, Static.RED)
             screen.blit(game_label, game_label.get_rect(center=game_label_container.center))
-            solution_link_suffix = myfont.render(random_val["solution_link"], 1, Static.BLUE)
+            solution_link_suffix = Static.myfont.render(random_val["solution_link"], 1, Static.BLUE)
             screen.blit(solution_link_suffix, solution_link_suffix.get_rect(center=countdown_container.center))
             screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
         else:
@@ -104,12 +83,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         pygame.draw.rect(screen, Static.WHITE, picture_container)
         pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
         winner_ix = [i for i, x in enumerate(playerScore) if x == max(playerScore)]
-        winners = [scorefont.render("Gewinner:", 1, Static.RED)]
-        [winners.append(scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
-        scorefont_width, scorefont_height = scorefont.size("Test")
+        winners = [Static.scorefont.render("Gewinner:", 1, Static.RED)]
+        [winners.append(Static.scorefont.render(playerNames[i], 1, Static.RED)) for i in winner_ix]
+        scorefont_width, scorefont_height = Static.scorefont.size("Test")
         for line in range(len(winners)):
-            screen.blit(winners[line], (0 + picture_container_width / 3,
-                                        game_label_container_height + picture_container_height / 4 + (
+            screen.blit(winners[line], (0 + picture_container.width / 3,
+                                        game_label_container.height + picture_container.height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
 
     def points_reached():
@@ -122,27 +101,27 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
     pygame.display.set_caption(game_name)
 
     # Created Variable for the text on the screen
-    game_label = myfont.render(game_name, 1, Static.RED)
+    game_label = Static.myfont.render(game_name, 1, Static.RED)
     question_nr = 1
-    progress = myfont.render(str(amount_of_content) + " Dateien", 1, Static.RED)
+    progress = Static.myfont.render(str(amount_of_content) + " Dateien", 1, Static.RED)
     screen.blit(game_label, game_label.get_rect(center=game_label_container.center))
     screen.blit(progress, progress.get_rect(center=picture_counter_container.center))
     screen.blit(picture, picture.get_rect(center=picture_container.center))
 
     # Draw name of players, 4 empty rectangles and players score
     for n in range(0, players):
-        player_label = myfont.render(playerNames[n], 1, Static.BLACK)
-        player_label_container = pygame.Rect(picture_container_width,
-                                             (picture_counter_container_height + n * player_container_height),
+        player_label = Static.myfont.render(playerNames[n], 1, Static.BLACK)
+        player_label_container = pygame.Rect(picture_container.width,
+                                             (picture_counter_container.height + n * player_container_height),
                                              player_label_container_width, player_label_container_height)
         screen.blit(player_label, player_label.get_rect(center=player_label_container.center))
-        player_buzzer_container = pygame.Rect(picture_container_width, (
-                    game_label_container_height + player_label_container_height + n * player_container_height),
+        player_buzzer_container = pygame.Rect(picture_container.width, (
+                    game_label_container.height + player_label_container_height + n * player_container_height),
                                               player_buzzer_container_width, player_buzzer_container_height)
         pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
-        player_score = scorefont.render(str(playerScore[n]), 1, Static.BLACK)
-        player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width), (
-                    game_label_container_height + player_label_container_height + n * player_container_height),
+        player_score = Static.scorefont.render(str(playerScore[n]), 1, Static.BLACK)
+        player_score_container = pygame.Rect((picture_container.width + player_buzzer_container_width), (
+                    game_label_container.height + player_label_container_height + n * player_container_height),
                                              player_score_container_width, player_score_container_height)
         screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
 
@@ -183,8 +162,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         while initialize and not winner_found:
             active_players = [True] * players
             for n in range(0, players):
-                player_buzzer_container = pygame.Rect(picture_container_width, (
-                        game_label_container_height + player_label_container_height + n * player_container_height),
+                player_buzzer_container = pygame.Rect(picture_container.width, (
+                        game_label_container.height + player_label_container_height + n * player_container_height),
                                                       player_buzzer_container_width,
                                                       player_buzzer_container_height)
                 pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
@@ -214,8 +193,8 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     if event.key == pygame.K_RETURN:
                         first_element_of_question = False
                         # mark player to give answer
-                        player_buzzer_container = pygame.Rect(picture_container_width, (
-                                game_label_container_height + player_label_container_height + active_player * player_container_height),
+                        player_buzzer_container = pygame.Rect(picture_container.width, (
+                                game_label_container.height + player_label_container_height + active_player * player_container_height),
                                                               player_buzzer_container_width,
                                                               player_buzzer_container_height)
                         pygame.draw.rect(screen, Static.RED, player_buzzer_container)
@@ -245,7 +224,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             if not countdown_ended:
                 countdown_seconds_left -= 1
             time_left = str(countdown_seconds_left)
-            time_left_rendered = myfont.render(time_left, 1, Static.RED)
+            time_left_rendered = Static.myfont.render(time_left, 1, Static.RED)
             screen.blit(time_left_rendered, time_left_rendered.get_rect(center=countdown_container.center))
             pygame.display.flip()
             pygame.time.wait(1000)
@@ -270,7 +249,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                         try:
                             answer_id = answer_id[:-1]
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            answer_id_input = myfont.render(answer_id, 1, Static.BLUE)
+                            answer_id_input = Static.myfont.render(answer_id, 1, Static.BLUE)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                         except Exception as e:
@@ -280,7 +259,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             # let game master provide id of given answer from pool of answers
                             answer_id += event.unicode
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            answer_id_input = myfont.render(answer_id, 1, Static.BLUE)
+                            answer_id_input = Static.myfont.render(answer_id, 1, Static.BLUE)
                             screen.blit(answer_id_input, answer_id_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                         except Exception as e:
@@ -291,7 +270,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                             answer_id_int = int(answer_id)
                             if random_val["answers"][answer_id_int] in answers_solved:
                                 pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                                incorrect_input = smallfont.render('Schon Gelöst!', 1, Static.BLUE)
+                                incorrect_input = Static.smallfont.render('Schon Gelöst!', 1, Static.BLUE)
                                 screen.blit(incorrect_input,
                                             incorrect_input.get_rect(center=countdown_container.center))
                                 pygame.display.flip()
@@ -302,24 +281,24 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                 answers_solved.append(random_val["answers"][answer_id_int])
                                 if len(random_val["answers"]) > 28:
                                     if len(random_val["answers"][answer_id_int]) < 15:
-                                        answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                        answer = Static.myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                     elif len(random_val["answers"][answer_id_int]) < 28:
-                                        answer = smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                        answer = Static.smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                     else:
-                                        answer = tinyfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
-                                    answer_container_width = (game_label_container_width / 6) - 5
-                                    answer_container_height = (picture_container_height / 10) - 2
+                                        answer = Static.tinyfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                    answer_container_width = (game_label_container.width / 6) - 5
+                                    answer_container_height = (picture_container.height / 10) - 2
                                     x = ((answer_id_int - 1) % 6) * (answer_container_width + 5)
-                                    y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container_height
+                                    y = ((answer_id_int - 1) // 6) * (answer_container_height + 2) + game_label_container.height
                                 else:
                                     if len(random_val["answers"][answer_id_int]) < 22:
-                                        answer = myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                        answer = Static.myfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
                                     else:
-                                        answer = smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
-                                    answer_container_width = (game_label_container_width / 4) - 5
-                                    answer_container_height = (picture_container_height / 7) - 2
+                                        answer = Static.smallfont.render(random_val["answers"][answer_id_int], 1, Static.WHITE)
+                                    answer_container_width = (game_label_container.width / 4) - 5
+                                    answer_container_height = (picture_container.height / 7) - 2
                                     x = ((answer_id_int - 1) % 4) * (answer_container_width + 5)
-                                    y = ((answer_id_int - 1) // 4) * (answer_container_height + 2) + game_label_container_height
+                                    y = ((answer_id_int - 1) // 4) * (answer_container_height + 2) + game_label_container.height
                                 answer_container = pygame.Rect(x, y, answer_container_width,
                                                                answer_container_height)
                                 pygame.draw.rect(screen, Static.BLUE, answer_container)
@@ -337,17 +316,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                         if active_players[active_player]:
                                             active_player_found = True
                                     for n in range(0, players):
-                                        player_buzzer_container = pygame.Rect(picture_container_width, (
-                                                game_label_container_height + player_label_container_height + n * player_container_height),
+                                        player_buzzer_container = pygame.Rect(picture_container.width, (
+                                                game_label_container.height + player_label_container_height + n * player_container_height),
                                                                               player_buzzer_container_width,
                                                                               player_buzzer_container_height)
                                         pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                                         if not active_players[n]:
-                                            buzzer_blocked = scorefont.render("X", 1, Static.RED)
+                                            buzzer_blocked = Static.scorefont.render("X", 1, Static.RED)
                                             screen.blit(buzzer_blocked,
                                                         buzzer_blocked.get_rect(center=player_buzzer_container.center))
-                                    player_buzzer_container = pygame.Rect(picture_container_width, (
-                                            game_label_container_height + player_label_container_height + active_player * player_container_height),
+                                    player_buzzer_container = pygame.Rect(picture_container.width, (
+                                            game_label_container.height + player_label_container_height + active_player * player_container_height),
                                                                           player_buzzer_container_width,
                                                                           player_buzzer_container_height)
                                     pygame.draw.rect(screen, Static.RED, player_buzzer_container)
@@ -358,17 +337,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                                     countdown = True
                                 # no answers left
                                 else:
-                                #   set variable to start next round
+                                    # set variable to start next round
                                     correct_answer = False
                                     initialize = True
                                     first_element_of_question = True
                                     answers_solved = []
                                     countdown_seconds_left = 30
-                                #   no points assigned
+                                    # no points assigned
                             skip_print_answer = False
                         except Exception as e:
                             pygame.draw.rect(screen, Static.WHITE, countdown_container)
-                            incorrect_input = myfont.render('Falsche ID', 1, Static.BLUE)
+                            incorrect_input = Static.myfont.render('Falsche ID', 1, Static.BLUE)
                             screen.blit(incorrect_input, incorrect_input.get_rect(center=countdown_container.center))
                             pygame.display.flip()
                             answer_id = ""
@@ -401,17 +380,17 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                     active_player_found = True
             #   mark player to give next answer
             for n in range(0, players):
-                player_buzzer_container = pygame.Rect(picture_container_width, (
-                        game_label_container_height + player_label_container_height + n * player_container_height),
+                player_buzzer_container = pygame.Rect(picture_container.width, (
+                        game_label_container.height + player_label_container_height + n * player_container_height),
                                                       player_buzzer_container_width,
                                                       player_buzzer_container_height)
                 pygame.draw.rect(screen, Static.BLACK, player_buzzer_container)
                 if not active_players[n]:
-                    buzzer_blocked = scorefont.render("X", 1, Static.RED)
+                    buzzer_blocked = Static.scorefont.render("X", 1, Static.RED)
                     screen.blit(buzzer_blocked,
                                 buzzer_blocked.get_rect(center=player_buzzer_container.center))
-            player_buzzer_container = pygame.Rect(picture_container_width, (
-                    game_label_container_height + player_label_container_height + active_player * player_container_height),
+            player_buzzer_container = pygame.Rect(picture_container.width, (
+                    game_label_container.height + player_label_container_height + active_player * player_container_height),
                                                   player_buzzer_container_width,
                                                   player_buzzer_container_height)
             pygame.draw.rect(screen, Static.RED, player_buzzer_container)
@@ -427,43 +406,43 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 for a in random_val["answers"].keys():
                     if len(random_val["answers"]) > 28:
                         if len(random_val["answers"][a]) < 15:
-                            answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
+                            answer = Static.myfont.render(random_val["answers"][a], 1, Static.WHITE)
                         elif len(random_val["answers"][a]) < 28:
-                            answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
+                            answer = Static.smallfont.render(random_val["answers"][a], 1, Static.WHITE)
                         else:
-                            answer = tinyfont.render(random_val["answers"][a], 1, Static.WHITE)
-                        answer_container_width = (game_label_container_width / 6) - 5
-                        answer_container_height = (picture_container_height / 10) - 2
+                            answer = Static.tinyfont.render(random_val["answers"][a], 1, Static.WHITE)
+                        answer_container_width = (game_label_container.width / 6) - 5
+                        answer_container_height = (picture_container.height / 10) - 2
                         x = ((a - 1) % 6) * (answer_container_width + 5)
-                        y = ((a - 1) // 6) * (answer_container_height + 2) + game_label_container_height
+                        y = ((a - 1) // 6) * (answer_container_height + 2) + game_label_container.height
                     else:
                         if len(random_val["answers"][a]) < 22:
-                            answer = myfont.render(random_val["answers"][a], 1, Static.WHITE)
+                            answer = Static.myfont.render(random_val["answers"][a], 1, Static.WHITE)
                         else:
-                            answer = smallfont.render(random_val["answers"][a], 1, Static.WHITE)
-                        answer_container_width = (game_label_container_width / 4) - 5
-                        answer_container_height = (picture_container_height / 7) - 2
+                            answer = Static.smallfont.render(random_val["answers"][a], 1, Static.WHITE)
+                        answer_container_width = (game_label_container.width / 4) - 5
+                        answer_container_height = (picture_container.height / 7) - 2
                         x = ((a - 1) % 4) * (answer_container_width + 5)
-                        y = ((a - 1) // 4) * (answer_container_height + 2) + game_label_container_height
+                        y = ((a - 1) // 4) * (answer_container_height + 2) + game_label_container.height
                     answer_container = pygame.Rect(x, y, answer_container_width,
                                                    answer_container_height)
                     pygame.draw.rect(screen, Static.BLUE, answer_container)
                     screen.blit(answer, answer.get_rect(center=answer_container.center))
                     pygame.display.flip()
                 #   assign point to winning player
-                player_score_container = pygame.Rect((picture_container_width + player_buzzer_container_width),
-                                                     (game_label_container_height + player_label_container_height + active_player * player_container_height),
+                player_score_container = pygame.Rect((picture_container.width + player_buzzer_container_width),
+                                                     (game_label_container.height + player_label_container_height + active_player * player_container_height),
                                                      player_score_container_width,
                                                      player_score_container_height)
                 pygame.draw.rect(screen, Static.WHITE, player_score_container)
                 playerScore[active_player] += 1
-                player_score = scorefont.render(str(playerScore[active_player]), 1, Static.BLACK)
+                player_score = Static.scorefont.render(str(playerScore[active_player]), 1, Static.BLACK)
                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
                 points_reached()
                 # increase question count
                 pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                 question_nr += 1
-                progress = myfont.render(str(question_nr) + "/" + str(amount_of_content), 1, Static.RED)
+                progress = Static.myfont.render(str(question_nr) + "/" + str(amount_of_content), 1, Static.RED)
                 pygame.display.flip()
             else:
                 # start countdown
@@ -473,7 +452,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         if break_flag:
             break
 
-# todo: variable font size
 
 if __name__ == "__main__":
     buzzer_game(players, PlayersNameList, content_dir, screen, screenx, screeny, game_type)

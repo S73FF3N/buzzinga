@@ -22,6 +22,7 @@ def hint_game(players, playerNamesList, content_dir, screen, screenx, screeny, g
 
     # Set the fonts for the textf
     smallfont = pygame.font.SysFont("Ariel", 30)
+
     myfont = pygame.font.SysFont("Ariel", 50)
     scorefont = pygame.font.SysFont("Ariel", 100)
 
