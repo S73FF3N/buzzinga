@@ -60,6 +60,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         global random_key
         global random_val
         global winner_found
+        print(winner_found)
         winner_found = False
         try:
             random_key = random.choice(list(content_dict.keys()))
