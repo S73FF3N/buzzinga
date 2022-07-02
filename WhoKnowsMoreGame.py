@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, pygame, random, sys
-from game_utilities import load_image, points_reached
+from game_utilities import load_image
 from static import Static
 from layout import return_layout
 import json
