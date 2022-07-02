@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, pygame, random, sys
-from game_utilities import load_image
+from game_utilities import load_image, points_reached
 from static import Static
 from layout import return_layout
 import json
@@ -90,12 +90,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(winners[line], (0 + picture_container.width / 3,
                                         game_label_container.height + picture_container.height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
-
-    def points_reached():
-        global winner_found
-        if not game_modus:
-            if points_to_win == max(playerScore):
-                winner_found = True
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
@@ -438,7 +432,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 playerScore[active_player] += 1
                 player_score = Static.scorefont.render(str(playerScore[active_player]), 1, Static.BLACK)
                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                points_reached()
+                points_reached(game_modus, points_to_win, playerScore)
                 # increase question count
                 pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                 question_nr += 1

@@ -58,3 +58,9 @@ def mp3_to_wav(mp3_file):
         os.remove(mp3_file)
         file_out = mp3_file[:-3] + 'wav'
     return file_out
+
+def points_reached(game_modus, points_to_win, playerScore):
+    global winner_found
+    if not game_modus:
+        if points_to_win == max(playerScore):
+            winner_found = True
