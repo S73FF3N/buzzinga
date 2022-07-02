@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pygame
+pygame.init()
 
 class Static:
     # color definitions
