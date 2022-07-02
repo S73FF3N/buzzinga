@@ -60,7 +60,6 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
         global random_key
         global random_val
         global winner_found
-        print(winner_found)
         winner_found = False
         try:
             random_key = random.choice(list(content_dict.keys()))
@@ -91,6 +90,12 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
             screen.blit(winners[line], (0 + picture_container.width / 3,
                                         game_label_container.height + picture_container.height / 4 + (
                                                     line * scorefont_height) + (15 * line)))
+
+    def points_reached():
+        global winner_found
+        if not game_modus:
+            if points_to_win == max(playerScore):
+                winner_found = True
 
     screen.fill(Static.WHITE)
     pygame.display.set_caption(game_name)
@@ -433,7 +438,7 @@ def who_knows_more_game(players, playerNamesList, content_dir, screen, screenx, 
                 playerScore[active_player] += 1
                 player_score = Static.scorefont.render(str(playerScore[active_player]), 1, Static.BLACK)
                 screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
-                points_reached(game_modus, points_to_win, playerScore)
+                points_reached()
                 # increase question count
                 pygame.draw.rect(screen, Static.WHITE, picture_counter_container)
                 question_nr += 1
