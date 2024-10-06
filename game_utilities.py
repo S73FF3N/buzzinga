@@ -7,21 +7,83 @@ Created on Tue Sep 22 19:54:59 2015
 import os, pygame
 from PIL import Image
 import subprocess
+import functools
+from static import Static
 
-# load images properly
+
+def text_objects(text, font, color=Static.WHITE):
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    return text_surface, text_rect
+
+def wrap_text(text, font, max_width):
+    words = text.split(' ')
+    lines = []
+    current_line = []
+    
+    for word in words:
+        test_line = ' '.join(current_line + [word])
+        test_width, _ = font.size(test_line)
+        
+        if test_width <= max_width:
+            current_line.append(word)
+        else:
+            lines.append(' '.join(current_line))
+            current_line = [word]
+    
+    if current_line:
+        lines.append(' '.join(current_line))
+    
+    return lines
+
+def blit_text_objects(screen, container, text, font, color=Static.WHITE):
+    text_surface, text_rect = text_objects(text, font, color)
+    text_rect.center = container.center
+    screen.blit(text_surface, text_rect)
+
+# Cache decorator to store loaded images
+@functools.lru_cache(maxsize=128)  # Caches up to 128 unique images
 def load_image(name, folder, colorkey=None):
     fullname = os.path.join(folder, name)
+    
     try:
         image = pygame.image.load(fullname)
-    except pygame.error as message:
-        print('Cannot load image:', fullname)
-        raise SystemExit(message)
+    except pygame.error as e:
+        raise FileNotFoundError(f"Cannot load image: {fullname}") from e
+    
     image = image.convert_alpha()
+
     if colorkey is not None:
-        if colorkey is -1:
-            colorkey = image.get_at((0,0))
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))  # Use pixel at (0, 0) as colorkey
         image.set_colorkey(colorkey, pygame.RLEACCEL)
+    
     return image
+
+def load_and_scale_image(image_name, folder, target_height, image_cache):
+    if image_name not in image_cache:
+        image_file = load_image(image_name, folder)
+        rela = image_file.get_width() / float(image_file.get_height())
+        image_cache[image_name] = pygame.transform.scale(image_file, (int(target_height * rela), int(target_height)))
+    return image_cache[image_name]
+
+def adjust_image_size(img, container_width, container_height):
+    original_width, original_height = img.get_rect().size
+    aspect_ratio = original_width / original_height
+    if aspect_ratio >= 1:  # Landscape or square image
+        new_height = int(container_width / aspect_ratio)
+        if new_height <= container_height:
+            return (container_width, new_height)
+        else:
+            new_width = int(container_height * aspect_ratio)
+            return (new_width, container_height)
+    else:  # Portrait image
+        new_width = int(container_height * aspect_ratio)
+        if new_width <= container_width:
+            return (new_width, container_height)
+        else:
+            new_height = int(container_width / aspect_ratio)
+            return (container_width, new_height)
 
 # convert image to desired image format    
 def convert_image_to(image_file, im_format):
@@ -58,3 +120,10 @@ def mp3_to_wav(mp3_file):
         os.remove(mp3_file)
         file_out = mp3_file[:-3] + 'wav'
     return file_out
+
+def count_files_by_extensions(directory, *extensions):
+    count = 0
+    for filename in os.listdir(directory):
+        if filename.endswith(extensions):
+            count += 1
+    return count

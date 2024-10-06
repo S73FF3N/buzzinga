@@ -11,3 +11,4 @@ sounds/*
 .DS_Store
 *.pdf
 *.docx
+.env
