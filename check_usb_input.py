@@ -1,136 +1,84 @@
-#!/usr/bin/env python3
-# -*- coding: latin-1 -*-
-
 import subprocess
 import time
-import os
 import sys
+from pathlib import Path
+import shutil
+import platform
 
+from static import Static
 
 def get_mountedlist():
-	return [item[item.find(b'/'):] for item in subprocess.check_output(["/bin/bash", "-c", "lsblk"]).split(b'\n') if b'/' in item]
+    if platform.system() == "Windows":
+        try:
+            result = subprocess.run(["wmic", "logicaldisk", "get", "caption"], capture_output=True, text=True, check=True)
+            return [Path(drive.strip()) for drive in result.stdout.split('\n')[1:] if drive.strip()]
+        except subprocess.CalledProcessError:
+            print("Error executing wmic command")
+            return []
+    else:  # Linux and other Unix-like systems
+        try:
+            result = subprocess.run(["lsblk"], capture_output=True, text=True, check=True)
+            return [Path(item.split()[-1]) for item in result.stdout.split('\n') if '/' in item]
+        except subprocess.CalledProcessError:
+            print("Error executing lsblk command")
+            return []
+	
+def copy_and_rename_files(src_dir, dest_dir, allowed_extensions):
+    for file in src_dir.iterdir():
+        if file.is_file() and file.suffix.lower() in allowed_extensions:
+            new_name = file.name.replace(' ', '_').replace('(', 'zzz').replace(')', 'uuu')
+            new_file = dest_dir / new_name
+            if not new_file.exists():
+                shutil.copy2(file, new_file)
+                if platform.system() != "Windows":
+                    new_file.chmod(0o777)
+                    
+def usb_input_check(game_type):
+    done = set()
+    files_imported = False
+    time_consumed = 0
+    folder = Path(game_type)
 
+    while True:
+        mounted = set(get_mountedlist())
+        newly_mounted = mounted - done
 
-def usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sys.argv[1]):
-	while True:
-		mounted = get_mountedlist()
-		newly_mounted = [dev for dev in mounted if dev not in done]
-		valid = sum([[drive for drive in newly_mounted]], [])
+        for item in newly_mounted:
+            if item not in {Path('/boot'), Path('/')}:
+                game_folder = item / folder
+                if game_folder.exists():
+                    if game_type in ["images", "sounds"]:
+                        for category in game_folder.iterdir():
+                            if category.is_dir():
+                                new_category = Path(Static.ROOT_EXTENDED) / folder / category.name.replace(' ', '_')
+                                new_category.mkdir(parents=True, exist_ok=True)
+                                copy_and_rename_files(category, new_category, {'.png', '.jpg', '.jpeg', '.bmp', '.mp3', '.wav'})
+                    elif game_type in ["questions", "hints", "who-knows-more"]:
+                        dest_folder = Path(Static.ROOT_EXTENDED) / folder
+                        dest_folder.mkdir(parents=True, exist_ok=True)
+                        copy_and_rename_files(game_folder, dest_folder, {'.json'})
+                    
+                    files_imported = True
 
-		if game_type == "images":
-			folder = b'/Bilder/'
-		elif game_type == "sounds":
-			folder = b'/Audio/'
-		elif game_type == "questions":
-			folder = b'/Questions/'
-		elif game_type == "hints":
-			folder = b'/Hints/'
-		elif game_type == "who-knows-more":
-			folder = b'/WhoKnowsMore/'
+                if files_imported:
+                    if platform.system() != "Windows":
+                        try:
+                            subprocess.run(["sudo", "umount", str(item)], check=True)
+                        except subprocess.CalledProcessError:
+                            print(f"Error unmounting {item}")
+                            return "Error during file import"
+                    return "Files successfully imported"
 
-		# get files from usb and copy them to raspberry
-		for item in valid:
-			if item not in [b'/boot', b'/']:
-				os.chdir(item)
-				if os.path.exists(item + folder) and game_type in ["images", "sounds"]:
-					categories = os.listdir(item + folder)
-					for category in categories:  # type: bytes
-						c_renamed = category.replace(b' ', b'_')
-						path_old = item + folder + category
-						path_new = item + folder + c_renamed
-						if category != c_renamed:
-							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
-						if not os.path.isdir(item + folder + c_renamed):
-							continue
-						if not os.path.exists(b'/home/pi/Desktop/SdR' + folder + c_renamed):
-							dir_name = b'/home/pi/Desktop/SdR' + folder + c_renamed
-							os.mkdir(dir_name.decode('utf-8'))
-						# remove whitespaces from file names
-						for f in os.listdir(item + folder + c_renamed):
-							file = item + folder + c_renamed + b'/' + f
-							f_renamed = f.replace(b' ', b'_')
-							f_renamed = f_renamed.replace(b'(', b'zzz')
-							f_renamed = f_renamed.replace(b')', b'uuu')
-							file_renamed = item + folder + c_renamed + b'/' + f_renamed
-							if f != f_renamed:
-								os.rename(file.decode('utf-8'), file_renamed.decode('utf-8'))
-						for f in os.listdir(item + folder + c_renamed):
-							if not os.path.isfile(b'/home/pi/Desktop/SdR' + folder + c_renamed + b'/' + f) and f.lower().endswith((b'.png', b'.jpg', b'.jpeg', b'.bmp', b'.mp3', b'.wav')):
-								file_to_copy = item + folder + c_renamed + b'/' + f
-								file_to_create = b'/home/pi/Desktop/SdR' + folder + c_renamed + b'/' + f
-								os.popen("sudo cp {} {}".format(file_to_copy.decode('utf-8'), file_to_create.decode('utf-8')))
-								os.popen("sudo chmod 777 {}".format(file_to_create.decode('utf-8')))
-					files_imported = True
-
-				if os.path.exists(item + folder) and game_type in ["questions"]:
-					for f in os.listdir(item + folder):
-						f_renamed = f.replace(b' ', b'_')
-						path_old = item + folder + f
-						path_new = item + folder + f_renamed
-						if f != f_renamed:
-							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
-						if not os.path.isfile(
-								b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed) and f_renamed.lower().endswith(b'.json'):
-							file_to_copy = item + folder + b'/' + f_renamed
-							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-							file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed
-							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
-							os.popen('sudo cp "$file_to_copy" "$file_to_create"')
-							os.popen('sudo chmod 777 "$file_to_create"')
-					files_imported = True
-
-				if os.path.exists(item + folder) and game_type in ["hints"]:
-					for f in os.listdir(item + folder):
-						f_renamed = f.replace(b' ', b'_')
-						path_old = item + folder + f
-						path_new = item + folder + f_renamed
-						if f != f_renamed:
-							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
-						if not os.path.isfile(
-								b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed) and f_renamed.lower().endswith(
-							b'.json'):
-							file_to_copy = item + folder + b'/' + f_renamed
-							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-							file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed
-							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
-							os.popen('sudo cp "$file_to_copy" "$file_to_create"')
-							os.popen('sudo chmod 777 "$file_to_create"')
-					files_imported = True
-
-				if os.path.exists(item + folder) and game_type in ["who-knows-more"]:
-					for f in os.listdir(item + folder):
-						f_renamed = f.replace(b' ', b'_')
-						path_old = item + folder + f
-						path_new = item + folder + f_renamed
-						if f != f_renamed:
-							os.rename(path_old.decode('utf-8'), path_new.decode('utf-8'))
-						if not os.path.isfile(
-								b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed) and f_renamed.lower().endswith(
-							b'.json'):
-							file_to_copy = item + folder + b'/' + f_renamed
-							os.putenv("file_to_copy", file_to_copy.decode('utf-8').strip())
-							file_to_create = b'/home/pi/Desktop/SdR' + folder + b'/' + f_renamed
-							os.putenv("file_to_create", file_to_create.decode('utf-8').strip())
-							os.popen('sudo cp "$file_to_copy" "$file_to_create"')
-							os.popen('sudo chmod 777 "$file_to_create"')
-					files_imported = True
-
-			# unmount usb and print message
-			if files_imported:
-				os.putenv("item", item.decode('utf-8').strip())
-				os.system('sudo umount "$item"')
-				return "Dateien erfolgreich importiert"
-			else:
-				os.putenv("item", item.decode('utf-8').strip())
-				os.system('sudo umount "$item"')
-				return "Keine Dateien importiert"
-
-		done = mounted
-		time.sleep(2)
-		time_consumed += 2
-		if time_consumed >= 4:
-			return "keine Dateien importiert"
+        done = mounted
+        time.sleep(2)
+        time_consumed += 2
+        if time_consumed >= 4:
+            return "No files imported"
 
 
 if __name__ == '__main__':
-	usb_input_check(done=[], files_imported=False, time_consumed=0, game_type=sys.argv[1])
+    if len(sys.argv) < 2:
+        print("Please provide game type as an argument")
+    else:
+        result = usb_input_check(game_type=sys.argv[1])
+        print(result)

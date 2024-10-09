@@ -16,16 +16,56 @@ def text_objects(text, font, color=Static.WHITE):
     text_rect = text_surface.get_rect()
     return text_surface, text_rect
 
-def wrap_text(text, font, max_width):
-    words = text.split(' ')
+def optimize_text_in_container(screen, container, text, min_font_size=10, max_font_size=70, color=Static.WHITE):
+    def can_fit_text(font, text, max_width, max_height):
+        words = text.split()
+        lines = []
+        current_line = []
+        
+        for word in words:
+            test_line = ' '.join(current_line + [word])
+            test_width, _ = font.size(test_line)
+            
+            if test_width <= max_width:
+                current_line.append(word)
+            else:
+                if not current_line:  # If a single word is too long
+                    return False
+                lines.append(' '.join(current_line))
+                current_line = [word]
+        
+        if current_line:
+            lines.append(' '.join(current_line))
+        
+        total_height = len(lines) * font.get_linesize()
+        return total_height <= max_height
+
+    optimal_font_size = min_font_size
+    optimal_font = None
+    
+    while min_font_size <= max_font_size:
+        current_font_size = (min_font_size + max_font_size) // 2
+        font = pygame.font.Font(None, current_font_size)
+        
+        if can_fit_text(font, text, container.w - 16, container.h - 16):
+            optimal_font_size = current_font_size
+            optimal_font = font
+            min_font_size = current_font_size + 1
+        else:
+            max_font_size = current_font_size - 1
+    
+    if optimal_font is None:
+        optimal_font = pygame.font.Font(None, min_font_size)
+    
+    words = text.split()
     lines = []
     current_line = []
     
     for word in words:
         test_line = ' '.join(current_line + [word])
-        test_width, _ = font.size(test_line)
+        test_width, _ = optimal_font.size(test_line)
         
-        if test_width <= max_width:
+        if test_width <= container.w - 16:
             current_line.append(word)
         else:
             lines.append(' '.join(current_line))
@@ -34,7 +74,16 @@ def wrap_text(text, font, max_width):
     if current_line:
         lines.append(' '.join(current_line))
     
-    return lines
+    if len(lines) > 1:
+        y_offset = optimal_font.get_linesize() * (-1) * ((len(lines)/2)-0.5)
+    else:
+        y_offset = 0
+    
+    for line in lines:
+        blit_text_objects(screen, pygame.Rect(container.x, container.y + y_offset,
+                                              container.w, container.h),
+                          line, optimal_font, color)
+        y_offset += optimal_font.get_linesize()
 
 def blit_text_objects(screen, container, text, font, color=Static.WHITE):
     text_surface, text_rect = text_objects(text, font, color)

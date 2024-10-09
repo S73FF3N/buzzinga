@@ -80,7 +80,7 @@ class Buzzinga():
         self.build_required_folders()
 
     def game(self):
-        common_args = (self.SCREEN, self.SCREEN_WIDTH, self.SCREEN_HEIGHT, self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win)
         match self.game_type:
             case "images":
                 quiz = ImageQuiz(*common_args)
@@ -92,7 +92,7 @@ class Buzzinga():
                 quiz = HintQuiz(*common_args)
             case "who-knows-more":
                 quiz = WhoKnowsMoreQuiz(*common_args)
-        quiz.run(self.SCREEN)
+        quiz.run()
 
     def get_amount_rounds(self, category_folder):
         if self.game_type == "images":
@@ -244,8 +244,6 @@ class Buzzinga():
                     self.toggle_category_for_deletion(game_option, categories_to_delete)
 
     def delete_category(self, game_dir, multiple_files=True):
-        permission_fail_counter = 0
-        remove_fail_counter = 0
         game_path = Path(game_dir)
 
         def remove_readonly(func, path, _):
@@ -257,18 +255,17 @@ class Buzzinga():
                 if file_path.is_file():
                     try:
                         file_path.chmod(0o777)
-                    except PermissionError:
-                        permission_fail_counter += 1
+                    except PermissionError as e:
+                        print(e)
                     try:
                         file_path.unlink()
-                    except OSError:
-                        remove_fail_counter += 1
-
+                    except OSError as e:
+                        print(e)
             try:
                 shutil.rmtree(game_path, onerror=remove_readonly)
-                return f"{permission_fail_counter}|{remove_fail_counter} Deletion successful!"
+                return "Deletion successful!"
             except OSError:
-                return f"{permission_fail_counter}|{remove_fail_counter} Deletion failed!"
+                return "Deletion failed!"
         else:
             try:
                 game_path.chmod(0o777)
@@ -284,7 +281,7 @@ class Buzzinga():
                 return "Deletion failed!"
 
     def toggle_category_for_deletion(self, game_option, categories_to_delete):
-        _, _, x, y, w, h = game_option
+        _, _, x, y, w, h, total_rounds = game_option
         pygame.draw.rect(self.SCREEN, Static.GREY, (x, y, w, h))
         
         category_folder = game_option[0].replace(' ', '_')
@@ -486,12 +483,12 @@ class Buzzinga():
         self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'S P I E L K A T E G O R I E')
         free_space = self.get_free_disk_space()
         blit_text_objects(self.SCREEN, pygame.Rect(self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 4 / 15, self.SCREEN_HEIGHT * 1 / 9), f'{free_space} % freier Speicherplatz', self.SMALL_TEXT)
-        blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), import_status[:-1], self.SMALL_TEXT)
+        blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), import_status, self.SMALL_TEXT)
         
         if no_categories:
             blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT / 2, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'Keine Kategorien vorhanden!', self.SMALL_TEXT)
 
-    def choose_category(self, import_status=""):
+    def choose_category(self, import_status=""):    
         self.build_category_buttons_dict()
         
         if not self.buttons:
@@ -533,10 +530,16 @@ class Buzzinga():
             inactive_color = Static.GREY if self.delete_modus else Static.RED
             if self.render_button('flash-drive.bmp', pygame.Rect(x+2*w/3, y, w/3, h), click, inactive_color=inactive_color, image=True):
                 if not self.delete_modus:
-                    blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 2 / 11, self.SCREEN_HEIGHT * 1 / 9), 'Importiere Dateien', self.SMALL_TEXT)
-                    usb_input = subprocess.check_output(["python3", "check_usb_input.py", self.game_type])
-                    self.choose_category_menu = False
-                    self.choose_category(import_status=usb_input)
+                    pygame.draw.rect(self.SCREEN, Static.BLUE, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9))
+                    blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), 'Importiere Dateien', self.SMALL_TEXT)
+                    pygame.display.flip()
+                    try:
+                        usb_input = subprocess.run([sys.executable, "check_usb_input.py", self.game_type], capture_output=True, text=True)
+                        self.choose_category_menu = False
+                        self.choose_category(import_status=usb_input.stdout.strip())
+                    except subprocess.CalledProcessError as e:
+                        print(f"An error occurred: {e}")
+                        print(f"Error output: {e.stderr}")
             
             if self.render_button('Zurück', pygame.Rect(*self.button_layout_32[30]), click):
                 self.delete_modus = False
