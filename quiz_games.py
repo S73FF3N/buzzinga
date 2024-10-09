@@ -7,9 +7,9 @@ from game_utilities import blit_text_objects
 from animation import SoundAnimation
 
 class QuizGameBase:
-    def __init__(self, SCREEN, SCREEN_WIDTH, SCREEN_HEIGHT, clock, game_data, players, is_game_sounds, max_score):
-        # Basic game setup
-        self.screen = SCREEN
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
+        self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock
         self.sound_channel = pygame.mixer.Channel(0)
         self.game_sound_channel = pygame.mixer.Channel(1)
@@ -39,43 +39,41 @@ class QuizGameBase:
         self.current_solution = None
         self.escape_pressed = False
 
-        self.main_container_width = SCREEN_WIDTH * 0.8
-        self.main_container_height = SCREEN_HEIGHT * 0.8
-        self.top_left_container_width = self.main_container_width
-        self.top_left_container_height = SCREEN_HEIGHT * 0.1
-        self.bottom_left_container_width = self.main_container_width
-        self.bottom_left_container_height = SCREEN_HEIGHT * 0.1
-        self.top_right_container_width = SCREEN_WIDTH * 0.2
-        self.top_right_container_height = SCREEN_HEIGHT * 0.1
-        self.bottom_right_container_width = self.top_right_container_width
-        self.bottom_right_container_height = SCREEN_HEIGHT * 0.1
-        self.player_container_width = self.top_right_container_width
-        self.player_container_height = SCREEN_HEIGHT * 0.2
-        self.player_label_container_width = self.player_container_width
-        self.player_label_container_height = self.player_container_height * 0.3
-        self.player_buzzer_container_width = self.player_container_width * 0.5
-        self.player_buzzer_container_height = self.player_container_height * 0.7
-        self.player_score_container_width = self.player_container_width * 0.5
-        self.player_score_container_height = self.player_container_height * 0.7
-        self.BUTTON_WIDTH = SCREEN_WIDTH * 0.625 // 3
-        self.BUTTON_HEIGHT = SCREEN_HEIGHT * 5 // 81
-        self.BUTTON_SPACING = SCREEN_WIDTH / 100 * 4
+        self.left_container_width = self.SCREEN_WIDTH * 8 // 10
+        self.right_container_width = self.SCREEN_WIDTH - self.left_container_width
+        self.main_container_height = self.SCREEN_HEIGHT * 8 // 10
+        self.top_container_height = (self.SCREEN_HEIGHT - self.main_container_height) // 2
+        self.bottom_container_height = self.SCREEN_HEIGHT - self.main_container_height - self.top_container_height
+
+        # Adjust the bottom container to fill any remaining gap
+        self.bottom_container_height += self.SCREEN_HEIGHT - (self.top_container_height + self.main_container_height + self.bottom_container_height)
+
+        self.top_left_container = pygame.Rect(0, 0, self.left_container_width, self.top_container_height)
+        self.main_container = pygame.Rect(0, self.top_container_height, self.left_container_width, self.main_container_height)
+        self.bottom_left_container = pygame.Rect(0, (self.top_container_height + self.main_container_height),
+                                            self.left_container_width, self.bottom_container_height)
+        self.top_right_container = pygame.Rect(self.left_container_width, 0, self.right_container_width,
+                                                    self.top_container_height)
+        self.bottom_right_container = pygame.Rect(self.left_container_width,
+                                            (self.top_container_height + self.main_container_height),
+                                            self.right_container_width, self.bottom_container_height)
+        
+        self.player_container_height = self.SCREEN_HEIGHT * 2 // 10
+        self.player_label_container_height = self.player_container_height * 4 // 10
+        self.player_buzzer_container_width = self.right_container_width * 5 // 10
+        self.player_buzzer_container_height = self.player_container_height * 6 // 10
+        self.player_score_container_width = self.right_container_width * 5 // 10
+        self.player_score_container_height = self.player_container_height * 6 // 10
+        
+        self.BUTTON_WIDTH = self.SCREEN_WIDTH * 0.625 // 3
+        self.BUTTON_HEIGHT = self.SCREEN_HEIGHT * 5 // 81
+        self.BUTTON_SPACING = self.SCREEN_WIDTH / 100 * 4
         self.TOGGLE_ADJ = int(self.BUTTON_WIDTH * 0.075)
-
-        self.MENU_TEXT = pygame.font.SysFont("Verdana", SCREEN_HEIGHT // 5)
-        self.MEDIUM_TEXT = pygame.font.SysFont("Verdana", SCREEN_HEIGHT // 9, bold=True)
-        self.SMALL_TEXT = pygame.font.SysFont("Verdana", SCREEN_HEIGHT // 25, bold=True)
-        self.MINI_TEXT = pygame.font.SysFont("Verdana", SCREEN_HEIGHT // 40, bold=True)
-
-        self.top_left_container = pygame.Rect(0, 0, self.top_left_container_width, self.top_left_container_height)
-        self.main_container = pygame.Rect(0, self.top_left_container_height, self.main_container_width, self.main_container_height)
-        self.bottom_left_container = pygame.Rect(0, (self.top_left_container_height + self.main_container_height),
-                                     self.bottom_left_container_width, self.bottom_left_container_height)
-        self.top_right_container = pygame.Rect(self.top_left_container_width, 0, self.top_right_container_width,
-                                            self.top_right_container_height)
-        self.bottom_right_container = pygame.Rect(self.bottom_left_container_width,
-                                      (self.top_left_container_height + self.main_container_height),
-                                      self.bottom_right_container_width, self.bottom_right_container_height)
+        
+        self.MENU_TEXT = pygame.font.SysFont("Verdana", self.SCREEN_HEIGHT // 5)
+        self.MEDIUM_TEXT = pygame.font.SysFont("Verdana", self.SCREEN_HEIGHT // 9, bold=True)
+        self.SMALL_TEXT = pygame.font.SysFont("Verdana", self.SCREEN_HEIGHT // 25, bold=True)
+        self.MINI_TEXT = pygame.font.SysFont("Verdana", self.SCREEN_HEIGHT // 40, bold=True)
         
         self.sound_moving_sprites = pygame.sprite.Group()
         self.sound_animation = SoundAnimation(self.main_container, self.image_cache)
@@ -87,81 +85,72 @@ class QuizGameBase:
     def load_round_data(self):
         pass
 
-    def draw_rect(self, screen, color, border_color, border_width, rect):
-        pygame.draw.rect(screen, color, rect)
-        pygame.draw.rect(screen, border_color, rect, width=border_width)
+    def draw_rect(self, color, border_color, border_width, rect):
+        pygame.draw.rect(self.screen, color, rect)
+        pygame.draw.rect(self.screen, border_color, rect, width=border_width)
 
-    def display_buzzer(self, screen, i, buzzer_color, width=0):
-        player_buzzer_container = pygame.Rect(self.main_container_width, (
-                                            self.top_left_container_height + self.player_label_container_height + (i * self.player_container_height)),
+    def display_buzzer(self, i, buzzer_color, width=0, y_offset=8):
+        player_buzzer_container = pygame.Rect(self.left_container_width, (
+                                            self.top_container_height + self.player_label_container_height - y_offset + (i * self.player_container_height)),
                                             self.player_buzzer_container_width, self.player_buzzer_container_height)
-        pygame.draw.circle(screen, buzzer_color, player_buzzer_container.center, self.player_buzzer_container_width / 3, width)
+        pygame.draw.circle(self.screen, buzzer_color, player_buzzer_container.center, self.player_buzzer_container_width / 3.5, width)
         return player_buzzer_container
     
-    def update_score(self, screen, n):
-        player_score_container = pygame.Rect((self.main_container_width + self.player_buzzer_container_width), (
-                self.top_left_container_height + self.player_label_container_height + n * self.player_container_height),
-                                        self.player_score_container_width, self.player_score_container_height)
-        pygame.draw.rect(screen, Static.WHITE, player_score_container)
-        blit_text_objects(screen, player_score_container, str(self.scores[n]), self.MEDIUM_TEXT, Static.LIGHT_BLUE)
-        player_container = pygame.Rect(self.main_container_width, self.top_left_container_height + n * self.player_container_height,
-                                self.player_container_width, self.player_container_height)
-        pygame.draw.rect(screen, Static.LIGHT_BLUE, player_container, width=4)
+    def update_score(self, n):        
+        player_label_container = pygame.Rect(self.left_container_width,
+                                                (self.top_container_height + n * self.player_container_height),
+                                                self.right_container_width, self.player_label_container_height)
+        player_container = pygame.Rect(self.left_container_width, self.top_container_height + n * self.player_container_height,
+                                        self.right_container_width, self.player_container_height)
+        player_score_container = pygame.Rect((self.left_container_width + self.player_buzzer_container_width), (
+                    self.top_container_height + self.player_label_container_height - 8 + n * self.player_container_height),
+                                            self.player_score_container_width, self.player_score_container_height)
+        pygame.draw.rect(self.screen, Static.WHITE, player_score_container)
+        blit_text_objects(self.screen, player_score_container, str(self.scores[n]), self.MEDIUM_TEXT, Static.LIGHT_BLUE)
+        self.draw_rect(Static.LIGHT_BLUE, Static.WHITE, 8, player_label_container)
+        blit_text_objects(self.screen, player_label_container, self.players[n], self.SMALL_TEXT)
+        pygame.draw.rect(self.screen, Static.LIGHT_BLUE, pygame.Rect(player_container.x+8, player_container.y+8, player_container.w-16, player_container.h-16), width=4)
 
-    def update_progress(self, screen):
-        self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.top_right_container)
+    def update_progress(self):
+        self.draw_rect(Static.RED, Static.WHITE, 8, self.top_right_container)
         if self.current_round == 0:
             progress = self.SMALL_TEXT.render(f"{str(self.total_rounds)} Runden", 1, Static.WHITE)
         else:
             progress = self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
-        screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
+        self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
     
-    def display_game_info(self, screen):
-        self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.top_left_container)
-        self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.bottom_right_container)
-        self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.bottom_left_container)
+    def display_game_info(self):
+        self.draw_rect(Static.RED, Static.WHITE, 8, self.top_left_container)
+        self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
+        self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_left_container)
         if not os.path.isdir(self.game_data):
             game_title = os.path.basename(self.game_data)
             game_title = os.path.splitext(game_title)[0].replace('_', ' ')
         else:
             game_title = os.path.basename(os.path.dirname(self.game_data)).replace('_', ' ')
-        game_title = self.SMALL_TEXT.render(game_title, True, Static.WHITE)
-        screen.blit(game_title, game_title.get_rect(center=self.top_left_container.center))
-        self.update_progress(screen)
+        blit_text_objects(self.screen, self.top_left_container, game_title, self.SMALL_TEXT)
+        self.update_progress()
 
         for n in range(0, self.amount_players):
-            player_label = self.SMALL_TEXT.render(self.players[n], 1, Static.WHITE)
-            player_label_container = pygame.Rect(self.main_container_width,
-                                                (self.top_right_container_height + n * self.player_container_height),
-                                                self.player_label_container_width, self.player_label_container_height)
-            player_container = pygame.Rect(self.main_container_width, self.top_left_container_height + n * self.player_container_height,
-                                            self.player_container_width, self.player_container_height)
-            pygame.draw.rect(screen, Static.LIGHT_BLUE, player_container, width=4)
-            pygame.draw.rect(screen, Static.LIGHT_BLUE, player_label_container)
-            screen.blit(player_label, player_label.get_rect(center=player_label_container.center))
-            self.display_buzzer(screen, n, Static.LIGHT_BLUE)
-            player_score = self.MEDIUM_TEXT.render(str(self.scores[n]), 1, Static.LIGHT_BLUE)
-            player_score_container = pygame.Rect((self.main_container_width + self.player_buzzer_container_width), (
-                        self.top_left_container_height + self.player_label_container_height + n * self.player_container_height),
-                                                self.player_score_container_width, self.player_score_container_height)
-            screen.blit(player_score, player_score.get_rect(center=player_score_container.center))
+            self.update_score(n)
+            self.display_buzzer(n, Static.LIGHT_BLUE)
 
         pygame.display.flip()
         pygame.display.update()
 
-    def play_round(self, screen):
+    def play_round(self):
         pass
     
-    def countdown(self, screen, count_from):
+    def countdown(self, count_from):
         for i in range(1, count_from):
-            time_left = count_from - i
-            time_left = str(time_left)
+            time_left = str(count_from - i)
+            blit_text_objects(self.screen, self.bottom_right_container, time_left, self.SMALL_TEXT)
             countdown = self.SMALL_TEXT.render(time_left, 1, Static.WHITE)
-            screen.blit(countdown, countdown.get_rect(center=self.bottom_right_container.center))
+            self.screen.blit(countdown, countdown.get_rect(center=self.bottom_right_container.center))
             pygame.display.flip()
             pygame.time.wait(1000)
             if time_left != 0:
-                self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.bottom_right_container)
+                self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()
                 if self.is_game_sounds:
                     countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown.wav'))
@@ -175,7 +164,7 @@ class QuizGameBase:
             buzzerHit = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'buzzer.wav'))
             self.game_sound_channel.play(buzzerHit)
 
-    def award_points(self, screen, first_buzz, key, reset=False):
+    def award_points(self, first_buzz, key, reset=False):
         if key == self.answer_keys[0]:
             self.scores[first_buzz] += 1
             if reset:
@@ -184,12 +173,11 @@ class QuizGameBase:
             self.scores[first_buzz] -= 1
             if reset:
                 self.buzzer_hit = False
-        self.update_score(screen, first_buzz)
+        self.update_score(first_buzz)
         pygame.display.flip()
 
-    def show_solution(self, screen):
-        solution = self.SMALL_TEXT.render(self.current_solution, 1, Static.WHITE)
-        screen.blit(solution, solution.get_rect(center=self.bottom_left_container.center))
+    def show_solution(self):
+        blit_text_objects(self.screen, self.bottom_left_container, self.current_solution, self.SMALL_TEXT)
 
     def check_game_over(self):
         if max(self.scores) >= self.max_score:
@@ -197,20 +185,19 @@ class QuizGameBase:
         elif self.current_round == self.total_rounds and self.solution_shown:
             self.winner_found = True
 
-    def show_winner(self, screen):
+    def show_winner(self):
         self.buzzer_hit = False
         self.solution_shown = True
-        pygame.draw.rect(screen, Static.BLUE, self.main_container)
-        pygame.draw.rect(screen, Static.WHITE, self.main_container, width=8)
-        self.draw_rect(screen, Static.RED, Static.WHITE, 8, self.bottom_left_container)
+        self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
+        self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_left_container)
         winner_ix = [i for i, x in enumerate(self.scores) if x == max(self.scores)]
-        title_rect = pygame.Rect(0, self.top_left_container_height, self.main_container_width, self.main_container_height/2)
-        blit_text_objects(screen, title_rect, "GEWINNER", self.MEDIUM_TEXT)
+        title_rect = pygame.Rect(0, self.top_container_height, self.left_container_width, self.main_container_height/2)
+        blit_text_objects(self.screen, title_rect, "GEWINNER", self.MEDIUM_TEXT)
         winners = []
         [winners.append(self.players[i]) for i in winner_ix]
         for line in range(len(winners)):
-            winner_rect = pygame.Rect(0, self.top_left_container_height+self.main_container_height/2.8+(80*line), self.main_container_width, self.main_container_height/2/len(winners))
-            blit_text_objects(screen, winner_rect, winners[line], self.MEDIUM_TEXT, Static.RED)
+            winner_rect = pygame.Rect(0, self.top_container_height+self.main_container_height/2.8+(80*line), self.left_container_width, self.main_container_height/2/len(winners))
+            blit_text_objects(self.screen, winner_rect, winners[line], self.MEDIUM_TEXT, Static.RED)
 
     def handle_events(self):
         key_status = pygame.key.get_pressed()
@@ -234,5 +221,5 @@ class QuizGameBase:
                 button_pressed = event.button
         return key_pressed, button_pressed
     
-    def run(self, screen):
+    def run(self):
         pass

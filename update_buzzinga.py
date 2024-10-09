@@ -1,25 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: latin-1 -*-
 
-import subprocess
-import time
 import os
+import subprocess
+from static import Static
 
 time_consumed = 0
 
 def run_update_buzzinga():
     try:
-        #os.system("sudo apt-get -qq update")
-        #os.system("sudo apt-get -qq upgrade")
-        #os.system("sudo apt-get -qq --yes --assume-yes install lame")
-        #os.chdir("/home/pi/Desktop/venv/mycode/")
-        os.system("git remote prune origin")
-        os.system("git pull origin master")
-        #os.system("sudo git reset --hard origin/master")
-        return
-    except:
-        return "Update nicht erfolgreich."
+        git_directory = Static.GIT_DIRECTORY
+        
+        commands = [
+            ["git", "remote", "prune", "origin"],
+            ["git", "pull", "origin", "master"]
+            # Uncomment the following lines if needed:
+            #["git", "reset", "--hard", "origin/master"]
+        ]
+        
+        for command in commands:
+            result = subprocess.run(command, cwd=git_directory, capture_output=True, text=True)
+            
+            if result.returncode != 0:
+                return f"Error: Command '{' '.join(command)}' failed with error: {result.stderr.strip()}"
+        
+        return "Update erfolgreich!"  # Update successful message
+    
+    except Exception as e:
+        return f"Update nicht erfolgreich: {str(e)}"
 
 
 if __name__ == '__main__':
-	run_update_buzzinga()
+    result = run_update_buzzinga()
+    if result:
+        print(result)
