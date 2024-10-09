@@ -97,10 +97,8 @@ class ImageQuiz(QuizGameBase):
                     pygame.display.flip()
 
                 # player buzzers
-                if key in self.player_buzzer_keys:
-                #if button in self.player_keys:
-                    #first_buzz = self.player_keys.index(button)
-                    first_buzz = self.player_buzzer_keys.index(key)
+                if button in self.player_buzzer_keys:
+                    first_buzz = self.player_keys.index(button)
                     self.display_buzzer(first_buzz, Static.RED)
                     self.play_buzzer_sound()
                     self.buzzer_hit = True

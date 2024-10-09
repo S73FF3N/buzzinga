@@ -39,7 +39,6 @@ class AudioQuiz(QuizGameBase):
         random.shuffle(self.round_data)
 
     def play_round(self):
-        """Display the image and handle buzzer logic for the image quiz."""
         current_data = self.round_data[self.current_round - 1]
         self.current_sound = pygame.mixer.Sound(current_data["data"])
         self.current_solution = current_data["solution"]
@@ -114,10 +113,8 @@ class AudioQuiz(QuizGameBase):
                     self.sound_channel.play(self.current_sound)
 
                 # player buzzers
-                if key in self.player_buzzer_keys:
-                #if button in self.player_buzzer_keys:
-                    #first_buzz = self.player_buzzer_keys.index(button)
-                    first_buzz = self.player_buzzer_keys.index(key)
+                if button in self.player_buzzer_keys:
+                    first_buzz = self.player_buzzer_keys.index(button)
                     self.sound_channel.pause()
                     self.sound_animation_running = False
                     self.display_buzzer(first_buzz, Static.RED)

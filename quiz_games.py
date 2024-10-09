@@ -17,8 +17,7 @@ class QuizGameBase:
         self.players = players  # List of player names
         self.amount_players = len(players)
         self.scores = [0 for player in players]
-        #self.player_buzzer_keys = [0, 5, 10, 15]
-        self.player_buzzer_keys = [pygame.K_g, pygame.K_h, pygame.K_j, pygame.K_k]
+        self.player_buzzer_keys = [0, 5, 10, 15]
         self.answer_keys = [pygame.K_r, pygame.K_f]
         self.image_cache = {}
         self.current_round = 0
@@ -45,7 +44,6 @@ class QuizGameBase:
         self.top_container_height = (self.SCREEN_HEIGHT - self.main_container_height) // 2
         self.bottom_container_height = self.SCREEN_HEIGHT - self.main_container_height - self.top_container_height
 
-        # Adjust the bottom container to fill any remaining gap
         self.bottom_container_height += self.SCREEN_HEIGHT - (self.top_container_height + self.main_container_height + self.bottom_container_height)
 
         self.top_left_container = pygame.Rect(0, 0, self.left_container_width, self.top_container_height)

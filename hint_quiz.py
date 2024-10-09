@@ -142,10 +142,8 @@ class HintQuiz(QuizGameBase):
                         self.hint_nr += 1
 
                 # player buzzers
-                if key in self.player_buzzer_keys:
-                #if button in self.player_buzzer_keys:
-                    #first_buzz = self.player_buzzer_keys.index(button)
-                    first_buzz = self.player_buzzer_keys.index(key)
+                if button in self.player_buzzer_keys:
+                    first_buzz = self.player_buzzer_keys.index(button)
                     buzzer_container = self.display_buzzer(first_buzz, Static.RED)
                     blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round]['solution_link'], self.MINI_TEXT)
                     if self.is_game_sounds:

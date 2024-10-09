@@ -9,10 +9,10 @@ from animation import BuzzingaAnimation
 class QuestionQuiz(QuizGameBase):
     def __init__(self, clock, game_data, players, is_game_sounds, max_score):
         super().__init__(clock, game_data, players, is_game_sounds, max_score)
-        self.player1_answer_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4]
-        self.player2_answer_keys = [pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8]
-        self.player3_answer_keys = [pygame.K_q, pygame.K_w, pygame.K_a, pygame.K_s]
-        self.player4_answer_keys = [pygame.K_j, pygame.K_k, pygame.K_n, pygame.K_m]
+        self.player1_answer_keys = [1, 2, 3, 4]
+        self.player2_answer_keys = [6, 7, 8, 9]
+        self.player3_answer_keys = [11, 12, 13, 14]
+        self.player4_answer_keys = [16, 17, 18, 19]
 
         self.current_question = None
         self.player_answers = {1: False, 2: False, 3: False, 4: False}
@@ -148,25 +148,21 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
                         self.question_answered = True
 
-                #if button in self.player1_answer_keys and not self.player1_locked:
-                if key in self.player1_answer_keys and not self.player1_locked:
+                if button in self.player1_answer_keys and not self.player1_locked:
                     self.player1_locked = True
-                    self.player_answers[1] = self.solution_dict[self.player1_answer_keys.index(key)+1]#button]
+                    self.player_answers[1] = self.solution_dict[self.player1_answer_keys.index(button)+1]
                     self.display_buzzer(0, Static.RED)
-                #elif button in self.player2_answer_keys and not self.player2_locked:
-                elif key in self.player2_answer_keys and not self.player2_locked:
+                elif button in self.player2_answer_keys and not self.player2_locked:
                     self.player2_locked = True
-                    self.player_answers[2] = self.solution_dict[self.player2_answer_keys.index(key)+1]#button]
+                    self.player_answers[2] = self.solution_dict[self.player2_answer_keys.index(button)+1]
                     self.display_buzzer(1, Static.RED)
-                #elif button in self.player3_answer_keys and not self.player3_locked:
-                elif key in self.player3_answer_keys and not self.player3_locked:
+                elif button in self.player3_answer_keys and not self.player3_locked:
                     self.player3_locked = True
-                    self.player_answers[3] = self.solution_dict[self.player3_answer_keys.index(key)+1]#button]
+                    self.player_answers[3] = self.solution_dict[self.player3_answer_keys.index(button)+1]
                     self.display_buzzer(2, Static.RED)
-                #elif button in self.player4_answer_keys and not self.player4_locked:
-                elif key in self.player4_answer_keys and not self.player4_locked:
+                elif button in self.player4_answer_keys and not self.player4_locked:
                     self.player4_locked = True
-                    self.player_answers[4] = self.solution_dict[self.player4_answer_keys.index(key)+1]#button]
+                    self.player_answers[4] = self.solution_dict[self.player4_answer_keys.index(button)+1]
                     self.display_buzzer(3, Static.RED)
                 if self.player1_locked and self.player2_locked and self.player3_locked and self.player4_locked:
                     self.question_answered = True

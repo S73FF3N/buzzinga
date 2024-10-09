@@ -82,7 +82,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
             x, y, container_width, container_height = self.get_answer_position(1, is_large_grid)
         
         min_font_size = 10
-        max_font_size = 70  # Adjust this value based on your needs
+        max_font_size = 70
         optimal_font_size = min_font_size
         
         while min_font_size <= max_font_size:

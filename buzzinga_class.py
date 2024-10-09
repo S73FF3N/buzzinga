@@ -106,7 +106,6 @@ class Buzzinga():
                 data = json.load(f)
                 return len(data)
 
-    # to do: Folder umbenennen
     def build_required_folders(self):
         for folder in self.FOLDER_MAPPING.keys():
             dir_name = os.path.join(Static.ROOT_EXTENDED, folder)
