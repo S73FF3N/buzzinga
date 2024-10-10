@@ -6,6 +6,7 @@ import shutil
 import platform
 
 from static import Static
+from translations import german, english
 
 def get_mountedlist():
     if platform.system() == "Windows":
@@ -33,11 +34,13 @@ def copy_and_rename_files(src_dir, dest_dir, allowed_extensions):
                 if platform.system() != "Windows":
                     new_file.chmod(0o777)
                     
-def usb_input_check(game_type):
+def usb_input_check(game_type, language):
     done = set()
     files_imported = False
     time_consumed = 0
     folder = Path(game_type)
+
+    language = german if language == "german" else english
 
     while True:
         mounted = set(get_mountedlist())
@@ -66,19 +69,19 @@ def usb_input_check(game_type):
                             subprocess.run(["sudo", "umount", str(item)], check=True)
                         except subprocess.CalledProcessError:
                             print(f"Error unmounting {item}")
-                            return "Error during file import"
-                    return "Files successfully imported"
+                            return language['failed_import']
+                    return language['successful_import']
 
         done = mounted
         time.sleep(2)
         time_consumed += 2
         if time_consumed >= 4:
-            return "No files imported"
+            return language['no_files_imported']
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Please provide game type as an argument")
     else:
-        result = usb_input_check(game_type=sys.argv[1])
+        result = usb_input_check(game_type=sys.argv[1], language=sys.argv[2])
         print(result)

@@ -7,7 +7,7 @@ from game_utilities import blit_text_objects
 from animation import SoundAnimation
 
 class QuizGameBase:
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock
@@ -37,6 +37,7 @@ class QuizGameBase:
         self.solution_shown = False
         self.current_solution = None
         self.escape_pressed = False
+        self.language = language
 
         self.left_container_width = self.SCREEN_WIDTH * 8 // 10
         self.right_container_width = self.SCREEN_WIDTH - self.left_container_width
@@ -112,9 +113,9 @@ class QuizGameBase:
     def update_progress(self):
         self.draw_rect(Static.RED, Static.WHITE, 8, self.top_right_container)
         if self.current_round == 0:
-            progress = self.SMALL_TEXT.render(f"{str(self.total_rounds)} Runden", 1, Static.WHITE)
+            progress = self.SMALL_TEXT.render(f"{str(self.total_rounds)} {self.language['rounds']}", 1, Static.WHITE)
         else:
-            progress = self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
+            progress = self.SMALL_TEXT.render(f"{self.language['round']} {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
         self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
     
     def display_game_info(self):
@@ -190,7 +191,7 @@ class QuizGameBase:
         self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_left_container)
         winner_ix = [i for i, x in enumerate(self.scores) if x == max(self.scores)]
         title_rect = pygame.Rect(0, self.top_container_height, self.left_container_width, self.main_container_height/2)
-        blit_text_objects(self.screen, title_rect, "GEWINNER", self.MEDIUM_TEXT)
+        blit_text_objects(self.screen, title_rect, self.language['winner'], self.MEDIUM_TEXT)
         winners = []
         [winners.append(self.players[i]) for i in winner_ix]
         for line in range(len(winners)):

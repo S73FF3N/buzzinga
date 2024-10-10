@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class QuestionQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, language)
         self.player1_answer_keys = [1, 2, 3, 4]
         self.player2_answer_keys = [6, 7, 8, 9]
         self.player3_answer_keys = [11, 12, 13, 14]

@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class WhoKnowsMoreQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, language)
         self.answer_category = 1
         self.first_element_of_question = True
         self.active_player = 0
@@ -246,7 +246,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         answer_id_int = int(self.answer_id)
                         if current_round_data["answers"][answer_id_int] in self.answers_solved:
                             self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                            blit_text_objects(self.screen, self.bottom_right_container, 'Schon gelöst!', self.MINI_TEXT)
+                            blit_text_objects(self.screen, self.bottom_right_container, self.language['already_solved'], self.MINI_TEXT)
                             pygame.display.flip()
                             self.skip_print_answer = True
                         if not self.skip_print_answer:
@@ -266,7 +266,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                             # no answers left
                             else:
                                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                                blit_text_objects(self.screen, self.bottom_right_container, 'Alles gelöst!', self.MINI_TEXT)
+                                blit_text_objects(self.screen, self.bottom_right_container, self.language['all_solved'], self.MINI_TEXT)
                                 pygame.display.flip()
                                 self.correct_answer = False
                                 self.initializing = True
@@ -278,7 +278,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                     except Exception as e:
                         print(e, traceback.print_exc())
                         self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                        blit_text_objects(self.screen, self.bottom_right_container, 'Falsche ID', self.SMALL_TEXT)
+                        blit_text_objects(self.screen, self.bottom_right_container, self.language['wrong_id'], self.SMALL_TEXT)
                         pygame.display.flip()
                         self.answer_id = ""
 

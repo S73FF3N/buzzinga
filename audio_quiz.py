@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class AudioQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, language)
         self.current_sound = None
 
     def clean_game_data(self):
