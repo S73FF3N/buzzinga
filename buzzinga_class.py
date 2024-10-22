@@ -84,17 +84,16 @@ class Buzzinga():
 
     def game(self):
         common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.current_language)
-        match self.game_type:
-            case "images":
-                quiz = ImageQuiz(*common_args)
-            case "sounds":
-                quiz = AudioQuiz(*common_args)
-            case "questions":
-                quiz = QuestionQuiz(*common_args)
-            case "hints":
-                quiz = HintQuiz(*common_args)
-            case "who-knows-more":
-                quiz = WhoKnowsMoreQuiz(*common_args)
+        if self.game_type == "images":
+            quiz = ImageQuiz(*common_args)
+        if self.game_type == "sounds":
+            quiz = AudioQuiz(*common_args)
+        if self.game_type == "questions":
+            quiz = QuestionQuiz(*common_args)
+        if self.game_type == "hints":
+            quiz = HintQuiz(*common_args)
+        if self.game_type == "who-knows-more":
+            quiz = WhoKnowsMoreQuiz(*common_args)
         quiz.run()
 
     def get_amount_rounds(self, category_folder):
@@ -302,32 +301,31 @@ class Buzzinga():
             ('Esc', 'Escape', 3),
             ('Enter', self.current_language['progress'], 4)
         ]
-        match self.game_type:
-            case 'images':
-                self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6)]
-                )
-            case 'sounds':
-                self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
-                    ('p', 'replay', 7)]
-                )
-            case 'hints':
-                self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
-                    ('n', 'next hint', 7)]
-                )
-            case 'questions':
-                pass
-            case 'who-knows-more':
-                self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
-                    ('1-9', self.current_language['display_answer'], 7)]
-                )               
+        if self.game_type == 'images':
+            self.key_instructions.extend(
+                [('r', self.current_language['correct'], 5),
+                ('f', self.current_language['wrong'], 6)]
+            )
+        if self.game_type == 'sounds':
+            self.key_instructions.extend(
+                [('r', self.current_language['correct'], 5),
+                ('f', self.current_language['wrong'], 6),
+                ('p', 'replay', 7)]
+            )
+        if self.game_type == 'hints':
+            self.key_instructions.extend(
+                [('r', self.current_language['correct'], 5),
+                ('f', self.current_language['wrong'], 6),
+                ('n', 'next hint', 7)]
+            )
+        if self.game_type == 'questions':
+            pass
+        if self.game_type == 'who-knows-more':
+            self.key_instructions.extend(
+                [('r', self.current_language['correct'], 5),
+                ('f', self.current_language['wrong'], 6),
+                ('1-9', self.current_language['display_answer'], 7)]
+            )               
 
     def build_category_buttons_dict(self):
         self.game_folder = os.path.join(Static.ROOT_EXTENDED, self.FOLDER_MAPPING[self.game_type])
