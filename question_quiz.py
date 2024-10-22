@@ -1,4 +1,4 @@
-import os, pygame, json, random
+import os, pygame, json, random, pybuzzers
 
 from quiz_games import QuizGameBase
 from static import Static
@@ -7,12 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class QuestionQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score)
-        self.player1_answer_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4]
-        self.player2_answer_keys = [pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8]
-        self.player3_answer_keys = [pygame.K_q, pygame.K_w, pygame.K_a, pygame.K_s]
-        self.player4_answer_keys = [pygame.K_j, pygame.K_k, pygame.K_n, pygame.K_m]
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
 
         self.current_question = None
         self.player_answers = {1: False, 2: False, 3: False, 4: False}
@@ -43,6 +39,17 @@ class QuestionQuiz(QuizGameBase):
                                     self.top_container_height + self.question_container_height + self.option_container_height + 20,
                                     self.option_container_width,
                                     self.option_container_height)
+        
+        self.buzzer_set = buzzer_set
+        self.buzzering_player = None
+        self.answer = None
+        def handle_answer(buzzer_set: pybuzzers.BuzzerSet, buzzer: int, button: int):
+            if not self.question_answered and not self.initializing and not button == 0:
+                self.buzzering_player = buzzer
+                self.answer = button
+        
+        self.buzzer_set.on_button_down(handle_answer)
+        self.buzzer_set.start_listening()
 
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
@@ -104,12 +111,12 @@ class QuestionQuiz(QuizGameBase):
         self.display_game_info()
 
         while self.running:
-            key, button = self.handle_events()
+            key = self.handle_events()
             if self.escape_pressed:
                 break
 
             while self.initializing:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
@@ -132,7 +139,7 @@ class QuestionQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.question_answered and not self.winner_found:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
@@ -148,37 +155,41 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
                         self.question_answered = True
 
-                #if button in self.player1_answer_keys and not self.player1_locked:
-                if key in self.player1_answer_keys and not self.player1_locked:
+                if self.buzzering_player == 0 and not self.player1_locked:
                     self.player1_locked = True
-                    self.player_answers[1] = self.solution_dict[self.player1_answer_keys.index(key)+1]#button]
+                    self.player_answers[1] = self.solution_dict[5-self.answer]
+                    self.buzzering_player = None
+                    self.answer = None
                     self.display_buzzer(0, Static.RED)
-                #elif button in self.player2_answer_keys and not self.player2_locked:
-                elif key in self.player2_answer_keys and not self.player2_locked:
+                elif self.buzzering_player == 1 and not self.player2_locked:
                     self.player2_locked = True
-                    self.player_answers[2] = self.solution_dict[self.player2_answer_keys.index(key)+1]#button]
+                    self.player_answers[2] = self.solution_dict[5-self.answer]
+                    self.buzzering_player = None
+                    self.answer = None
                     self.display_buzzer(1, Static.RED)
-                #elif button in self.player3_answer_keys and not self.player3_locked:
-                elif key in self.player3_answer_keys and not self.player3_locked:
+                elif self.buzzering_player == 2 and not self.player3_locked:
                     self.player3_locked = True
-                    self.player_answers[3] = self.solution_dict[self.player3_answer_keys.index(key)+1]#button]
+                    self.player_answers[3] = self.solution_dict[5-self.answer]
+                    self.buzzering_player = None
+                    self.answer = None
                     self.display_buzzer(2, Static.RED)
-                #elif button in self.player4_answer_keys and not self.player4_locked:
-                elif key in self.player4_answer_keys and not self.player4_locked:
+                elif self.buzzering_player == 3 and not self.player4_locked:
                     self.player4_locked = True
-                    self.player_answers[4] = self.solution_dict[self.player4_answer_keys.index(key)+1]#button]
+                    self.player_answers[4] = self.solution_dict[5-self.answer]
+                    self.buzzering_player = None
+                    self.answer = None
                     self.display_buzzer(3, Static.RED)
                 if self.player1_locked and self.player2_locked and self.player3_locked and self.player4_locked:
                     self.question_answered = True
                 pygame.display.flip()
 
             while self.question_answered and not self.winner_found:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
 
                 while not self.answers_shown:
-                    key, button = self.handle_events()
+                    key = self.handle_events()
                     if self.escape_pressed:
                         break
 
@@ -190,7 +201,7 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 while self.answers_shown and not self.solution_shown:
-                    key, button = self.handle_events()
+                    key = self.handle_events()
                     if self.escape_pressed:
                         break
 
@@ -208,7 +219,7 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 while self.answers_shown and self.solution_shown:
-                        key, button = self.handle_events()
+                        key = self.handle_events()
                         if self.escape_pressed:
                             break
                         if key == pygame.K_RETURN:

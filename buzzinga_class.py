@@ -1,4 +1,4 @@
-import pygame, os, sys, shutil, subprocess, shutil, json
+import pygame, os, sys, shutil, subprocess, shutil, json, pybuzzers
 from pygame import gfxdraw
 from itertools import islice
 from pathlib import Path
@@ -58,6 +58,7 @@ class Buzzinga():
         self.game_folder = ""
         self.pages = 0
         self.buttons = {}
+        self.buzzer_set = None
 
         self.key_instructions = []
 
@@ -80,9 +81,10 @@ class Buzzinga():
         self.build_required_folders()
 
     def game(self):
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set)
         match self.game_type:
             case "images":
+                print(*common_args)
                 quiz = ImageQuiz(*common_args)
             case "sounds":
                 quiz = AudioQuiz(*common_args)
@@ -102,7 +104,7 @@ class Buzzinga():
             file_count = count_files_by_extensions(f"{self.game_folder}/{category_folder}/", '.wav', '.mp3')
             return file_count
         else:
-            with open(f"{self.game_folder}{category_folder}", 'r', encoding='utf-8') as f:
+            with open(f"{self.game_folder}/{category_folder}", 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return len(data)
 
@@ -221,7 +223,7 @@ class Buzzinga():
         if self.game_type in ["images", "sounds"]:
             self.game_dir = f"{self.game_folder}/{category_folder}/"
         else:
-            self.game_dir = f"{self.game_folder}{category_folder}.json"
+            self.game_dir = f"{self.game_folder}/{category_folder}.json"
         self.settings_menu()
 
     def handle_category_selection(self, click, game_options, categories_to_delete):
@@ -594,10 +596,8 @@ class Buzzinga():
                     self.start_game = True
                 else:
                     try:
-                        pygame.joystick.quit()
-                        pygame.joystick.init()
-                        if pygame.joystick.get_count() == 1:
-                            pygame.joystick.Joystick(0).init()
+                        self.buzzer_set = pybuzzers.get_all_buzzers()[0]
+                        if self.buzzer_set:
                             self.start_game = True
                         else:
                             no_buzzer_connected()

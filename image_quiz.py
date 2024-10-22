@@ -1,4 +1,4 @@
-import os, random, pygame, time
+import os, random, pygame, pybuzzers
 
 from quiz_games import QuizGameBase
 from static import Static
@@ -7,6 +7,17 @@ from animation import BuzzingaAnimation
 
 
 class ImageQuiz(QuizGameBase):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+        self.buzzer_set = buzzer_set
+        self.buzzering_player = None
+        def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
+            if not self.buzzer_hit and not self.initializing:
+                self.buzzering_player = buzzer
+        
+        self.buzzer_set.on_buzz(handle_buzz)
+        self.buzzer_set.start_listening()
+
     def clean_game_data(self):
         os.chdir(self.game_data)
         game_data_list = os.listdir(self.game_data)
@@ -58,12 +69,12 @@ class ImageQuiz(QuizGameBase):
         self.display_game_info()
 
         while self.running:
-            key, button = self.handle_events()
+            key = self.handle_events()
             if self.escape_pressed:
                 break
 
             while self.initializing:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
@@ -86,7 +97,8 @@ class ImageQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.buzzer_hit and not self.solution_shown:
-                key, button = self.handle_events()
+                key = self.handle_events()
+
                 if self.escape_pressed:
                     break
                 # noone buzzers
@@ -97,17 +109,16 @@ class ImageQuiz(QuizGameBase):
                     pygame.display.flip()
 
                 # player buzzers
-                if key in self.player_buzzer_keys:
-                #if button in self.player_keys:
-                    #first_buzz = self.player_keys.index(button)
-                    first_buzz = self.player_buzzer_keys.index(key)
+                if self.buzzering_player:
+                    first_buzz = self.buzzering_player
                     self.display_buzzer(first_buzz, Static.RED)
+                    self.buzzering_player = None
                     self.play_buzzer_sound()
                     self.buzzer_hit = True
                     self.countdown(5)
 
             while self.buzzer_hit:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
 

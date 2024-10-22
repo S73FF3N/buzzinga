@@ -1,4 +1,4 @@
-import pygame, os, sys
+import pygame, os, sys, pybuzzers
 
 import pygame.locals
 
@@ -7,7 +7,7 @@ from game_utilities import blit_text_objects
 from animation import SoundAnimation
 
 class QuizGameBase:
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock
@@ -17,8 +17,6 @@ class QuizGameBase:
         self.players = players  # List of player names
         self.amount_players = len(players)
         self.scores = [0 for player in players]
-        #self.player_buzzer_keys = [0, 5, 10, 15]
-        self.player_buzzer_keys = [pygame.K_g, pygame.K_h, pygame.K_j, pygame.K_k]
         self.answer_keys = [pygame.K_r, pygame.K_f]
         self.image_cache = {}
         self.current_round = 0
@@ -202,7 +200,6 @@ class QuizGameBase:
     def handle_events(self):
         key_status = pygame.key.get_pressed()
         key_pressed = None
-        button_pressed = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -217,9 +214,7 @@ class QuizGameBase:
                     self.escape_pressed = True
                     self.sound_channel.stop()
                     os.chdir(Static.GIT_DIRECTORY)
-            if event.type == pygame.JOYBUTTONDOWN:
-                button_pressed = event.button
-        return key_pressed, button_pressed
+        return key_pressed
     
     def run(self):
         pass
