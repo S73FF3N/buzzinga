@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class WhoKnowsMoreQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, language)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language, buzzer_set):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, language, buzzer_set)
         self.answer_category = 1
         self.first_element_of_question = True
         self.active_player = 0

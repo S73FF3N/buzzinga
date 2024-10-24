@@ -1,4 +1,4 @@
-import os, random, pygame, json
+import os, random, pygame, json, pybuzzers
 
 from quiz_games import QuizGameBase
 from static import Static
@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class HintQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, language)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, language, buzzer_set):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, language, buzzer_set)
         self.hint_container_width = (self.left_container_width / 2) - 10
         self.hint_container_height = (self.main_container_height / 5) - 5
         self.hint1_container = pygame.Rect(5, self.top_container_height, self.hint_container_width, self.hint_container_height)
@@ -47,6 +47,15 @@ class HintQuiz(QuizGameBase):
         }
         self.no_points_awarded = False
         self.correct_answer = False
+
+        self.buzzer_set = buzzer_set
+        self.buzzering_player = None
+        def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
+            if not self.buzzer_hit and not self.initializing:
+                self.buzzering_player = buzzer
+        
+        self.buzzer_set.on_buzz(handle_buzz)
+        self.buzzer_set.start_listening()
 
     def print_hint(self, n):
         pygame.draw.rect(self.screen, Static.BLUE, self.hint_match_dict[n][0])
@@ -96,12 +105,12 @@ class HintQuiz(QuizGameBase):
         self.display_game_info()
 
         while self.running:
-            key, button = self.handle_events()
+            key = self.handle_events()
             if self.escape_pressed:
                 break
 
             while self.initializing:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
@@ -124,7 +133,7 @@ class HintQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.buzzer_hit and not self.solution_shown:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
                 # noone buzzers
@@ -142,18 +151,17 @@ class HintQuiz(QuizGameBase):
                         self.hint_nr += 1
 
                 # player buzzers
-                if button in self.player_buzzer_keys:
-                    first_buzz = self.player_buzzer_keys.index(button)
+                if self.buzzering_player:
+                    first_buzz = self.buzzering_player
                     buzzer_container = self.display_buzzer(first_buzz, Static.RED)
                     blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round]['solution_link'], self.MINI_TEXT)
-                    if self.is_game_sounds:
-                        buzzerHit = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'buzzer.wav'))
-                        self.game_sound_channel.play(buzzerHit)
+                    self.buzzering_player = None
+                    self.play_buzzer_sound()
                     self.buzzer_hit = True
                     self.countdown(5)
 
             while self.buzzer_hit:
-                key, button = self.handle_events()
+                key = self.handle_events()
                 if self.escape_pressed:
                     break
 

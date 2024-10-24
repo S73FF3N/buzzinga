@@ -1,4 +1,4 @@
-import pygame, os, sys, shutil, subprocess, shutil, json
+import pygame, os, sys, shutil, subprocess, shutil, json, pybuzzers
 from pygame import gfxdraw
 from itertools import islice
 from pathlib import Path
@@ -61,6 +61,7 @@ class Buzzinga():
         self.game_folder = ""
         self.pages = 0
         self.buttons = {}
+        self.buzzer_set = None
 
         self.key_instructions = []
 
@@ -83,7 +84,7 @@ class Buzzinga():
         self.build_required_folders()
 
     def game(self):
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.current_language)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.current_language, self.buzzer_set)
         if self.game_type == "images":
             quiz = ImageQuiz(*common_args)
         if self.game_type == "sounds":
@@ -602,10 +603,8 @@ class Buzzinga():
                     self.start_game = True
                 else:
                     try:
-                        pygame.joystick.quit()
-                        pygame.joystick.init()
-                        if pygame.joystick.get_count() == 1:
-                            pygame.joystick.Joystick(0).init()
+                        self.buzzer_set = pybuzzers.get_all_buzzers()[0]
+                        if self.buzzer_set:
                             self.start_game = True
                         else:
                             no_buzzer_connected()
