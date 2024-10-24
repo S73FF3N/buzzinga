@@ -6,6 +6,7 @@ import stat
 
 from static import Static
 from game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_files_by_extensions
+from translations import english, german
 from image_quiz import ImageQuiz
 from audio_quiz import AudioQuiz
 from question_quiz import QuestionQuiz
@@ -45,8 +46,11 @@ class Buzzinga():
         self.SMALL_TEXT = pygame.font.SysFont("Ariel", self.SCREEN_HEIGHT // 25)
         self.MINI_TEXT = pygame.font.SysFont("Ariel", self.SCREEN_HEIGHT // 35)
 
+        self.current_language = german
+        self.language_toggle = True
+
         self.game_type = "images"
-        self.player = ['Spieler 1', 'Spieler 2', 'Spieler 3', 'Spieler 4']
+        self.player = [self.current_language['player1'], self.current_language['player2'], self.current_language['player3'], self.current_language['player4']]
         self.game_dir = None
         self.is_game_sounds = False
         self.game_modus = True
@@ -265,9 +269,9 @@ class Buzzinga():
                         print(e)
             try:
                 shutil.rmtree(game_path, onerror=remove_readonly)
-                return "Deletion successful!"
+                return self.current_language['deletion_successful']
             except OSError:
-                return "Deletion failed!"
+                return self.current_language['deletion_failed']
         else:
             try:
                 game_path.chmod(0o777)
@@ -278,9 +282,9 @@ class Buzzinga():
                     game_path.unlink()
                 else:
                     shutil.rmtree(game_path, onerror=remove_readonly)
-                return "Deletion successful!"
+                return self.current_language['deletion_successful']
             except OSError:
-                return "Deletion failed!"
+                return self.current_language['deletion_failed']
 
     def toggle_category_for_deletion(self, game_option, categories_to_delete):
         _, _, x, y, w, h, total_rounds = game_option
@@ -300,33 +304,33 @@ class Buzzinga():
     def build_key_instructions(self):
         self.key_instructions = [
             ('Esc', 'Escape', 3),
-            ('Enter', 'Progress', 4)
+            ('Enter', self.current_language['progress'], 4)
         ]
         match self.game_type:
             case 'images':
                 self.key_instructions.extend(
-                    [('r', 'correct', 5),
-                    ('f', 'wrong', 6)]
+                    [('r', self.current_language['correct'], 5),
+                    ('f', self.current_language['wrong'], 6)]
                 )
             case 'sounds':
                 self.key_instructions.extend(
-                    [('r', 'correct', 5),
-                    ('f', 'wrong', 6),
+                    [('r', self.current_language['correct'], 5),
+                    ('f', self.current_language['wrong'], 6),
                     ('p', 'replay', 7)]
                 )
             case 'hints':
                 self.key_instructions.extend(
-                    [('r', 'correct', 5),
-                    ('f', 'wrong', 6),
+                    [('r', self.current_language['correct'], 5),
+                    ('f', self.current_language['wrong'], 6),
                     ('n', 'next hint', 7)]
                 )
             case 'questions':
                 pass
             case 'who-knows-more':
                 self.key_instructions.extend(
-                    [('r', 'correct', 5),
-                    ('f', 'wrong', 6),
-                    ('1-9', 'display answer', 7)]
+                    [('r', self.current_language['correct'], 5),
+                    ('f', self.current_language['wrong'], 6),
+                    ('1-9', self.current_language['display_answer'], 7)]
                 )               
 
     def build_category_buttons_dict(self):
@@ -405,8 +409,9 @@ class Buzzinga():
             pygame.display.update()
 
     def players_names_menu_setup(self):
-        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'W E R  S P I E L T  M I T ?')
+        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['who_plays'])
 
+        self.player = [self.current_language['player1'], self.current_language['player2'], self.current_language['player3'], self.current_language['player4']]
         for i, player in enumerate(self.player):
             self.print_player_name(i, player)
 
@@ -437,10 +442,16 @@ class Buzzinga():
                     self.player[player_idx] = ''
                     self.print_player_name(player_idx, self.player[player_idx])
 
+            self.draw_button(self.current_language['language'], '', pygame.Rect(self.button_layout_32[17]), False, Static.RED)
+            if self.draw_button('English', 'Deutsch', pygame.Rect(self.button_layout_32[18]), click, Static.RED, enabled=self.language_toggle, toggle=True):
+                self.language_toggle = not self.language_toggle
+                self.current_language = german if self.current_language == english else english
+                self.players_names_menu()
+
             x11, y11, w11, h11 = self.button_layout_32[19]
             x12, y12, w12, h12 = self.button_layout_32[16]
 
-            if self.render_button('Spiel wählen', pygame.Rect(x11, y11, w11, h11), click):
+            if self.render_button(self.current_language['choose_game'], pygame.Rect(x11, y11, w11, h11), click):
                 self.choose_game_menu()
 
             elif self.render_button('X', pygame.Rect(x12+w12*3/4, y12, w12/4, h12), click):
@@ -455,11 +466,11 @@ class Buzzinga():
         self.choose_game_menu_running = True
 
         button_data = [
-            ('Bilder', 8, "images"),
-            ('Sounds', 9, "sounds"),
+            (self.current_language['image_quiz'], 8, "images"),
+            ('Audio Quiz', 9, "sounds"),
             ('Multiple Choice Quiz', 10, "questions"),
-            ('10 Hinweise', 11, "hints"),
-            ('Wer weiß mehr?', 12, "who-knows-more")
+            (self.current_language['hints'], 11, "hints"),
+            (self.current_language['who_knows_more'], 12, "who-knows-more")
         ]
 
         while self.choose_game_menu_running:
@@ -474,7 +485,7 @@ class Buzzinga():
                     self.choose_category()
             
             x, y, w, h = self.button_layout_32[20]
-            if self.render_button('Zurück', pygame.Rect(x+w/2, y, w/2, h), click):
+            if self.render_button(self.current_language['back'], pygame.Rect(x+w/2, y, w/2, h), click):
                         self.choose_game_menu_running = False
                         self.players_names_menu()
 
@@ -482,13 +493,13 @@ class Buzzinga():
             self.clock.tick(100)
 
     def choose_category_setup(self, import_status="", no_categories=False):
-        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'S P I E L K A T E G O R I E')
+        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['game_category'])
         free_space = self.get_free_disk_space()
-        blit_text_objects(self.SCREEN, pygame.Rect(self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 4 / 15, self.SCREEN_HEIGHT * 1 / 9), f'{free_space} % freier Speicherplatz', self.SMALL_TEXT)
+        blit_text_objects(self.SCREEN, pygame.Rect(self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 4 / 15, self.SCREEN_HEIGHT * 1 / 9), f"{free_space} % {self.current_language['free_disk_space']}", self.SMALL_TEXT)
         blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), import_status, self.SMALL_TEXT)
         
         if no_categories:
-            blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT / 2, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'Keine Kategorien vorhanden!', self.SMALL_TEXT)
+            blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT / 2, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['no_categories'], self.SMALL_TEXT)
 
     def choose_category(self, import_status=""):    
         self.build_category_buttons_dict()
@@ -533,17 +544,18 @@ class Buzzinga():
             if self.render_button('flash-drive.bmp', pygame.Rect(x+2*w/3, y, w/3, h), click, inactive_color=inactive_color, image=True):
                 if not self.delete_modus:
                     pygame.draw.rect(self.SCREEN, Static.BLUE, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9))
-                    blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), 'Importiere Dateien', self.SMALL_TEXT)
+                    blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), self.current_language['import_files'], self.SMALL_TEXT)
                     pygame.display.flip()
+                    language = "german" if self.current_language == german else "english"
                     try:
-                        usb_input = subprocess.run([sys.executable, "check_usb_input.py", self.game_type], capture_output=True, text=True)
+                        usb_input = subprocess.run([sys.executable, "check_usb_input.py", self.game_type, language], capture_output=True, text=True)
                         self.choose_category_menu = False
                         self.choose_category(import_status=usb_input.stdout.strip())
                     except subprocess.CalledProcessError as e:
                         print(f"An error occurred: {e}")
                         print(f"Error output: {e.stderr}")
             
-            if self.render_button('Zurück', pygame.Rect(*self.button_layout_32[30]), click):
+            if self.render_button(self.current_language['back'], pygame.Rect(*self.button_layout_32[30]), click):
                 self.delete_modus = False
                 self.choose_category_menu = False
                 self.choose_game_menu()
@@ -554,14 +566,14 @@ class Buzzinga():
             self.clock.tick(60)
 
     def settings_menu_setup(self):
-        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'E I N S T E L L U N G E N')
+        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['settings'])
 
-        self.draw_button('S O U N D S', '', pygame.Rect(self.button_layout_32[8]), False, Static.RED)
-        self.draw_button('M O D U S', '', pygame.Rect(self.button_layout_32[16]), False, Static.RED)
+        self.draw_button('SOUNDS', '', pygame.Rect(self.button_layout_32[8]), False, Static.RED)
+        self.draw_button(self.current_language['mode'], '', pygame.Rect(self.button_layout_32[16]), False, Static.RED)
 
     def settings_menu(self):
         def no_buzzer_connected():
-            blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 9), "Kein Buzzer verbunden!", self.SMALL_TEXT)
+            blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 9), self.current_language['no_buzzer'], self.SMALL_TEXT)
 
         self.settings_menu_setup()
         self.settings_menu_running, self.start_game = True, False
@@ -570,10 +582,10 @@ class Buzzinga():
         while self.settings_menu_running:
             key_pressed, letter, click = self.handle_events()
 
-            if self.draw_button('Aus', 'Ein', pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
+            if self.draw_button(self.current_language['on'], self.current_language['off'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
                 self.is_game_sounds = not self.is_game_sounds
 
-            if self.draw_button('Punkte', 'Alle Dateien', pygame.Rect(self.button_layout_32[17]), click, Static.RED, enabled=self.game_modus, toggle=True):
+            if self.draw_button(self.current_language['points'], self.current_language['all_rounds'], pygame.Rect(self.button_layout_32[17]), click, Static.RED, enabled=self.game_modus, toggle=True):
                 self.game_modus = not self.game_modus
 
             if not self.game_modus:
@@ -591,7 +603,7 @@ class Buzzinga():
                 x9, y9, w9, h9 = self.button_layout_32[18]
                 pygame.draw.rect(self.SCREEN, Static.BLUE, (x9, y9, w9, h9))
 
-            if self.render_button('Spiel starten', pygame.Rect(self.button_layout_32[21]), click, Static.RED):
+            if self.render_button(self.current_language['start_game'], pygame.Rect(self.button_layout_32[21]), click, Static.RED):
                 if self.game_type == "who-knows-more":
                     self.start_game = True
                 else:
@@ -605,12 +617,12 @@ class Buzzinga():
                         no_buzzer_connected()
 
             x, y, w, h = self.button_layout_32[20]
-            if self.render_button('Zurück', pygame.Rect(x+w/2, y, w/2, h), click, Static.RED):
+            if self.render_button(self.current_language['back'], pygame.Rect(x+w/2, y, w/2, h), click, Static.RED):
                 self.settings_menu_running = False
                 self.choose_category(import_status="")
 
             x, y, w, h = self.button_layout_32[2]
-            blit_text_objects(self.SCREEN, pygame.Rect(x,y,w,h), 'Keys', self.SMALL_TEXT, Static.WHITE)
+            blit_text_objects(self.SCREEN, pygame.Rect(x,y,w,h), self.current_language['keys'], self.SMALL_TEXT, Static.WHITE)
             for key, text, position in self.key_instructions:
                 x, y, w, h = self.button_layout_32[position]
                 blit_text_objects(self.SCREEN, pygame.Rect(x,y,w/2,h), key, self.SMALL_TEXT, Static.WHITE)
