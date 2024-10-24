@@ -455,8 +455,7 @@ class Buzzinga():
                 self.choose_game_menu()
 
             elif self.render_button('X', pygame.Rect(x12+w12*3/4, y12, w12/4, h12), click):
-                # Shutdown the system (works only on Linux with sudo privileges)
-                os.popen("sudo poweroff")
+                self.running = False
 
             pygame.display.update()
             self.clock.tick(100)
