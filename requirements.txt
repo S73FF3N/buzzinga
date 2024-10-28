@@ -1,3 +1,5 @@
+hidapi==0.14.0.post2
 pillow==10.4.0
+pybuzzers==1.0.5
 pygame==2.6.0
 python-dotenv==1.0.1
