@@ -88,7 +88,6 @@ class Buzzinga():
         common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set)
         match self.game_type:
             case "images":
-                print(*common_args)
                 quiz = ImageQuiz(*common_args)
             case "sounds":
                 quiz = AudioQuiz(*common_args)
@@ -455,7 +454,7 @@ class Buzzinga():
                 self.choose_game_menu()
 
             elif self.render_button('X', pygame.Rect(x12+w12*3/4, y12, w12/4, h12), click):
-                self.running = False
+                self.running = self.choose_game_menu_running = self.choose_category_menu = self.settings_menu_running = self.start_game = False
 
             pygame.display.update()
             self.clock.tick(100)
