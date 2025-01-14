@@ -13,7 +13,7 @@ class ImageQuiz(QuizGameBase):
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
             if not self.buzzer_hit and not self.initializing:
-                self.buzzering_player = buzzer
+                self.buzzering_player = buzzer + 1
         
         self.buzzer_set.on_buzz(handle_buzz)
         self.buzzer_set.start_listening()
@@ -110,7 +110,7 @@ class ImageQuiz(QuizGameBase):
 
                 # player buzzers
                 if self.buzzering_player:
-                    first_buzz = self.buzzering_player
+                    first_buzz = self.buzzering_player - 1
                     self.display_buzzer(first_buzz, Static.RED)
                     self.buzzering_player = None
                     self.play_buzzer_sound()

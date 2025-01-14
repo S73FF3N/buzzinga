@@ -366,6 +366,7 @@ class Buzzinga():
                 sys.exit()
             alt_f4 = (event.type == pygame.KEYDOWN and (event.key == pygame.K_F4 and (key_status[pygame.K_LALT] or key_status[pygame.K_RALT])))
             if alt_f4:
+                pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 key_pressed = event.key
@@ -454,6 +455,8 @@ class Buzzinga():
 
             elif self.render_button('X', pygame.Rect(x12+w12*3/4, y12, w12/4, h12), click):
                 self.running = self.choose_game_menu_running = self.choose_category_menu = self.settings_menu_running = self.start_game = False
+                pygame.quit()
+                sys.exit()
 
             pygame.display.update()
             self.clock.tick(100)

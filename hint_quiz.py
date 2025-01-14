@@ -52,7 +52,7 @@ class HintQuiz(QuizGameBase):
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
             if not self.buzzer_hit and not self.initializing:
-                self.buzzering_player = buzzer
+                self.buzzering_player = buzzer + 1
         
         self.buzzer_set.on_buzz(handle_buzz)
         self.buzzer_set.start_listening()
@@ -152,7 +152,7 @@ class HintQuiz(QuizGameBase):
 
                 # player buzzers
                 if self.buzzering_player:
-                    first_buzz = self.buzzering_player
+                    first_buzz = self.buzzering_player - 1
                     buzzer_container = self.display_buzzer(first_buzz, Static.RED)
                     blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round]['solution_link'], self.MINI_TEXT)
                     self.buzzering_player = None
