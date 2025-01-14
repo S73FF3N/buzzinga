@@ -1,5 +1,6 @@
-hidapi==0.14.0.post2
-pillow==10.4.0
-pybuzzers==1.0.5
-pygame==2.6.0
+hidapi==0.14.0.post4
+pillow==11.1.0
+pybuzzers==1.0.6
+pygame==2.6.1
 python-dotenv==1.0.1
+setuptools==75.8.0
