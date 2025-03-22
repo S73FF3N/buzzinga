@@ -45,7 +45,7 @@ class QuestionQuiz(QuizGameBase):
         self.answer = None
         def handle_answer(buzzer_set: pybuzzers.BuzzerSet, buzzer: int, button: int):
             if not self.question_answered and not self.initializing and not button == 0:
-                self.buzzering_player = buzzer
+                self.buzzering_player = buzzer + 1
                 self.answer = button
         
         self.buzzer_set.on_button_down(handle_answer)
@@ -155,25 +155,25 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
                         self.question_answered = True
 
-                if self.buzzering_player == 0 and not self.player1_locked:
+                if self.buzzering_player == 1 and not self.player1_locked:
                     self.player1_locked = True
                     self.player_answers[1] = self.solution_dict[5-self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(0, Static.RED)
-                elif self.buzzering_player == 1 and not self.player2_locked:
+                elif self.buzzering_player == 2 and not self.player2_locked:
                     self.player2_locked = True
                     self.player_answers[2] = self.solution_dict[5-self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(1, Static.RED)
-                elif self.buzzering_player == 2 and not self.player3_locked:
+                elif self.buzzering_player == 3 and not self.player3_locked:
                     self.player3_locked = True
                     self.player_answers[3] = self.solution_dict[5-self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(2, Static.RED)
-                elif self.buzzering_player == 3 and not self.player4_locked:
+                elif self.buzzering_player == 4 and not self.player4_locked:
                     self.player4_locked = True
                     self.player_answers[4] = self.solution_dict[5-self.answer]
                     self.buzzering_player = None

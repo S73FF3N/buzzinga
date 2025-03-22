@@ -67,7 +67,7 @@ class HintQuiz(QuizGameBase):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         for q in data:
-            solution_link = "4/" + str(q["pk"])
+            solution_link = str(q["pk"])
             self.round_data.append({
                 'solution': q["fields"]["solution"],
                 'hint1': q["fields"]["hint1"],
@@ -154,7 +154,7 @@ class HintQuiz(QuizGameBase):
                 if self.buzzering_player:
                     first_buzz = self.buzzering_player - 1
                     buzzer_container = self.display_buzzer(first_buzz, Static.RED)
-                    blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round]['solution_link'], self.MINI_TEXT)
+                    blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round-1]['solution_link'], self.MINI_TEXT)
                     self.buzzering_player = None
                     self.play_buzzer_sound()
                     self.buzzer_hit = True

@@ -29,7 +29,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
             data = json.load(json_file)
         data_counter = 0
         for q in data:
-            solution_link = "5/" + str(q["id"])
+            solution_link = str(q["id"])
             self.round_data.append({
                 'answer_category': q["solution"],
                 'solution_link': solution_link,
