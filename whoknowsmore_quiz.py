@@ -262,6 +262,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                                 self.display_buzzer(self.active_player, Static.RED)
                                 pygame.display.flip()
                                 self.correct_answer = False
+                                self.countdown_ended = False
                                 self.countdown = True
                             # no answers left
                             else:
@@ -272,7 +273,9 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                                 self.initializing = True
                                 self.first_element_of_question = True
                                 self.answers_solved = []
-                        self.countdown_seconds_left = 30   
+                        self.countdown_seconds_left = 30
+                        self.countdown_ended = False
+                        self.countdown = True   
                         self.answer_id = ""
                         self.skip_print_answer = False
                     except Exception as e:
@@ -317,4 +320,5 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 else:
                     # start countdown
                     self.countdown_seconds_left = 30
+                    self.countdown_ended = False
                     self.countdown = True
