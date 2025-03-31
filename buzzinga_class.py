@@ -335,7 +335,7 @@ class Buzzinga():
                 )               
 
     def build_category_buttons_dict(self):
-        self.game_folder = Static.ROOT_EXTENDED / self.FOLDER_MAPPING[self.game_type] #os.path.join(Static.ROOT_EXTENDED, self.FOLDER_MAPPING[self.game_type])
+        self.game_folder = Static.ROOT_EXTENDED / self.FOLDER_MAPPING[self.game_type]
         categories = [item for item in os.listdir(self.game_folder) if not item.startswith('.')]
         
         self.pages = (len(categories) - 1) // Static.BUTTONS_PER_PAGE + 1
