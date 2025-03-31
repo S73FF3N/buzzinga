@@ -100,14 +100,17 @@ class Buzzinga():
         quiz.run()
 
     def get_amount_rounds(self, category_folder):
+        path = self.game_folder / category_folder
         if self.game_type == "images":
-            file_count = count_files_by_extensions(f"{self.game_folder}/{category_folder}/", '.bmp', '.jpg', '.jpeg', '.png')
+            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp")
+            file_count = count_files_by_extensions(path, *extensions)
             return file_count
         elif self.game_type == "sounds":
-            file_count = count_files_by_extensions(f"{self.game_folder}/{category_folder}/", '.wav', '.mp3')
+            extensions = ("*.wav", "*.mp3")
+            file_count = count_files_by_extensions(path, *extensions)
             return file_count
         else:
-            with open(f"{self.game_folder}/{category_folder}", 'r', encoding='utf-8') as f:
+            with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return len(data)
 
@@ -332,7 +335,7 @@ class Buzzinga():
                 )               
 
     def build_category_buttons_dict(self):
-        self.game_folder = os.path.join(Static.ROOT_EXTENDED, self.FOLDER_MAPPING[self.game_type])
+        self.game_folder = Static.ROOT_EXTENDED / self.FOLDER_MAPPING[self.game_type] #os.path.join(Static.ROOT_EXTENDED, self.FOLDER_MAPPING[self.game_type])
         categories = [item for item in os.listdir(self.game_folder) if not item.startswith('.')]
         
         self.pages = (len(categories) - 1) // Static.BUTTONS_PER_PAGE + 1
