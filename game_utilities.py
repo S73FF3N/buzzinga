@@ -91,7 +91,7 @@ def blit_text_objects(screen, container, text, font, color=Static.WHITE):
     screen.blit(text_surface, text_rect)
 
 # Cache decorator to store loaded images
-@functools.lru_cache(maxsize=128)  # Caches up to 128 unique images
+@functools.lru_cache(maxsize=128)
 def load_image(name, folder, colorkey=None):
     fullname = os.path.join(folder, name)
     
@@ -99,12 +99,15 @@ def load_image(name, folder, colorkey=None):
         image = pygame.image.load(fullname)
     except pygame.error as e:
         raise FileNotFoundError(f"Cannot load image: {fullname}") from e
-    
+
+    # Use convert_alpha() to preserve per-pixel alpha (transparency)
     image = image.convert_alpha()
 
+    # Only use colorkey if explicitly needed (for non-alpha images)
     if colorkey is not None:
+        image = image.convert()  # Must convert to remove alpha before setting colorkey
         if colorkey == -1:
-            colorkey = image.get_at((0, 0))  # Use pixel at (0, 0) as colorkey
+            colorkey = image.get_at((0, 0))
         image.set_colorkey(colorkey, pygame.RLEACCEL)
     
     return image
@@ -153,6 +156,8 @@ def convert_image_to(image_file, im_format):
         img.save(file_out)
         os.remove(image_file)
     return file_out
+
+
 
 def reverse_mp3(mp3_file):
     print(mp3_file)

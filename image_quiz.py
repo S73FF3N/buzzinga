@@ -24,7 +24,7 @@ class ImageQuiz(QuizGameBase):
         for f in game_data_list:
             if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
                 pass
-            elif not f.lower().endswith(".bmp"):
+            elif not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
                 try:
                     f = convert_image_to(f, "bmp")
                     self.cleaned_game_data.append(f)
