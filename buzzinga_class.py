@@ -85,6 +85,8 @@ class Buzzinga():
         self.build_required_folders()
 
     def game(self):
+        if self.game_modus:
+            self.points_to_win = 100
         common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set)
         match self.game_type:
             case "images":
