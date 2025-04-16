@@ -50,7 +50,7 @@ class ImageQuiz(QuizGameBase):
         current_image = current_data["data"]
         self.current_solution = current_data["solution"]
         img = load_image(current_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
-        image_size = adjust_image_size(img, self.left_container_width-8, self.main_container_height-8) # subtract 8 for the border
+        image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
         img = pygame.transform.scale(img, image_size)
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
         pygame.display.flip()
