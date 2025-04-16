@@ -3,7 +3,7 @@ import pygame, os, sys, pybuzzers
 import pygame.locals
 
 from static import Static
-from game_utilities import blit_text_objects
+from game_utilities import blit_text_objects, optimize_text_in_container
 from animation import SoundAnimation
 
 class QuizGameBase:
@@ -106,7 +106,8 @@ class QuizGameBase:
         pygame.draw.rect(self.screen, Static.WHITE, player_score_container)
         blit_text_objects(self.screen, player_score_container, str(self.scores[n]), self.MEDIUM_TEXT, Static.LIGHT_BLUE)
         self.draw_rect(Static.LIGHT_BLUE, Static.WHITE, 8, player_label_container)
-        blit_text_objects(self.screen, player_label_container, self.players[n], self.SMALL_TEXT)
+        # blit_text_objects(self.screen, player_label_container, self.players[n], self.SMALL_TEXT)
+        optimize_text_in_container(self.screen, player_label_container, self.players[n])
         pygame.draw.rect(self.screen, Static.LIGHT_BLUE, pygame.Rect(player_container.x+8, player_container.y+8, player_container.w-16, player_container.h-16), width=4)
 
     def update_progress(self):
