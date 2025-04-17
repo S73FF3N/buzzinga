@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
+import random, pygame, os
 from pathlib import Path
 
 class Static:
@@ -26,3 +26,24 @@ class Static:
     GAME_FOLDER_HINTS="hints/"
     GAME_FOLDER_WHO_KNOWS_MORE="who-knows-more/"
     BUTTONS_PER_PAGE = 29
+
+
+class Confetti:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.vx = random.uniform(-3, 3)
+        self.vy = random.uniform(-8, -4)
+        self.size = random.randint(4, 8)
+        self.color = random.choice([(255,0,0), (0,255,0), (0,0,255), (255,255,0), (255,0,255), (0,255,255)])
+        self.life = 60  # frames
+
+    def update(self):
+        self.vy += 0.3  # gravity
+        self.x += self.vx
+        self.y += self.vy
+        self.life -= 1
+
+    def draw(self, surface):
+        if self.life > 0:
+            pygame.draw.rect(surface, self.color, (int(self.x), int(self.y), self.size, self.size))

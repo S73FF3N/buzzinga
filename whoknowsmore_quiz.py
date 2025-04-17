@@ -61,10 +61,12 @@ class WhoKnowsMoreQuiz(QuizGameBase):
         letter_pressed = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.running = False
                 pygame.quit()
                 sys.exit()
             alt_f4 = (event.type == pygame.KEYDOWN and (event.key == pygame.K_F4 and (key_status[pygame.K_LALT] or key_status[pygame.K_RALT])))
             if alt_f4:
+                self.running = False
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:

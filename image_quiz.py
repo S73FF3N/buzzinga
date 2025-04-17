@@ -132,6 +132,7 @@ class ImageQuiz(QuizGameBase):
                     elif self.solution_shown:
                         self.buzzer_hit = False
                         self.solution_shown = False
+                        self.particles = []
                         if not self.winner_found:
                             self.current_round += 1
                             self.display_game_info()
@@ -146,3 +147,11 @@ class ImageQuiz(QuizGameBase):
                     self.award_points(first_buzz, key)
                 
                 self.check_game_over()
+            # Update and draw particles
+            for p in self.particles[:]:
+                p.update()
+                p.draw(self.screen)
+                if p.life <= 0:
+                    self.particles.remove(p)
+                pygame.display.flip()            
+            self.clock.tick(60)

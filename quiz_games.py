@@ -2,7 +2,7 @@ import pygame, os, sys, pybuzzers
 
 import pygame.locals
 
-from static import Static
+from static import Static, Confetti
 from game_utilities import blit_text_objects, optimize_text_in_container
 from animation import SoundAnimation
 
@@ -76,6 +76,14 @@ class QuizGameBase:
         self.sound_moving_sprites = pygame.sprite.Group()
         self.sound_animation = SoundAnimation(self.main_container, self.image_cache)
         self.sound_animation_running = False
+
+        self.particles = []
+
+
+    # Trigger confetti
+    def celebrate(self, x, y, amount=100):
+        for _ in range(amount):
+            self.particles.append(Confetti(x, y))
     
     def clean_game_data(self):
         pass
@@ -189,6 +197,8 @@ class QuizGameBase:
         self.solution_shown = True
         self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
         self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_left_container)
+        self.celebrate(self.left_container_width // 4 * 3, self.top_container_height * 2)
+        self.celebrate(self.left_container_width // 4, self.top_container_height * 5)
         winner_ix = [i for i, x in enumerate(self.scores) if x == max(self.scores)]
         title_rect = pygame.Rect(0, self.top_container_height, self.left_container_width, self.main_container_height/2)
         blit_text_objects(self.screen, title_rect, "GEWINNER", self.MEDIUM_TEXT)
@@ -203,10 +213,12 @@ class QuizGameBase:
         key_pressed = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.running = False
                 pygame.quit()
                 sys.exit()
             alt_f4 = (event.type == pygame.KEYDOWN and (event.key == pygame.K_F4 and (key_status[pygame.K_LALT] or key_status[pygame.K_RALT])))
             if alt_f4:
+                self.running = False
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:

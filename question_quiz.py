@@ -219,21 +219,30 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 while self.answers_shown and self.solution_shown:
-                        key = self.handle_events()
-                        if self.escape_pressed:
-                            break
-                        if key == pygame.K_RETURN:
-                            for n in range(1, self.amount_players + 1):
-                                self.display_buzzer(n-1, Static.LIGHT_BLUE)
-                            self.check_game_over()
-                            self.answers_shown = False
-                            self.solution_shown = False
-                            self.question_answered = False
-                            if not self.winner_found:
-                                self.current_round += 1
-                                self.display_game_info()
-                                self.update_progress()
-                                self.play_round()
-                            else:
-                                self.show_winner()
-                            pygame.display.flip()    
+                    key = self.handle_events()
+                    if self.escape_pressed:
+                        break
+                    if key == pygame.K_RETURN:
+                        for n in range(1, self.amount_players + 1):
+                            self.display_buzzer(n-1, Static.LIGHT_BLUE)
+                        self.check_game_over()
+                        self.answers_shown = False
+                        self.solution_shown = False
+                        self.question_answered = False
+                        if not self.winner_found:
+                            self.current_round += 1
+                            self.display_game_info()
+                            self.update_progress()
+                            self.play_round()
+                        else:
+                            self.show_winner()
+                        pygame.display.flip()   
+
+            # Update and draw particles
+            for p in self.particles[:]:
+                p.update()
+                p.draw(self.screen)
+                if p.life <= 0:
+                    self.particles.remove(p)
+                pygame.display.flip()            
+            self.clock.tick(60) 

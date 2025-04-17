@@ -197,3 +197,12 @@ class HintQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 self.check_game_over()
+
+            # Update and draw particles
+            for p in self.particles[:]:
+                p.update()
+                p.draw(self.screen)
+                if p.life <= 0:
+                    self.particles.remove(p)
+                pygame.display.flip()            
+            self.clock.tick(60)
