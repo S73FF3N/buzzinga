@@ -226,6 +226,7 @@ class QuizGameBase:
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
                     self.sound_channel.stop()
+                    self.running = False
                     os.chdir(Static.GIT_DIRECTORY)
         return key_pressed
     

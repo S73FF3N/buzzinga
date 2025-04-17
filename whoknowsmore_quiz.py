@@ -74,6 +74,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 letter_pressed = event.unicode
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
+                    self.running = False
                     os.chdir(Static.GIT_DIRECTORY)
         return key_pressed, letter_pressed
             
@@ -178,6 +179,15 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         animation.animate()
                         pygame.display.flip()
                         self.clock.tick(60)
+                
+                #Update and draw particles
+                for p in self.particles[:]:
+                    p.update()
+                    p.draw(self.screen)
+                    if p.life <= 0:
+                        self.particles.remove(p)
+                    pygame.display.flip()            
+                self.clock.tick(60)
 
             while self.first_element_of_question and not self.winner_found:
                 key, letter = self.handle_events()
@@ -324,3 +334,12 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                     self.countdown_seconds_left = 30
                     self.countdown_ended = False
                     self.countdown = True
+                
+                # Update and draw particles
+                for p in self.particles[:]:
+                    p.update()
+                    p.draw(self.screen)
+                    if p.life <= 0:
+                        self.particles.remove(p)
+                    pygame.display.flip()            
+                self.clock.tick(60)
