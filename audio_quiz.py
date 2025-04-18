@@ -1,4 +1,5 @@
 import os, random, pygame, pybuzzers
+from pathlib import Path
 
 from quiz_games import QuizGameBase
 from static import Static
@@ -21,16 +22,15 @@ class AudioQuiz(QuizGameBase):
         self.buzzer_set.start_listening()
 
     def clean_game_data(self):
-        os.chdir(self.game_data)
-        game_data_list = os.listdir(self.game_data)
-        for f in game_data_list:
-            if os.path.isdir(f) or not f.lower().endswith((".wav", ".mp3")):
-                pass
-            elif not f.lower().endswith(".wav"):
+        game_data_path = Path(self.game_data)
+        for f in game_data_path.iterdir():
+            if f.is_dir() or not f.suffix.lower() in (".wav", ".mp3"):
+                continue
+            elif f.suffix.lower() == ".mp3":
                 try:
-                    f = mp3_to_wav(f)
-                    self.cleaned_game_data.append(f)
-                except:
+                    converted = mp3_to_wav(f)
+                    self.cleaned_game_data.append(converted)
+                except Exception:
                     pass
             else:
                 self.cleaned_game_data.append(f)
@@ -109,6 +109,8 @@ class AudioQuiz(QuizGameBase):
 
                 key = self.handle_events()
                 if self.escape_pressed:
+                    self.sound_channel.pause()
+                    self.sound_animation_running = False
                     break
                 # noone buzzers
                 if key == pygame.K_RETURN:

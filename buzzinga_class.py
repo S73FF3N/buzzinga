@@ -218,7 +218,7 @@ class Buzzinga():
         
         for category in categories_to_delete:
             if self.game_type in ["images", "sounds"]:
-                delete_status = self.delete_category(f"{self.game_folder}/{category}", multiple_files=True)
+                delete_status = self.delete_category(self.game_folder / category, multiple_files=True)
             else:
                 delete_status = self.delete_category(f"{self.game_folder}/{category}.json", multiple_files=False)
         
@@ -226,9 +226,8 @@ class Buzzinga():
     
     def setup_selected_category(self, category_folder):
         self.is_game_choosen = True
-        category_folder = category_folder.replace(' ', '_')
         if self.game_type in ["images", "sounds"]:
-            self.game_dir = f"{self.game_folder}/{category_folder}/"
+            self.game_dir = self.game_folder / category_folder
         else:
             self.game_dir = f"{self.game_folder}/{category_folder}.json"
         self.settings_menu()
@@ -293,7 +292,7 @@ class Buzzinga():
         _, _, x, y, w, h, total_rounds = game_option
         pygame.draw.rect(self.SCREEN, Static.GREY, (x, y, w, h))
         
-        category_folder = game_option[0].replace(' ', '_')
+        category_folder = game_option[0]
         if category_folder not in categories_to_delete:
             categories_to_delete.append(category_folder)
 
@@ -347,7 +346,7 @@ class Buzzinga():
             for btn_index, item in enumerate(category_chunk):
                 x, y, w, h = self.button_layout_32[btn_index]
                 total_rounds = self.get_amount_rounds(item)
-                category_name = os.path.splitext(item)[0].replace('_', ' ')
+                category_name = os.path.splitext(item)[0]
                 self.buttons[f'page {page}'].append([category_name, x, y, w, h, total_rounds])
 
     @staticmethod
