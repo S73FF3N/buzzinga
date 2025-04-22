@@ -135,7 +135,7 @@ class QuizGameBase:
             game_title = os.path.basename(self.game_data)
             game_title = os.path.splitext(game_title)[0].replace('_', ' ')
         else:
-            game_title = os.path.basename(os.path.dirname(self.game_data)).replace('_', ' ')
+            game_title = os.path.basename(self.game_data)
         blit_text_objects(self.screen, self.top_left_container, game_title, self.SMALL_TEXT)
         self.update_progress()
 

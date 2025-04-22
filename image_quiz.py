@@ -35,22 +35,23 @@ class ImageQuiz(QuizGameBase):
 
     def load_round_data(self):    
         for f in self.cleaned_game_data:
-            file_path = os.path.join(self.game_data,f)
-            base = os.path.basename(file_path)
-            name_o = os.path.splitext(base)[0]
-            name = name_o.replace("_", " ").replace("zzz", "(").replace("uuu", ")")
+            if not os.path.splitext(f)[0].endswith("_solution"):
+                file_path = os.path.join(self.game_data,f)
+                base = os.path.basename(file_path)
+                name_o = os.path.splitext(base)[0]
+                name = name_o.replace("_", " ").replace("zzz", "(").replace("uuu", ")")
 
-            # Build the expected solution file name
-            name_no_ext, ext = os.path.splitext(f)
-            solution_filename = f"{name_no_ext}_solution{ext}"
-            solution_path = os.path.join(self.game_data, solution_filename)
+                # Build the expected solution file name
+                name_no_ext, ext = os.path.splitext(f)
+                solution_filename = f"{name_no_ext}_solution{ext}"
+                solution_path = os.path.join(self.game_data, solution_filename)
 
-            if os.path.exists(solution_path):
-                solution_image = solution_path
-            else:
-                solution_image = None
-            
-            self.round_data.append({"solution": name, "data": file_path, "solution_image": solution_image})
+                if os.path.exists(solution_path):
+                    solution_image = solution_path
+                else:
+                    solution_image = None
+                
+                self.round_data.append({"solution": name, "data": file_path, "solution_image": solution_image})
         self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
