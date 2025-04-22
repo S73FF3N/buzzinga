@@ -35,13 +35,23 @@ class ImageQuiz(QuizGameBase):
 
     def load_round_data(self):    
         for f in self.cleaned_game_data:
-            file_path = os.path.join(self.game_data,f)
-            base = os.path.basename(file_path)
-            name_o = os.path.splitext(base)[0]
-            name = name_o.replace("_", " ")
-            name = name.replace("zzz", "(")
-            name = name.replace("uuu", ")")
-            self.round_data.append({"solution": name, "data": file_path})
+            if not os.path.splitext(f)[0].endswith("_solution"):
+                file_path = os.path.join(self.game_data,f)
+                base = os.path.basename(file_path)
+                name_o = os.path.splitext(base)[0]
+                name = name_o.replace("_", " ").replace("zzz", "(").replace("uuu", ")")
+
+                # Build the expected solution file name
+                name_no_ext, ext = os.path.splitext(f)
+                solution_filename = f"{name_no_ext}_solution{ext}"
+                solution_path = os.path.join(self.game_data, solution_filename)
+
+                if os.path.exists(solution_path):
+                    solution_image = solution_path
+                else:
+                    solution_image = None
+                
+                self.round_data.append({"solution": name, "data": file_path, "solution_image": solution_image})
         self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
@@ -49,6 +59,7 @@ class ImageQuiz(QuizGameBase):
         current_data = self.round_data[self.current_round - 1]
         current_image = current_data["data"]
         self.current_solution = current_data["solution"]
+        self.current_solution_image = current_data["solution_image"]
         img = load_image(current_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
         image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
         img = pygame.transform.scale(img, image_size)
