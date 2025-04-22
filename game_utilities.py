@@ -176,5 +176,10 @@ def mp3_to_wav(mp3_file):
     return file_out
 
 def count_files_by_extensions(directory, *extensions):
-    count = sum(len(list(directory.glob(ext))) for ext in extensions)
+    count = sum(
+        1
+        for ext in extensions
+        for file in directory.glob(ext)
+        if not file.stem.endswith('_solution')
+    )
     return count

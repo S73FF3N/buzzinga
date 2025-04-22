@@ -3,7 +3,7 @@ import pygame, os, sys, pybuzzers
 import pygame.locals
 
 from static import Static, Confetti
-from game_utilities import blit_text_objects, optimize_text_in_container
+from game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size
 from animation import SoundAnimation
 
 class QuizGameBase:
@@ -35,6 +35,7 @@ class QuizGameBase:
         self.animation_stopped = False
         self.solution_shown = False
         self.current_solution = None
+        self.current_solution_image = None
         self.escape_pressed = False
 
         self.left_container_width = self.SCREEN_WIDTH * 8 // 10
@@ -185,6 +186,15 @@ class QuizGameBase:
 
     def show_solution(self):
         blit_text_objects(self.screen, self.bottom_left_container, self.current_solution, self.SMALL_TEXT)
+        # show solution image
+        if self.current_solution_image:
+            img = load_image(self.current_solution_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
+            image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
+            img = pygame.transform.scale(img, image_size)
+            pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
+            pygame.display.flip()
+            self.screen.blit(img, img.get_rect(center=self.main_container.center))
+            pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
 
     def check_game_over(self):
         if max(self.scores) >= self.max_score:
