@@ -113,7 +113,8 @@ class QuizGameBase:
                     self.top_container_height + self.player_label_container_height - 8 + n * self.player_container_height),
                                             self.player_score_container_width, self.player_score_container_height)
         pygame.draw.rect(self.screen, Static.WHITE, player_score_container)
-        blit_text_objects(self.screen, player_score_container, str(self.scores[n]), self.MEDIUM_TEXT, Static.LIGHT_BLUE)
+        #blit_text_objects(self.screen, player_score_container, str(self.scores[n]), self.MEDIUM_TEXT, Static.LIGHT_BLUE)
+        optimize_text_in_container(self.screen, player_score_container, str(self.scores[n]), color=Static.LIGHT_BLUE)
         self.draw_rect(Static.LIGHT_BLUE, Static.WHITE, 8, player_label_container)
         # blit_text_objects(self.screen, player_label_container, self.players[n], self.SMALL_TEXT)
         optimize_text_in_container(self.screen, player_label_container, self.players[n])
@@ -122,10 +123,12 @@ class QuizGameBase:
     def update_progress(self):
         self.draw_rect(Static.RED, Static.WHITE, 8, self.top_right_container)
         if self.current_round == 0:
-            progress = self.SMALL_TEXT.render(f"{str(self.total_rounds)} Runden", 1, Static.WHITE)
+            progress = f"{str(self.total_rounds)} Runden" #self.SMALL_TEXT.render(f"{str(self.total_rounds)} Runden", 1, Static.WHITE)
         else:
-            progress = self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
-        self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
+            progress = f"Runde {str(self.current_round)}/{str(self.total_rounds)}" #self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
+        #self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
+        optimize_text_in_container(self.screen, progress.get_rect(center=self.top_right_container.center), progress)
+        
     
     def display_game_info(self):
         self.draw_rect(Static.RED, Static.WHITE, 8, self.top_left_container)
@@ -136,7 +139,8 @@ class QuizGameBase:
             game_title = os.path.splitext(game_title)[0].replace('_', ' ')
         else:
             game_title = os.path.basename(self.game_data)
-        blit_text_objects(self.screen, self.top_left_container, game_title, self.SMALL_TEXT)
+        #blit_text_objects(self.screen, self.top_left_container, game_title, self.SMALL_TEXT)
+        optimize_text_in_container(self.screen, self.top_left_container, game_title)
         self.update_progress()
 
         for n in range(0, self.amount_players):
@@ -216,7 +220,9 @@ class QuizGameBase:
         [winners.append(self.players[i]) for i in winner_ix]
         for line in range(len(winners)):
             winner_rect = pygame.Rect(0, self.top_container_height+self.main_container_height/2.8+(80*line), self.left_container_width, self.main_container_height/2/len(winners))
-            blit_text_objects(self.screen, winner_rect, winners[line], self.MEDIUM_TEXT, Static.RED)
+            #blit_text_objects(self.screen, winner_rect, winners[line], self.MEDIUM_TEXT, Static.RED)
+            optimize_text_in_container(self.screen, winner_rect, winners[line], color=Static.RED)
+            
 
     def handle_events(self):
         key_status = pygame.key.get_pressed()
