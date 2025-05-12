@@ -586,7 +586,7 @@ class Buzzinga():
         while self.settings_menu_running:
             key_pressed, letter, click = self.handle_events()
 
-            if self.draw_button(self.current_language['on'], self.current_language['off'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
+            if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
                 self.is_game_sounds = not self.is_game_sounds
 
             if self.draw_button(self.current_language['points'], self.current_language['all_rounds'], pygame.Rect(self.button_layout_32[17]), click, Static.RED, enabled=self.game_modus, toggle=True):
