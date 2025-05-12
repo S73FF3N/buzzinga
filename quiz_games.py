@@ -127,7 +127,7 @@ class QuizGameBase:
         else:
             progress = f"Runde {str(self.current_round)}/{str(self.total_rounds)}" #self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
         #self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
-        optimize_text_in_container(self.screen, progress.get_rect(center=self.top_right_container.center), progress)
+        optimize_text_in_container(self.screen, self.top_right_container, progress)
         
     
     def display_game_info(self):
@@ -181,9 +181,11 @@ class QuizGameBase:
             self.scores[first_buzz] += 1
             if reset:
                 self.correct_answer = True
+                self.points_awarded = True
         if key == self.answer_keys[1]:
             self.scores[first_buzz] -= 1
             if reset:
+                #self.points_awarded = False
                 self.buzzer_hit = False
         self.update_score(first_buzz)
         pygame.display.flip()

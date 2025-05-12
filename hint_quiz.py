@@ -45,13 +45,13 @@ class HintQuiz(QuizGameBase):
             9: [self.hint9_container, "hint9"],
             10: [self.hint10_container, "hint10"],
         }
-        self.no_points_awarded = False
+        self.points_awarded = False
         self.correct_answer = False
 
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
-            if not self.buzzer_hit and not self.initializing:
+            if not self.buzzer_hit and not self.initializing and not self.points_awarded:
                 self.buzzering_player = buzzer + 1
         
         self.buzzer_set.on_buzz(handle_buzz)
@@ -88,7 +88,7 @@ class HintQuiz(QuizGameBase):
     def play_round(self):
         self.hint_nr = 1
         self.correct_answer = False
-        self.no_points_awarded = False
+        self.points_awarded = False
         current_data = self.round_data[self.current_round - 1]
         self.current_solution = current_data["solution"]
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
@@ -142,7 +142,7 @@ class HintQuiz(QuizGameBase):
                     for n in range(0, self.amount_players):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
-                    self.no_points_awarded = True
+                    self.points_awarded = True
                     self.correct_answer = True
 
                 if key == pygame.K_n:
@@ -166,7 +166,7 @@ class HintQuiz(QuizGameBase):
                     break
 
                 # Award or deduct points based on answer keys
-                if not self.no_points_awarded and key in self.answer_keys:
+                if not self.points_awarded and key in self.answer_keys:
                     try:
                         self.award_points(first_buzz, key, reset=True)
                     except NameError:
@@ -186,7 +186,7 @@ class HintQuiz(QuizGameBase):
                     if self.hint_nr != 10:
                         self.hint_nr += 1
 
-                elif key == pygame.K_RETURN:
+                elif key == pygame.K_RETURN and self.correct_answer:
                     # solution is shown
                     if not self.solution_shown:
                         self.show_solution()
