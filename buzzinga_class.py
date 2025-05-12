@@ -52,7 +52,7 @@ class Buzzinga():
         self.game_type = "images"
         self.player = [self.current_language['player1'], self.current_language['player2'], self.current_language['player3'], self.current_language['player4']]
         self.game_dir = None
-        self.is_game_sounds = False
+        self.is_game_sounds = True
         self.game_modus = True
         self.points_to_win = 10
 
