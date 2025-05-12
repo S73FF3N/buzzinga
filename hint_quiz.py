@@ -165,19 +165,36 @@ class HintQuiz(QuizGameBase):
                 if self.escape_pressed:
                     break
 
-                if key == pygame.K_n and self.correct_answer:
+                # Award or deduct points based on answer keys
+                if not self.no_points_awarded and key in self.answer_keys:
+                    try:
+                        self.award_points(first_buzz, key, reset=True)
+                    except NameError:
+                        print("Error: 'first_buzz' is undefined. Ensure it is set when a player buzzes in.")
+                        self.buzzer_hit = False  # fail-safe exit
+                        continue
+
+                    if not self.buzzer_hit:
+                        # Reset buzzer visuals if buzzer_hit was cleared in award_points()
+                        for n in range(0, self.amount_players):
+                            self.display_buzzer(n, Static.LIGHT_BLUE)
+                        pygame.display.flip()
+                        continue
+
+                elif key == pygame.K_n and self.correct_answer:
                     self.print_hint(self.hint_nr)
                     if self.hint_nr != 10:
                         self.hint_nr += 1
 
-                if key == pygame.K_RETURN:
+                elif key == pygame.K_RETURN:
                     # solution is shown
-                    if not self.solution_shown and self.correct_answer:
+                    if not self.solution_shown:
                         self.show_solution()
                         pygame.display.flip()
                         self.solution_shown = True
-                    # next round is started
-                    elif self.solution_shown:
+
+                    else:
+                        # Proceed to next round or show winner
                         self.buzzer_hit = False
                         self.solution_shown = False
                         if not self.winner_found:
@@ -187,13 +204,6 @@ class HintQuiz(QuizGameBase):
                             self.play_round()
                         else:
                             self.show_winner()
-                        pygame.display.flip()
-
-                if not self.no_points_awarded and key in self.answer_keys:
-                    self.award_points(first_buzz, key, reset=True)
-                    if not self.buzzer_hit:
-                        for n in range(0, self.amount_players):
-                            self.display_buzzer(n, Static.LIGHT_BLUE)
                         pygame.display.flip()
 
                 self.check_game_over()
