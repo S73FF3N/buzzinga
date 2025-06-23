@@ -61,9 +61,14 @@ class AudioQuiz(QuizGameBase):
                         solution_image = img_path
                         break
 
-                self.round_data.append({"solution": name, "data": file_path, "solution_sound": solution_sound, "solution_img": solution_image})
+                self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_sound": solution_sound, "solution_img": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
         self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
+        # Ensure the example round is first if present
+        for i, rd in enumerate(self.round_data):
+            if rd.get("example", False):
+                self.round_data.insert(0, self.round_data.pop(i))
+                break
 
     def play_round(self):
         """Display the image and handle buzzer logic for the image quiz."""
