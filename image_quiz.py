@@ -28,7 +28,7 @@ class ImageQuiz(QuizGameBase):
                 try:
                     f = convert_image_to(f, "bmp")
                     self.cleaned_game_data.append(f)
-                except:
+                except Exception:
                     pass
             else:
                 self.cleaned_game_data.append(f)
@@ -51,9 +51,14 @@ class ImageQuiz(QuizGameBase):
                 else:
                     solution_image = None
                 
-                self.round_data.append({"solution": name, "data": file_path, "solution_image": solution_image})
+                self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_image": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
         self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
+        # Ensure the example round is first if present
+        for i, rd in enumerate(self.round_data):
+            if rd.get("example", False):
+                self.round_data.insert(0, self.round_data.pop(i))
+                break
 
     def play_round(self):
         current_data = self.round_data[self.current_round - 1]
