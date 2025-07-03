@@ -281,6 +281,11 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                                 blit_text_objects(self.screen, self.bottom_right_container, 'Alles gelöst!', self.MINI_TEXT)
                                 pygame.display.flip()
+                                # Award one point to all active players if all answers are solved
+                                for idx, is_active in enumerate(self.active_players):
+                                    if is_active:
+                                        self.scores[idx] += 1
+                                        self.update_score(idx)
                                 self.correct_answer = False
                                 self.initializing = True
                                 self.first_element_of_question = True
