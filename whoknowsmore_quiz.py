@@ -302,6 +302,12 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         pygame.display.flip()
                         self.answer_id = ""
 
+                # Allow escape if answer was actually incorrect (e.g., user hit wrong key)
+                if key == pygame.K_BACKSPACE:
+                    self.correct_answer = False
+                    self.incorrect_answer = True
+                    break
+
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
 
             while self.incorrect_answer and not self.winner_found:
