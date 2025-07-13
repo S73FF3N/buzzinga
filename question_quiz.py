@@ -127,7 +127,7 @@ class QuestionQuiz(QuizGameBase):
                         self.play_round()
                         pygame.display.flip()
                     except Exception as e:
-                        os.chdir(Static.GIT_DIRECTORY)
+                        os.chdir(Static.BASE_PATH)
                         self.running = False
                     self.initializing = False
                 if not self.animation_stopped:

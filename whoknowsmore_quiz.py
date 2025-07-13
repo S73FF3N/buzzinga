@@ -75,7 +75,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
                     self.running = False
-                    os.chdir(Static.GIT_DIRECTORY)
+                    os.chdir(Static.BASE_PATH)
         return key_pressed, letter_pressed
             
     def get_answer_text(self, answer_text, is_large_grid, container=None):
@@ -169,7 +169,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                             self.play_round()
                             pygame.display.flip()
                         except Exception as e:
-                            os.chdir(Static.GIT_DIRECTORY)
+                            os.chdir(Static.BASE_PATH)
                             self.running = False
                         self.initializing = False
                     if not self.animation_stopped:

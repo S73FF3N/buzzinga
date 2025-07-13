@@ -9,7 +9,7 @@ time_consumed = 0
 
 def run_update_buzzinga():
     try:
-        git_directory = Static.GIT_DIRECTORY
+        git_directory = Static.BASE_PATH
         
         commands = [
             ["git", "remote", "prune", "origin"],

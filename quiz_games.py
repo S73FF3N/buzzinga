@@ -245,7 +245,7 @@ class QuizGameBase:
                     self.escape_pressed = True
                     self.sound_channel.stop()
                     self.running = False
-                    os.chdir(Static.GIT_DIRECTORY)
+                    os.chdir(Static.BASE_PATH)
         return key_pressed
     
     def run(self):
