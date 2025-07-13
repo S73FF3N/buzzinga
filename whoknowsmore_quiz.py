@@ -75,7 +75,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
                     self.running = False
-                    os.chdir(Static.GIT_DIRECTORY)
+                    os.chdir(Static.BASE_PATH)
         return key_pressed, letter_pressed
             
     def get_answer_text(self, answer_text, is_large_grid, container=None):
@@ -169,7 +169,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                             self.play_round()
                             pygame.display.flip()
                         except Exception as e:
-                            os.chdir(Static.GIT_DIRECTORY)
+                            os.chdir(Static.BASE_PATH)
                             self.running = False
                         self.initializing = False
                     if not self.animation_stopped:
@@ -281,6 +281,11 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                                 blit_text_objects(self.screen, self.bottom_right_container, 'Alles gelöst!', self.MINI_TEXT)
                                 pygame.display.flip()
+                                # Award one point to all active players if all answers are solved
+                                for idx, is_active in enumerate(self.active_players):
+                                    if is_active:
+                                        self.scores[idx] += 1
+                                        self.update_score(idx)
                                 self.correct_answer = False
                                 self.initializing = True
                                 self.first_element_of_question = True
@@ -296,6 +301,12 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         blit_text_objects(self.screen, self.bottom_right_container, 'Falsche ID', self.SMALL_TEXT)
                         pygame.display.flip()
                         self.answer_id = ""
+
+                # Allow escape if answer was actually incorrect (e.g., user hit wrong key)
+                if key == pygame.K_BACKSPACE:
+                    self.correct_answer = False
+                    self.incorrect_answer = True
+                    break
 
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
 

@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import random, pygame, os
 from pathlib import Path
+
+if getattr(sys, 'frozen', False):
+    # PyInstaller: use temp extraction folder
+    BASE_PATH = Path(sys._MEIPASS)
+else:
+    BASE_PATH = Path(os.path.dirname(os.path.abspath(__file__)))
 
 class Static:
     BLACK = 0, 0, 0
@@ -16,15 +23,14 @@ class Static:
     LIGHT_BLUE = 0, 102, 204
     YELLOW = 235, 217, 26
     GREY = 125, 119, 119
-    GIT_DIRECTORY = os.path.dirname(__file__)
-    ROOT = Path(os.path.dirname(GIT_DIRECTORY))
-    ROOT_EXTENDED = Path(os.path.join(ROOT, "data/"))
-    STATIC_FOLDER = Path(os.path.join(ROOT_EXTENDED, "staticfiles/"))
-    GAME_FOLDER_IMAGES="images/"
-    GAME_FOLDER_SOUNDS="sounds/"
-    GAME_FOLDER_QUESTIONS="questions/"
-    GAME_FOLDER_HINTS="hints/"
-    GAME_FOLDER_WHO_KNOWS_MORE="who-knows-more/"
+    BASE_PATH = BASE_PATH
+    ROOT_EXTENDED = BASE_PATH / "data"
+    STATIC_FOLDER = ROOT_EXTENDED / "staticfiles"
+    GAME_FOLDER_IMAGES = "images/"
+    GAME_FOLDER_SOUNDS = "sounds/"
+    GAME_FOLDER_QUESTIONS = "questions/"
+    GAME_FOLDER_HINTS = "hints/"
+    GAME_FOLDER_WHO_KNOWS_MORE = "who-knows-more/"
     BUTTONS_PER_PAGE = 29
 
 

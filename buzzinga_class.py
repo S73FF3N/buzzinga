@@ -297,7 +297,7 @@ class Buzzinga():
             categories_to_delete.append(category_folder)
 
     def get_free_disk_space(self):
-        usage = shutil.disk_usage(Static.ROOT)
+        usage = shutil.disk_usage(Static.BASE_PATH)
         total_size = usage.total / (1024.0 ** 3)
         free_size = usage.free / (1024.0 ** 3)
         free_percentage = int(100.0 / total_size * free_size)
@@ -377,7 +377,7 @@ class Buzzinga():
                 letter_pressed = event.unicode
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
-                    os.chdir(Static.GIT_DIRECTORY)
+                    os.chdir(Static.BASE_PATH)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 click = True
         return key_pressed, letter_pressed, click
