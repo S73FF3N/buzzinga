@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import random, pygame, os
+import os
+import random
+import pygame
 from pathlib import Path
 
+# Always use the directory where the .exe or .py is located
 if getattr(sys, 'frozen', False):
-    # PyInstaller: use temp extraction folder
-    BASE_PATH = Path(sys._MEIPASS)
+    # PyInstaller: use directory of the executable in dist for ROOT_EXTENDED
+    BASE_PATH = Path(os.path.dirname(sys.executable))
+    ROOT_EXTENDED = BASE_PATH / "data"
+    STATIC_FOLDER = Path(sys._MEIPASS) / "staticfiles"
 else:
     BASE_PATH = Path(os.path.dirname(os.path.abspath(__file__)))
+    ROOT_EXTENDED = BASE_PATH / "data"
+    STATIC_FOLDER = BASE_PATH / "staticfiles"
 
 class Static:
     BLACK = 0, 0, 0
@@ -24,8 +31,8 @@ class Static:
     YELLOW = 235, 217, 26
     GREY = 125, 119, 119
     BASE_PATH = BASE_PATH
-    ROOT_EXTENDED = BASE_PATH / "data"
-    STATIC_FOLDER = ROOT_EXTENDED / "staticfiles"
+    ROOT_EXTENDED = ROOT_EXTENDED
+    STATIC_FOLDER = STATIC_FOLDER
     GAME_FOLDER_IMAGES = "images/"
     GAME_FOLDER_SOUNDS = "sounds/"
     GAME_FOLDER_QUESTIONS = "questions/"
