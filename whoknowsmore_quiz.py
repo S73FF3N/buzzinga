@@ -303,7 +303,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         self.answer_id = ""
 
                 # Allow escape if answer was actually incorrect (e.g., user hit wrong key)
-                if key == pygame.K_BACKSPACE:
+                if key == pygame.K_z:
                     self.correct_answer = False
                     self.incorrect_answer = True
                     break
