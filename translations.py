@@ -42,7 +42,8 @@ english = {
     'winner': 'WINNER',
     'already_solved': 'Already solved!',
     'all_solved': 'All solved!',
-    'wrong_id': 'Wrong ID'
+    'wrong_id': 'Wrong ID',
+    'reverse_wrong_input': 'Reverse wrong input'
 
 }
 
@@ -87,5 +88,6 @@ german = {
     'winner': 'GEWINNER',
     'already_solved': 'Schon gelöst!',
     'all_solved': 'Alles gelöst!',
-    'wrong_id': 'Falsche ID'
+    'wrong_id': 'Falsche ID',
+    'reverse_wrong_input': 'Korrektur'
 }
