@@ -211,18 +211,6 @@ class Buzzinga():
 
         blit_text_objects(self.SCREEN, pygame.Rect(x, y, w, h), player_name, self.SMALL_TEXT, Static.WHITE)
         pygame.display.update()
-
-    def process_delete(self, categories_to_delete):
-        if not categories_to_delete:
-            return None
-        
-        for category in categories_to_delete:
-            if self.game_type in ["images", "sounds"]:
-                delete_status = self.delete_category(self.game_folder / category, multiple_files=True)
-            else:
-                delete_status = self.delete_category(f"{self.game_folder}/{category}.json", multiple_files=False)
-        
-        return delete_status
     
     def setup_selected_category(self, category_folder):
         self.is_game_choosen = True
@@ -232,69 +220,17 @@ class Buzzinga():
             self.game_dir = f"{self.game_folder}/{category_folder}.json"
         self.settings_menu()
 
-    def handle_category_selection(self, click, game_options, categories_to_delete):
+    def handle_category_selection(self, click, game_options):
         for game_option in game_options:
             game_name, clicked, x, y, w, h, total_rounds = game_option
 
-            if self.delete_modus and game_name in categories_to_delete:
-                inactive_color = Static.GREY
-            else:
-                inactive_color = Static.RED
-            self.render_button(game_name, pygame.Rect(x, y, w, h), clicked, inactive_color=inactive_color)
+            self.render_button(game_name, pygame.Rect(x, y, w, h), clicked)
             pygame.draw.circle(self.SCREEN, Static.LIGHT_BLUE, (x+w, y), 24)
             pygame.draw.circle(self.SCREEN, Static.WHITE, (x+w, y), 24, width=2)
             blit_text_objects(self.SCREEN, pygame.Rect(x+w-12,y-12,24,24), str(total_rounds), self.MINI_TEXT)
             
             if clicked:
-                if not self.delete_modus:
-                    self.setup_selected_category(game_name)
-                else:
-                    self.toggle_category_for_deletion(game_option, categories_to_delete)
-
-    def delete_category(self, game_dir, multiple_files=True):
-        game_path = Path(game_dir)
-
-        def remove_readonly(func, path, _):
-            os.chmod(path, stat.S_IWRITE)
-            func(path)
-
-        if multiple_files:
-            for file_path in game_path.iterdir():
-                if file_path.is_file():
-                    try:
-                        file_path.chmod(0o777)
-                    except PermissionError as e:
-                        print(e)
-                    try:
-                        file_path.unlink()
-                    except OSError as e:
-                        print(e)
-            try:
-                shutil.rmtree(game_path, onerror=remove_readonly)
-                return self.current_language['deletion_successful']
-            except OSError:
-                return self.current_language['deletion_failed']
-        else:
-            try:
-                game_path.chmod(0o777)
-            except PermissionError:
-                return "Permission error: "
-            try:
-                if game_path.is_file():
-                    game_path.unlink()
-                else:
-                    shutil.rmtree(game_path, onerror=remove_readonly)
-                return self.current_language['deletion_successful']
-            except OSError:
-                return self.current_language['deletion_failed']
-
-    def toggle_category_for_deletion(self, game_option, categories_to_delete):
-        _, _, x, y, w, h, total_rounds = game_option
-        pygame.draw.rect(self.SCREEN, Static.GREY, (x, y, w, h))
-        
-        category_folder = game_option[0]
-        if category_folder not in categories_to_delete:
-            categories_to_delete.append(category_folder)
+                self.setup_selected_category(game_name)
 
     def get_free_disk_space(self):
         usage = shutil.disk_usage(Static.BASE_PATH)
@@ -305,33 +241,34 @@ class Buzzinga():
     
     def build_key_instructions(self):
         self.key_instructions = [
-            ('Esc', 'Escape', 3),
-            ('Enter', self.current_language['progress'], 4)
+            ('Esc', 'Escape', 2),
+            ('Enter', self.current_language['progress'], 3)
         ]
         match self.game_type:
             case 'images':
                 self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6)]
+                    [('r', self.current_language['correct'], 4),
+                    ('f', self.current_language['wrong'], 5)]
                 )
             case 'sounds':
                 self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
+                    [('r', self.current_language['correct'], 4),
+                    ('f', self.current_language['wrong'], 5),
                     ('p', 'replay', 7)]
                 )
             case 'hints':
                 self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
+                    [('r', self.current_language['correct'], 4),
+                    ('f', self.current_language['wrong'], 5),
                     ('n', 'next hint', 7)]
                 )
             case 'questions':
                 pass
             case 'who-knows-more':
                 self.key_instructions.extend(
-                    [('r', self.current_language['correct'], 5),
-                    ('f', self.current_language['wrong'], 6),
+                    [('r', self.current_language['correct'], 4),
+                    ('f', self.current_language['wrong'], 5),
+                    ('z', self.current_language['reverse_wrong_input'], 6),
                     ('1-9', self.current_language['display_answer'], 7)]
                 )               
 
@@ -496,27 +433,25 @@ class Buzzinga():
             pygame.display.update()
             self.clock.tick(100)
 
-    def choose_category_setup(self, import_status="", no_categories=False):
+    def choose_category_setup(self, no_categories=False):
         self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['game_category'])
         free_space = self.get_free_disk_space()
         blit_text_objects(self.SCREEN, pygame.Rect(self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 4 / 15, self.SCREEN_HEIGHT * 1 / 9), f"{free_space} % {self.current_language['free_disk_space']}", self.SMALL_TEXT)
-        blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), import_status, self.SMALL_TEXT)
         
         if no_categories:
             blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT / 2, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['no_categories'], self.SMALL_TEXT)
 
-    def choose_category(self, import_status=""):    
+    def choose_category(self):    
         self.build_category_buttons_dict()
         
         if not self.buttons:
-            self.choose_category_setup(import_status=import_status, no_categories=True)
+            self.choose_category_setup(no_categories=True)
         else:
-            self.choose_category_setup(import_status=import_status, no_categories=False)
+            self.choose_category_setup(no_categories=False)
         
         self.choose_category_menu = True
         game_options = []
         page_counter = 1
-        categories_to_delete = []
         
         while self.choose_category_menu:
             key, letter, click = self.handle_events()
@@ -527,44 +462,16 @@ class Buzzinga():
             
             if page_counter < self.pages and self.render_button('>>', pygame.Rect(*self.button_layout_32[31]), click):
                 self.delete_modus = False
-                self.choose_category_setup(import_status)
+                self.choose_category_setup()
                 page_counter += 1
             
             x, y, w, h = self.button_layout_32[29]
-            inactive_color = Static.GREY if self.delete_modus else Static.RED
-            if self.render_button('delete.bmp', pygame.Rect(x, y, w/3, h), click, inactive_color=inactive_color, image=True):
-                self.delete_modus = not self.delete_modus
-                self.choose_category()
-            
-            inactive_color = Static.GREY if not self.delete_modus else Static.RED
-            if self.render_button('trash-truck.bmp', pygame.Rect(x+w/3, y, w/3, h), click, inactive_color=inactive_color, image=True):
-                self.delete_modus = False
-                delete_status = self.process_delete(categories_to_delete)
-                categories_to_delete.clear()
-                if delete_status:
-                    self.choose_category(import_status=delete_status)
-            
-            inactive_color = Static.GREY if self.delete_modus else Static.RED
-            if self.render_button('flash-drive.bmp', pygame.Rect(x+2*w/3, y, w/3, h), click, inactive_color=inactive_color, image=True):
-                if not self.delete_modus:
-                    pygame.draw.rect(self.SCREEN, Static.BLUE, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9))
-                    blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9), self.current_language['import_files'], self.SMALL_TEXT)
-                    pygame.display.flip()
-                    language = "german" if self.current_language == german else "english"
-                    try:
-                        usb_input = subprocess.run([sys.executable, "check_usb_input.py", self.game_type, language], capture_output=True, text=True)
-                        self.choose_category_menu = False
-                        self.choose_category(import_status=usb_input.stdout.strip())
-                    except subprocess.CalledProcessError as e:
-                        print(f"An error occurred: {e}")
-                        print(f"Error output: {e.stderr}")
             
             if self.render_button(self.current_language['back'], pygame.Rect(*self.button_layout_32[30]), click):
-                self.delete_modus = False
                 self.choose_category_menu = False
                 self.choose_game_menu()
 
-            self.handle_category_selection(click, game_options, categories_to_delete)
+            self.handle_category_selection(click, game_options)
 
             pygame.display.update()
             self.clock.tick(60)
@@ -623,9 +530,9 @@ class Buzzinga():
             x, y, w, h = self.button_layout_32[20]
             if self.render_button(self.current_language['back'], pygame.Rect(x+w/2, y, w/2, h), click, Static.RED):
                 self.settings_menu_running = False
-                self.choose_category(import_status="")
+                self.choose_category()
 
-            x, y, w, h = self.button_layout_32[2]
+            x, y, w, h = self.button_layout_32[1]
             blit_text_objects(self.SCREEN, pygame.Rect(x,y,w,h), self.current_language['keys'], self.SMALL_TEXT, Static.WHITE)
             for key, text, position in self.key_instructions:
                 x, y, w, h = self.button_layout_32[position]
