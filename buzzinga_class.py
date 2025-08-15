@@ -403,7 +403,7 @@ class Buzzinga():
             self.clock.tick(100)
     
     def choose_game_menu(self):
-        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'W E R  S P I E L T  M I T ?')
+        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'W E L C H E  S P I E L A R T ?')
         self.choose_game_menu_running = True
 
         button_data = [

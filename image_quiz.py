@@ -43,13 +43,14 @@ class ImageQuiz(QuizGameBase):
 
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
-                solution_filename = f"{name_no_ext}_solution{ext}"
-                solution_path = os.path.join(self.game_data, solution_filename)
-
-                if os.path.exists(solution_path):
-                    solution_image = solution_path
-                else:
-                    solution_image = None
+                solution_filename = f"{name_no_ext}_solution"
+                for ext in [".png", ".jpg", ".jpeg", ".bmp"]:
+                    solution_path = os.path.join(self.game_data, solution_filename + ext)
+                    if os.path.exists(solution_path):
+                        solution_image = solution_path
+                        break
+                    else:
+                        solution_image = None
                 
                 self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_image": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
         self.total_rounds = len(self.round_data)

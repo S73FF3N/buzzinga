@@ -47,14 +47,15 @@ class AudioQuiz(QuizGameBase):
 
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
-                solution_filename = f"{name_no_ext}_solution{ext}"
-                solution_path = os.path.join(self.game_data, solution_filename)
+                solution_filename = f"{name_no_ext}_solution"
+                for ext in [".wav", ".mp3"]:
+                    solution_path = os.path.join(self.game_data, solution_filename + ext)
+                    if os.path.exists(solution_path):
+                        solution_sound = solution_path
+                    else:
+                        solution_sound = None
+                
                 solution_img_path_list = [os.path.join(self.game_data, f"{name_no_ext}_solution{img_ext}") for img_ext in [".jpg", ".png", ".jpeg", ".bmp"]]
-
-                if os.path.exists(solution_path):
-                    solution_sound = solution_path
-                else:
-                    solution_sound = None
                 solution_image = None
                 for img_path in solution_img_path_list:
                     if os.path.exists(img_path):
