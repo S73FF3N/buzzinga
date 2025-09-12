@@ -283,7 +283,7 @@ class Buzzinga():
             for btn_index, item in enumerate(category_chunk):
                 x, y, w, h = self.button_layout_32[btn_index]
                 total_rounds = self.get_amount_rounds(item)
-                category_name = os.path.splitext(item)[0]
+                category_name = os.path.splitext(item)[0].replace('.', '')
                 self.buttons[f'page {page}'].append([category_name, x, y, w, h, total_rounds])
 
     @staticmethod
