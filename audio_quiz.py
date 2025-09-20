@@ -183,9 +183,9 @@ class AudioQuiz(QuizGameBase):
                             self.sound_channel.unpause()
                         if self.current_solution_image:
                             self.sound_animation_running = False
-                            self.show_solution()
                         else:
                             self.sound_animation_running = True
+                        self.show_solution()
                         pygame.display.flip()
                         self.solution_shown = True
                     # next round is started
