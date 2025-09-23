@@ -8,4 +8,5 @@ dependencies = [
     "pillow>=11.3.0",
     "pybuzzers>=1.0.6",
     "pygame>=2.6.1",
+    "pyinstaller>=6.16.0",
 ]
