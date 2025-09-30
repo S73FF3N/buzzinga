@@ -5,6 +5,7 @@ Created on Tue Sep 22 19:54:59 2015
 @author: List
 """
 import os, pygame
+from pathlib import Path
 from PIL import Image
 import subprocess
 import functools
@@ -148,7 +149,9 @@ def convert_image_to(image_file, im_format):
         except:
             print("Could not open {}".format(img))
             return
-        file_out = str(image_file[0:-4])+"."+im_format
+        im_format = im_format.lstrip(".")
+        image_path = Path(image_file)
+        file_out = str(image_path.with_suffix("." + im_format))
         if len(img.split()) == 4:
             # prevent IOError: cannot write mode RGBA as BMP
             r, g, b, a = img.split()

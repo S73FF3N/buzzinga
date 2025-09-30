@@ -22,9 +22,9 @@ class ImageQuiz(QuizGameBase):
         os.chdir(self.game_data)
         game_data_list = os.listdir(self.game_data)
         for f in game_data_list:
-            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
+            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp")):
                 pass
-            elif not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
+            elif not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp")):
                 try:
                     f = convert_image_to(f, "bmp")
                     self.cleaned_game_data.append(f)
