@@ -143,7 +143,6 @@ def convert_image_to(image_file, im_format):
     if image_file[-4:] == "."+im_format:
         file_out = image_file
     else:
-        print("converting image file...")
         try:
             img = Image.open(image_file)
         except:
@@ -152,10 +151,8 @@ def convert_image_to(image_file, im_format):
         im_format = im_format.lstrip(".")
         image_path = Path(image_file)
         file_out = str(image_path.with_suffix("." + im_format))
-        if len(img.split()) == 4:
-            # prevent IOError: cannot write mode RGBA as BMP
-            r, g, b, a = img.split()
-            img = Image.merge("RGB", (r, g, b))
+        if im_format.lower() in ["jpg", "jpeg", "bmp"]:
+            img = img.convert("RGB")
         img.save(file_out)
         os.remove(image_file)
     return file_out

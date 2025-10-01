@@ -24,14 +24,13 @@ class ImageQuiz(QuizGameBase):
         for f in game_data_list:
             if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp")):
                 pass
-            elif not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp")):
+            else:
                 try:
-                    f = convert_image_to(f, "bmp")
+                    f = convert_image_to(f, "png")
                     self.cleaned_game_data.append(f)
                 except Exception:
                     pass
-            else:
-                self.cleaned_game_data.append(f)
+
 
     def load_round_data(self):    
         for f in self.cleaned_game_data:
