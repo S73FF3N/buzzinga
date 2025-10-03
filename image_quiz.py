@@ -7,8 +7,8 @@ from animation import BuzzingaAnimation
 
 
 class ImageQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
@@ -17,6 +17,8 @@ class ImageQuiz(QuizGameBase):
         
         self.buzzer_set.on_buzz(handle_buzz)
         self.buzzer_set.start_listening()
+        self.image_reveal_animation = image_reveal_animation
+        self.continue_reveal = False
 
     def clean_game_data(self):
         os.chdir(self.game_data)
@@ -60,18 +62,93 @@ class ImageQuiz(QuizGameBase):
                 self.round_data.insert(0, self.round_data.pop(i))
                 break
 
-    def play_round(self):
+    def get_current_image(self):
         current_data = self.round_data[self.current_round - 1]
         current_image = current_data["data"]
         self.current_solution = current_data["solution"]
         self.current_solution_image = current_data["solution_image"]
-        img = load_image(current_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
-        image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
+
+        img = load_image(current_image, os.path.join(
+            Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data
+        ))
+
+        # Scale image
+        image_size = adjust_image_size(
+            img, self.left_container_width - 16, self.main_container_height - 16
+        )
         img = pygame.transform.scale(img, image_size)
+
+        self.round_img = img
+        self.round_img_rect = img.get_rect(center=self.main_container.center)
+
+        return img
+
+    def play_round(self, tile_size=(50, 50), reveal_speed=60):
+        img = self.get_current_image()
+
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
-        pygame.display.flip()
-        self.screen.blit(img, img.get_rect(center=self.main_container.center))
+
+        if not self.image_reveal_animation:
+            # Draw full image immediately
+            self.screen.blit(img, self.round_img_rect)
+            pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
+            pygame.display.flip()
+            self.tiles = None
+            return
+
+        # Prepare tile reveal state
+        tile_w, tile_h = tile_size
+        cols = (self.round_img_rect.width + tile_w - 1) // tile_w
+        rows = (self.round_img_rect.height + tile_h - 1) // tile_h
+
+        tiles = []
+        for r in range(rows):
+            for c in range(cols):
+                rect = pygame.Rect(
+                    self.round_img_rect.left + c * tile_w,
+                    self.round_img_rect.top + r * tile_h,
+                    min(tile_w, self.round_img_rect.width - c * tile_w),
+                    min(tile_h, self.round_img_rect.height - r * tile_h),
+                )
+                tiles.append(rect)
+
+        random.shuffle(tiles)
+
+        # Store state for update loop
+        self.tiles = tiles
+        self.revealed_tiles = []
+        self.reveal_speed = reveal_speed
+        self.next_reveal_time = pygame.time.get_ticks()
+
+    def update_tile_reveal(self):
+        if not self.tiles:  # no reveal in progress
+            return
+
+        now = pygame.time.get_ticks()
+        if now >= self.next_reveal_time and self.tiles:
+            self.revealed_tiles.append(self.tiles.pop())
+            if self.continue_reveal:
+                self.next_reveal_time = now + self.reveal_speed // 7
+            else:
+                self.next_reveal_time = now + self.reveal_speed
+
+        # Draw background
+        pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
+
+        # Draw revealed tiles
+        for rect in self.revealed_tiles:
+            src_rect = pygame.Rect(
+                rect.x - self.round_img_rect.x,
+                rect.y - self.round_img_rect.y,
+                rect.width,
+                rect.height
+            )
+            self.screen.blit(self.round_img, rect, src_rect)
+
+        # Draw border
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
+        pygame.display.flip()
+
 
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -133,14 +210,22 @@ class ImageQuiz(QuizGameBase):
                     self.buzzer_hit = True
                     self.countdown(5)
 
+                # Update tile reveal each frame
+                self.update_tile_reveal()
+
             while self.buzzer_hit:
                 key = self.handle_events()
                 if self.escape_pressed:
                     break
+                
+                #self.update_tile_reveal()
+                if key == pygame.K_s:
+                    self.continue_reveal = True
 
                 if key == pygame.K_RETURN:
                     # solution is shown
                     if not self.solution_shown and not self.winner_found:
+                        self.continue_reveal = False
                         self.show_solution()
                         pygame.display.flip()
                         self.solution_shown = True
@@ -162,7 +247,11 @@ class ImageQuiz(QuizGameBase):
                 if key in self.answer_keys and self.solution_shown:
                     self.award_points(first_buzz, key)
                 
+                if self.continue_reveal:
+                    self.update_tile_reveal()
+
                 self.check_game_over()
+
             # Update and draw particles
             for p in self.particles[:]:
                 p.update()
