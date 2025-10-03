@@ -89,5 +89,7 @@ german = {
     'already_solved': 'Schon gelöst!',
     'all_solved': 'Alles gelöst!',
     'wrong_id': 'Falsche ID',
-    'reverse_wrong_input': 'Korrektur'
+    'reverse_wrong_input': 'Korrektur',
+    'reveal': 'aufdecken',
+    'reveal animation': 'Aufdeckanimation'
 }
