@@ -7,7 +7,7 @@ from game_utilities import blit_text_objects, optimize_text_in_container, load_i
 from animation import SoundAnimation
 
 class QuizGameBase:
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock

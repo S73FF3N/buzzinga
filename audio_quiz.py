@@ -8,8 +8,8 @@ from animation import BuzzingaAnimation
 
 
 class AudioQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.current_sound = None
         self.current_solution_sound = None
         self.current_solution_image = None
@@ -183,9 +183,9 @@ class AudioQuiz(QuizGameBase):
                             self.sound_channel.unpause()
                         if self.current_solution_image:
                             self.sound_animation_running = False
-                            self.show_solution()
                         else:
                             self.sound_animation_running = True
+                        self.show_solution()
                         pygame.display.flip()
                         self.solution_shown = True
                     # next round is started

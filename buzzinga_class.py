@@ -55,6 +55,7 @@ class Buzzinga():
         self.is_game_sounds = False
         self.game_modus = True
         self.points_to_win = 10
+        self.image_reveal_animation = False
 
         self.image_cache = {}
         self.is_game_choosen = False
@@ -87,7 +88,7 @@ class Buzzinga():
     def game(self):
         if self.game_modus:
             self.points_to_win = 100
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation)
         match self.game_type:
             case "images":
                 quiz = ImageQuiz(*common_args)
@@ -248,7 +249,8 @@ class Buzzinga():
             case 'images':
                 self.key_instructions.extend(
                     [('r', self.current_language['correct'], 4),
-                    ('f', self.current_language['wrong'], 5)]
+                    ('f', self.current_language['wrong'], 5),
+                    ('s', self.current_language['reveal'], 6)]
                 )
             case 'sounds':
                 self.key_instructions.extend(
@@ -481,6 +483,8 @@ class Buzzinga():
 
         self.draw_button('SOUNDS', '', pygame.Rect(self.button_layout_32[8]), False, Static.RED)
         self.draw_button(self.current_language['mode'], '', pygame.Rect(self.button_layout_32[16]), False, Static.RED)
+        if self.game_type == 'images':
+            self.draw_button(self.current_language['reveal animation'], '', pygame.Rect(self.button_layout_32[10]), False, Static.RED)
 
     def settings_menu(self):
         def no_buzzer_connected():
@@ -495,6 +499,10 @@ class Buzzinga():
 
             if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
                 self.is_game_sounds = not self.is_game_sounds
+
+            if self.game_type == 'images':
+                if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[11]), click, Static.RED, enabled=self.image_reveal_animation, toggle=True):
+                    self.image_reveal_animation = not self.image_reveal_animation
 
             if self.draw_button(self.current_language['points'], self.current_language['all_rounds'], pygame.Rect(self.button_layout_32[17]), click, Static.RED, enabled=self.game_modus, toggle=True):
                 self.game_modus = not self.game_modus
