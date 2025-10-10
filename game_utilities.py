@@ -145,18 +145,27 @@ def convert_image_to(image_file, im_format):
     else:
         try:
             img = Image.open(image_file)
-        except:
-            print("Could not open {}".format(img))
-            return
+        except Exception as e:
+            print(f"Could not open {image_file}: {e}")
+            return None
         im_format = im_format.lstrip(".")
         image_path = Path(image_file)
         file_out = str(image_path.with_suffix("." + im_format))
-        if im_format.lower() in ["jpg", "jpeg", "bmp"]:
-            img = img.convert("RGB")
-        img.save(file_out)
-        os.remove(image_file)
+        try:
+            if im_format.lower() in ["jpg", "jpeg", "bmp"]:
+                img = img.convert("RGB")
+            img.save(file_out)
+            os.remove(image_file)
+        except Exception as e:
+            print(f"Failed to convert {image_file} -> {file_out}: {e}")
+            # cleanup partial output if any
+            try:
+                if os.path.exists(file_out):
+                    os.remove(file_out)
+            except Exception:
+                pass
+            return None
     return file_out
-
 
 
 def reverse_mp3(mp3_file):

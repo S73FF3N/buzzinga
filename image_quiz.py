@@ -20,18 +20,21 @@ class ImageQuiz(QuizGameBase):
         self.image_reveal_animation = image_reveal_animation
         self.continue_reveal = False
 
+
     def clean_game_data(self):
-        os.chdir(self.game_data)
+        # avoid changing cwd; use full paths
         game_data_list = os.listdir(self.game_data)
         for f in game_data_list:
-            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")):
-                pass
-            else:
-                try:
-                    f = convert_image_to(f, "png")
-                    self.cleaned_game_data.append(f)
-                except Exception:
-                    pass
+            full_path = os.path.join(self.game_data, f)
+            if os.path.isdir(full_path) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")):
+                continue
+            try:
+                converted = convert_image_to(full_path, "png")
+                if converted:
+                    # store filename (existing code expects filenames, joins with self.game_data later)
+                    self.cleaned_game_data.append(os.path.basename(converted))
+            except Exception as e:
+                print(f"convert_image_to raised for {full_path}: {e}")
 
 
     def load_round_data(self):    
