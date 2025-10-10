@@ -140,7 +140,7 @@ def adjust_image_size(img, container_width, container_height):
 
 # convert image to desired image format    
 def convert_image_to(image_file, im_format):
-    if image_file[-4:] == "."+im_format:
+    if Path(image_file).suffix.lower() == f".{im_format.lower()}":
         file_out = image_file
     else:
         try:

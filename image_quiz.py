@@ -24,7 +24,7 @@ class ImageQuiz(QuizGameBase):
         os.chdir(self.game_data)
         game_data_list = os.listdir(self.game_data)
         for f in game_data_list:
-            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp")):
+            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")):
                 pass
             else:
                 try:
