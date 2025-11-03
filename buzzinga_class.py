@@ -105,7 +105,7 @@ class Buzzinga():
     def get_amount_rounds(self, category_folder):
         path = self.game_folder / category_folder
         if self.game_type == "images":
-            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp")
+            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp", "*.avif", "*.mp4", "*.mov", "*.avi", "*.mkv")
             file_count = count_files_by_extensions(path, *extensions)
             return file_count
         elif self.game_type == "sounds":
