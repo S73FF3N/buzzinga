@@ -2,9 +2,9 @@ import pygame, os, sys, pybuzzers
 
 import pygame.locals
 
-from static import Static, Confetti
-from game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size
-from animation import SoundAnimation
+from .static import Static, Confetti
+from .game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size
+from .animation import SoundAnimation
 
 class QuizGameBase:
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
@@ -165,15 +165,15 @@ class QuizGameBase:
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()
                 if self.is_game_sounds:
-                    countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown.wav'))
+                    countdown_sound = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'countdown.wav'))
                     self.game_sound_channel.play(countdown_sound)
         if self.is_game_sounds:
-            countdown_end_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
+            countdown_end_sound = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'countdown_end.wav'))
             self.game_sound_channel.play(countdown_end_sound)
 
     def play_buzzer_sound(self):
         if self.is_game_sounds:
-            buzzerHit = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'buzzer.wav'))
+            buzzerHit = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'buzzer.wav'))
             self.game_sound_channel.play(buzzerHit)
 
     def award_points(self, first_buzz, key, reset=False):

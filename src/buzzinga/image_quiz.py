@@ -1,19 +1,14 @@
 import os, random, pygame, pybuzzers
-from pathlib import Path
 
-from quiz_games import QuizGameBase
-from static import Static
-from game_utilities import mp3_to_wav
-from animation import BuzzingaAnimation
+from .quiz_games import QuizGameBase
+from .static import Static
+from .game_utilities import convert_image_to, load_image, adjust_image_size
+from .animation import BuzzingaAnimation
 
 
-class AudioQuiz(QuizGameBase):
+class ImageQuiz(QuizGameBase):
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
         super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
-        self.current_sound = None
-        self.current_solution_sound = None
-        self.current_solution_image = None
-
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
@@ -24,14 +19,15 @@ class AudioQuiz(QuizGameBase):
         self.buzzer_set.start_listening()
 
     def clean_game_data(self):
-        game_data_path = Path(self.game_data)
-        for f in game_data_path.iterdir():
-            if f.is_dir() or f.suffix.lower() not in (".wav", ".mp3"):
-                continue
-            elif f.suffix.lower() == ".mp3":
+        os.chdir(self.game_data)
+        game_data_list = os.listdir(self.game_data)
+        for f in game_data_list:
+            if os.path.isdir(f) or not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
+                pass
+            elif not f.lower().endswith((".bmp", ".png", ".jpg", ".jpeg")):
                 try:
-                    converted = mp3_to_wav(f)
-                    self.cleaned_game_data.append(converted)
+                    f = convert_image_to(f, "bmp")
+                    self.cleaned_game_data.append(f)
                 except Exception:
                     pass
             else:
@@ -48,21 +44,15 @@ class AudioQuiz(QuizGameBase):
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
                 solution_filename = f"{name_no_ext}_solution"
-                for ext in [".wav", ".mp3"]:
+                for ext in [".png", ".jpg", ".jpeg", ".bmp"]:
                     solution_path = os.path.join(self.game_data, solution_filename + ext)
                     if os.path.exists(solution_path):
-                        solution_sound = solution_path
-                    else:
-                        solution_sound = None
-                
-                solution_img_path_list = [os.path.join(self.game_data, f"{name_no_ext}_solution{img_ext}") for img_ext in [".jpg", ".png", ".jpeg", ".bmp"]]
-                solution_image = None
-                for img_path in solution_img_path_list:
-                    if os.path.exists(img_path):
-                        solution_image = img_path
+                        solution_image = solution_path
                         break
-
-                self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_sound": solution_sound, "solution_img": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
+                    else:
+                        solution_image = None
+                
+                self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_image": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
         self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
         # Ensure the example round is first if present
@@ -72,25 +62,17 @@ class AudioQuiz(QuizGameBase):
                 break
 
     def play_round(self):
-        """Display the image and handle buzzer logic for the image quiz."""
         current_data = self.round_data[self.current_round - 1]
-        self.current_sound = pygame.mixer.Sound(current_data["data"])
+        current_image = current_data["data"]
         self.current_solution = current_data["solution"]
-        self.current_solution_image = current_data["solution_img"]
-        self.current_solution_sound = current_data["solution_sound"]
-        if self.current_solution_sound:
-            self.current_solution_sound = pygame.mixer.Sound(current_data["solution_sound"])
-        self.sound_channel.play(self.current_sound)
-        self.sound_animation_running = True
-
-    def check_sound_animation(self):
-        if self.sound_animation_running:
-            self.draw_rect(Static.WHITE, Static.WHITE, 8, self.main_container)
-            self.sound_moving_sprites.draw(self.screen)
-            self.sound_moving_sprites.update(0.15)
-            self.sound_animation.animate()
-            pygame.display.flip()
-            self.clock.tick(60)
+        self.current_solution_image = current_data["solution_image"]
+        img = load_image(current_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
+        image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
+        img = pygame.transform.scale(img, image_size)
+        pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
+        pygame.display.flip()
+        self.screen.blit(img, img.get_rect(center=self.main_container.center))
+        pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
 
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -100,7 +82,6 @@ class AudioQuiz(QuizGameBase):
         moving_sprites = pygame.sprite.Group()
         animation = BuzzingaAnimation(self.main_container, self.image_cache)
         moving_sprites.add(animation)
-        self.sound_moving_sprites.add(self.sound_animation)
 
         self.display_game_info()
 
@@ -133,12 +114,9 @@ class AudioQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.buzzer_hit and not self.solution_shown:
-                self.check_sound_animation()
-
                 key = self.handle_events()
+
                 if self.escape_pressed:
-                    self.sound_channel.pause()
-                    self.sound_animation_running = False
                     break
                 # noone buzzers
                 if key == pygame.K_RETURN:
@@ -147,20 +125,9 @@ class AudioQuiz(QuizGameBase):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
 
-                # replay sound
-                if key == pygame.K_p:
-                    self.sound_channel.stop()
-                    self.sound_animation_running = True
-                    self.sound_channel.play(self.current_sound)
-
                 # player buzzers
                 if self.buzzering_player:
                     first_buzz = self.buzzering_player - 1
-                    if self.current_solution_sound:
-                        self.sound_channel.stop()
-                    else:
-                        self.sound_channel.pause()
-                    self.sound_animation_running = False
                     self.display_buzzer(first_buzz, Static.RED)
                     self.buzzering_player = None
                     self.play_buzzer_sound()
@@ -168,8 +135,6 @@ class AudioQuiz(QuizGameBase):
                     self.countdown(5)
 
             while self.buzzer_hit:
-                self.check_sound_animation()
-
                 key = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -177,23 +142,14 @@ class AudioQuiz(QuizGameBase):
                 if key == pygame.K_RETURN:
                     # solution is shown
                     if not self.solution_shown and not self.winner_found:
-                        if self.current_solution_sound:
-                            self.sound_channel.play(self.current_solution_sound)
-                        else:
-                            self.sound_channel.unpause()
-                        if self.current_solution_image:
-                            self.sound_animation_running = False
-                        else:
-                            self.sound_animation_running = True
                         self.show_solution()
                         pygame.display.flip()
                         self.solution_shown = True
                     # next round is started
                     elif self.solution_shown:
-                        self.sound_channel.stop()
-                        self.sound_animation_running = False
                         self.buzzer_hit = False
                         self.solution_shown = False
+                        self.particles = []
                         if not self.winner_found:
                             self.current_round += 1
                             self.display_game_info()
@@ -206,9 +162,8 @@ class AudioQuiz(QuizGameBase):
                 # points are awarded
                 if key in self.answer_keys and self.solution_shown:
                     self.award_points(first_buzz, key)
-
+                
                 self.check_game_over()
-
             # Update and draw particles
             for p in self.particles[:]:
                 p.update()
