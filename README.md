@@ -4,27 +4,33 @@ A fullscreen quiz game for parties and game nights. Supports USB buzzers, multip
 
 ## Installation
 
-To install Buzzinga, you need two free tools. Don't worry — you only need them once for the setup, and the instructions below will guide you through everything.
-
-1. **[git](https://git-scm.com/downloads)** — this downloads Buzzinga for you
-2. **[uv](https://docs.astral.sh/uv/getting-started/installation/)** — this builds Buzzinga into an app you can double-click (it also takes care of Python and everything else automatically)
-
-Once you have both installed, follow the steps for your system:
-
 ### Linux
 
-Open a terminal and run these commands one by one:
+Open a terminal (you can usually find it by searching "Terminal" in your apps) and run these commands one by one:
 
 ```bash
+sudo apt install git
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env
 git clone https://github.com/S73FF3N/buzzinga.git
 cd buzzinga
 chmod +x setup.sh
 ./setup.sh
 ```
 
+The first two lines install the tools needed for the setup. If you already have them, that's fine — they'll just be updated.
+
 ### Windows
 
-Open **Command Prompt** (search for "cmd" in the Start menu) and run these commands one by one:
+First, install these two free tools (you only need to do this once):
+
+1. Download and install **git** from https://git-scm.com/downloads/win
+2. Download and install **uv** by opening **PowerShell** (search "PowerShell" in the Start menu) and running:
+   ```
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+Then open **Command Prompt** (search "cmd" in the Start menu) and run these commands one by one:
 
 ```
 git clone https://github.com/S73FF3N/buzzinga.git
