@@ -4,16 +4,16 @@ A fullscreen quiz game for parties and game nights. Supports USB buzzers, multip
 
 ## Installation
 
-Before you start, install these two free tools:
+To install Buzzinga, you need two free tools. Don't worry — you only need them once for the setup, and the instructions below will guide you through everything.
 
-1. **[git](https://git-scm.com/downloads)** — to download Buzzinga
-2. **[uv](https://docs.astral.sh/uv/getting-started/installation/)** — to build it (it handles Python and all dependencies for you)
+1. **[git](https://git-scm.com/downloads)** — this downloads Buzzinga for you
+2. **[uv](https://docs.astral.sh/uv/getting-started/installation/)** — this builds Buzzinga into an app you can double-click (it also takes care of Python and everything else automatically)
 
-Then follow the guide for your system below. The setup script will ask you where to install Buzzinga (defaults to your Desktop) and build a standalone app you can double-click to play.
+Once you have both installed, follow the steps for your system:
 
 ### Linux
 
-Open a terminal and run:
+Open a terminal and run these commands one by one:
 
 ```bash
 git clone https://github.com/S73FF3N/buzzinga.git
@@ -24,7 +24,7 @@ chmod +x setup.sh
 
 ### Windows
 
-Open **Command Prompt** or **PowerShell** and run:
+Open **Command Prompt** (search for "cmd" in the Start menu) and run these commands one by one:
 
 ```
 git clone https://github.com/S73FF3N/buzzinga.git
@@ -32,15 +32,27 @@ cd buzzinga
 setup.bat
 ```
 
-### After setup
+### What happens next
 
-When the script is done, you'll have a folder (e.g. on your Desktop) with the Buzzinga app inside it. Double-click `buzzinga` (Linux) or `buzzinga.exe` (Windows) to play — no terminal needed anymore.
+The setup script will ask you one question: **where do you want Buzzinga installed?** Just press Enter to use the default (a `Buzzinga` folder on your Desktop), or type a different path.
 
-You can delete the `buzzinga` folder you cloned during setup. You won't need it again unless you want to rebuild.
+Then it builds everything for you. This takes about a minute the first time — just let it run.
+
+When it's done, you'll have a folder with two things inside:
+
+```
+Buzzinga/
+├── buzzinga       (the app — double-click this to play!)
+└── data/          (your quiz content goes here)
+```
+
+On Windows, the app is called `buzzinga.exe`.
+
+That's it! You can now delete the `buzzinga` folder you cloned during setup — you won't need it again.
 
 ## Adding Game Content
 
-Buzzinga doesn't come with quiz content — you bring your own! Inside your Buzzinga folder you'll find a `data/` folder. This is where you put your game files:
+Buzzinga doesn't come with quiz content — you bring your own! Open the `data/` folder inside your Buzzinga installation. You'll see these subfolders:
 
 | Folder | What goes in it | Used by |
 |--------|----------------|---------|
