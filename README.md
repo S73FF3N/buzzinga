@@ -24,23 +24,57 @@ The first time you run this, uv will automatically download Python and install a
 
 > From now on, whenever you want to play, just open a terminal, go to your buzzinga folder and run `uv run buzzinga`.
 
-### Building a standalone executable
+## Setting up with PyInstaller
 
-If you don't want to type terminal commands every time, you can build a standalone executable. This works on both Linux and Windows — you get a single file you can double-click to start the game.
+Don't want to open a terminal every time you play? No problem. You can turn Buzzinga into a regular app — a single file you double-click to start, just like any other program on your computer. This works on both Linux and Windows.
 
-From inside the buzzinga folder, run:
+You'll still need uv for this one-time setup, but once you're done you can forget about it.
+
+### Step 1: Download Buzzinga
+
+Open a terminal and run these commands. This downloads Buzzinga to your Desktop (you can pick a different folder if you prefer):
+
+```bash
+cd ~/Desktop
+git clone https://github.com/S73FF3N/buzzinga.git
+cd buzzinga
+```
+
+### Step 2: Build the executable
+
+Still in the terminal, run:
 
 ```bash
 uv run pyinstaller launcher.py --onefile --add-data "src/buzzinga/staticfiles:staticfiles" --name buzzinga --paths src
 ```
 
-This creates a `dist/` folder with a `buzzinga` executable inside it (on Windows it will be `buzzinga.exe`). To use it:
+This takes a moment. When it's done, you'll find a new `dist/` folder inside the `buzzinga` folder. Inside `dist/` is your executable — `buzzinga` on Linux, `buzzinga.exe` on Windows.
 
-1. Copy the executable wherever you like (e.g. your Desktop)
-2. Create a `data/` folder next to it (see [Adding Game Content](#adding-game-content) below)
-3. Double-click to play
+### Step 3: Set up your game folder
 
-After building, you no longer need uv, Python, or the cloned repository — just the executable and your `data/` folder.
+Now create a folder wherever you want Buzzinga to live permanently — for example, a folder called `Buzzinga` on your Desktop. Put two things inside it:
+
+1. The executable you just built (from `dist/`)
+2. A folder called `data` — this is where your quiz content goes (see [Adding Game Content](#adding-game-content) below)
+
+It should look like this:
+
+```
+Buzzinga/
+├── buzzinga          (or buzzinga.exe on Windows)
+└── data/
+    ├── images/
+    ├── sounds/
+    ├── hints/
+    ├── questions/
+    └── who-knows-more/
+```
+
+### Step 4: Play!
+
+Double-click the executable to start the game. That's it — no terminal, no Python, no uv needed anymore.
+
+You can now delete the `buzzinga` folder you cloned in Step 1 if you want. Everything you need is in your new game folder.
 
 ## Adding Game Content
 
