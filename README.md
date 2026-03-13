@@ -4,27 +4,28 @@ A fullscreen quiz game for parties and game nights. Supports USB buzzers, multip
 
 ## Installation
 
-### Linux
+### Starting the setup script on Linux
 
-Open a terminal (you can usually find it by searching "Terminal" in your apps) and run these commands one by one:
+Do you have uv and git installed? If you are not sure, open a terminal and run these commands one by one:
 
 ```bash
 sudo apt install git
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
+```
+
+If you already have them, that's fine — they'll just be updated.
+
+Now download Buzzinga and start the setup:
+
+```bash
 git clone https://github.com/S73FF3N/buzzinga.git /tmp/buzzinga
 cd /tmp/buzzinga
 chmod +x setup.sh
 ./setup.sh
 ```
 
-The first three lines install the tools needed for the setup. If you already have them, that's fine — they'll just be updated.
-
-The setup script will ask you where you want Buzzinga installed. Press Enter to use the default (`~/Desktop/Buzzinga`) or type a different path.
-
-When it's done, you can close the terminal. The cloned folder in `/tmp` will be cleaned up automatically — you won't need it again.
-
-### Windows
+### Starting the setup script on Windows
 
 First, install these two free tools (if you don't have them already):
 
@@ -42,13 +43,13 @@ cd %TEMP%\buzzinga
 setup.bat
 ```
 
-The setup script will ask you where you want Buzzinga installed. Press Enter to use the default (a `Buzzinga` folder on your Desktop) or type a different path.
+### What the setup script does
 
-When it's done, you can close the window. The cloned folder was only needed for the setup.
+The setup script will ask you one question: **where do you want Buzzinga installed?** Just press Enter to use the default (a `Buzzinga` folder on your Desktop), or type a different path.
 
-### After setup
+Then it builds everything for you. This takes about a minute the first time — just let it run.
 
-You'll have a folder with two things inside:
+When it's done, you'll have a folder with two things inside:
 
 ```
 Buzzinga/
@@ -57,6 +58,8 @@ Buzzinga/
 ```
 
 On Windows, the app is called `buzzinga.exe`.
+
+That's it! Double-click the app to play. The cloned folder was only needed for the setup — on Linux it's in `/tmp` and gets cleaned up automatically.
 
 ## Adding Game Content
 
