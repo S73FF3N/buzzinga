@@ -12,20 +12,24 @@ Open a terminal (you can usually find it by searching "Terminal" in your apps) a
 sudo apt install git
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
-git clone https://github.com/S73FF3N/buzzinga.git
-cd buzzinga
+git clone https://github.com/S73FF3N/buzzinga.git /tmp/buzzinga
+cd /tmp/buzzinga
 chmod +x setup.sh
 ./setup.sh
 ```
 
-The first two lines install the tools needed for the setup. If you already have them, that's fine — they'll just be updated.
+The first three lines install the tools needed for the setup. If you already have them, that's fine — they'll just be updated.
+
+The setup script will ask you where you want Buzzinga installed. Press Enter to use the default (`~/Desktop/Buzzinga`) or type a different path.
+
+When it's done, you can close the terminal. The cloned folder in `/tmp` will be cleaned up automatically — you won't need it again.
 
 ### Windows
 
-First, install these two free tools (you only need to do this once):
+First, install these two free tools (if you don't have them already):
 
 1. Download and install **git** from https://git-scm.com/downloads/win
-2. Download and install **uv** by opening **PowerShell** (search "PowerShell" in the Start menu) and running:
+2. Install **uv** by opening **PowerShell** (search "PowerShell" in the Start menu) and running:
    ```
    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
    ```
@@ -33,18 +37,18 @@ First, install these two free tools (you only need to do this once):
 Then open **Command Prompt** (search "cmd" in the Start menu) and run these commands one by one:
 
 ```
-git clone https://github.com/S73FF3N/buzzinga.git
-cd buzzinga
+git clone https://github.com/S73FF3N/buzzinga.git %TEMP%\buzzinga
+cd %TEMP%\buzzinga
 setup.bat
 ```
 
-### What happens next
+The setup script will ask you where you want Buzzinga installed. Press Enter to use the default (a `Buzzinga` folder on your Desktop) or type a different path.
 
-The setup script will ask you one question: **where do you want Buzzinga installed?** Just press Enter to use the default (a `Buzzinga` folder on your Desktop), or type a different path.
+When it's done, you can close the window. The cloned folder was only needed for the setup.
 
-Then it builds everything for you. This takes about a minute the first time — just let it run.
+### After setup
 
-When it's done, you'll have a folder with two things inside:
+You'll have a folder with two things inside:
 
 ```
 Buzzinga/
@@ -53,8 +57,6 @@ Buzzinga/
 ```
 
 On Windows, the app is called `buzzinga.exe`.
-
-That's it! You can now delete the `buzzinga` folder you cloned during setup — you won't need it again.
 
 ## Adding Game Content
 
