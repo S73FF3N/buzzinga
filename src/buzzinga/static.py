@@ -6,16 +6,19 @@ import random
 import pygame
 from pathlib import Path
 
-# Always use the directory where the .exe or .py is located
+# Package directory (where this file lives)
+_PACKAGE_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+
 if getattr(sys, 'frozen', False):
     # PyInstaller: use directory of the executable in dist for ROOT_EXTENDED
     BASE_PATH = Path(os.path.dirname(sys.executable))
     ROOT_EXTENDED = BASE_PATH / "data"
     STATIC_FOLDER = Path(sys._MEIPASS) / "staticfiles"
 else:
-    BASE_PATH = Path(os.path.dirname(os.path.abspath(__file__)))
+    # Normal install: data is in the cwd, staticfiles are bundled in the package
+    BASE_PATH = Path.cwd()
     ROOT_EXTENDED = BASE_PATH / "data"
-    STATIC_FOLDER = BASE_PATH / "staticfiles"
+    STATIC_FOLDER = _PACKAGE_DIR / "staticfiles"
 
 class Static:
     BLACK = 0, 0, 0

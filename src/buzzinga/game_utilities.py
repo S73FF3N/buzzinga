@@ -8,7 +8,7 @@ import os, pygame
 from PIL import Image
 import subprocess
 import functools
-from static import Static
+from .static import Static
 
 
 def text_objects(text, font, color=Static.WHITE):

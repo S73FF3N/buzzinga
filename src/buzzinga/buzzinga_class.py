@@ -4,15 +4,15 @@ from itertools import islice
 from pathlib import Path
 import stat
 
-from static import Static
-from game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_files_by_extensions
-from translations import english, german
-from image_quiz import ImageQuiz
-from audio_quiz import AudioQuiz
-from question_quiz import QuestionQuiz
-from hint_quiz import HintQuiz
-from whoknowsmore_quiz import WhoKnowsMoreQuiz
-from animation import BuzzingaAnimation
+from .static import Static
+from .game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_files_by_extensions
+from .translations import english, german
+from .image_quiz import ImageQuiz
+from .audio_quiz import AudioQuiz
+from .question_quiz import QuestionQuiz
+from .hint_quiz import HintQuiz
+from .whoknowsmore_quiz import WhoKnowsMoreQuiz
+from .animation import BuzzingaAnimation
 
 
 class Buzzinga():
@@ -140,7 +140,7 @@ class Buzzinga():
         if not image:
             blit_text_objects(self.SCREEN, rect, text, self.SMALL_TEXT, text_color)
         else:
-            image_file = load_image(text, os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER))
+            image_file = load_image(text, Static.STATIC_FOLDER)
             scaled_image = pygame.transform.scale(image_file, (int(rect.height / 2), rect.height // 2))
             self.SCREEN.blit(scaled_image, scaled_image.get_rect(center=rect.center))
         return hover and click and pygame.time.get_ticks() > 100
@@ -206,7 +206,7 @@ class Buzzinga():
         pygame.draw.rect(self.SCREEN, Static.RED, (x, y, w, h), 5)
         pygame.draw.rect(self.SCREEN, Static.RED, (x - w // 4, y, w // 4, h))
 
-        image_file = load_and_scale_image('user.bmp', os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER), h // 2, self.image_cache)
+        image_file = load_and_scale_image('user.png', Static.STATIC_FOLDER, h // 2, self.image_cache)
         self.SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x - w // 4, y, w // 4, h).center))
 
         blit_text_objects(self.SCREEN, pygame.Rect(x, y, w, h), player_name, self.SMALL_TEXT, Static.WHITE)
@@ -549,6 +549,9 @@ class Buzzinga():
             pygame.display.update()
             self.clock.tick(100)
 
-if __name__ == "__main__":
+def main():
     buzzinga = Buzzinga()
     buzzinga.start_screen()
+
+if __name__ == "__main__":
+    main()

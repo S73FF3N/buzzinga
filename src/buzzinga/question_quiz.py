@@ -1,9 +1,9 @@
 import os, pygame, json, random, pybuzzers
 
-from quiz_games import QuizGameBase
-from static import Static
-from game_utilities import optimize_text_in_container
-from animation import BuzzingaAnimation
+from .quiz_games import QuizGameBase
+from .static import Static
+from .game_utilities import optimize_text_in_container
+from .animation import BuzzingaAnimation
 
 
 class QuestionQuiz(QuizGameBase):

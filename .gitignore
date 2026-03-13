@@ -11,3 +11,5 @@ data/who-knows-more/*
 *.pdf
 *.docx
 .env
+.venv/
+__pycache__/

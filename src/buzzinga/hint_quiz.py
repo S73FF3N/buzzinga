@@ -1,9 +1,9 @@
 import os, random, pygame, json, pybuzzers
 
-from quiz_games import QuizGameBase
-from static import Static
-from game_utilities import blit_text_objects, optimize_text_in_container
-from animation import BuzzingaAnimation
+from .quiz_games import QuizGameBase
+from .static import Static
+from .game_utilities import blit_text_objects, optimize_text_in_container
+from .animation import BuzzingaAnimation
 
 
 class HintQuiz(QuizGameBase):
