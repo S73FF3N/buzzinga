@@ -13,3 +13,6 @@ data/who-knows-more/*
 .env
 .venv/
 __pycache__/
+build/
+dist/
+*.spec

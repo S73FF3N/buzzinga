@@ -24,9 +24,27 @@ The first time you run this, uv will automatically download Python and install a
 
 > From now on, whenever you want to play, just open a terminal, go to your buzzinga folder and run `uv run buzzinga`.
 
+### Building a standalone executable
+
+If you don't want to type terminal commands every time, you can build a standalone executable. This works on both Linux and Windows — you get a single file you can double-click to start the game.
+
+From inside the buzzinga folder, run:
+
+```bash
+uv run pyinstaller launcher.py --onefile --add-data "src/buzzinga/staticfiles:staticfiles" --name buzzinga --paths src
+```
+
+This creates a `dist/` folder with a `buzzinga` executable inside it (on Windows it will be `buzzinga.exe`). To use it:
+
+1. Copy the executable wherever you like (e.g. your Desktop)
+2. Create a `data/` folder next to it (see [Adding Game Content](#adding-game-content) below)
+3. Double-click to play
+
+After building, you no longer need uv, Python, or the cloned repository — just the executable and your `data/` folder.
+
 ## Adding Game Content
 
-Buzzinga doesn't come with quiz content — you bring your own! Inside your `buzzinga` folder you'll find a `data/` folder. This is where you put your game files:
+Buzzinga doesn't come with quiz content — you bring your own! Inside your `buzzinga` folder (or next to your executable) you'll find a `data/` folder. This is where you put your game files:
 
 | Folder | What goes in it | Used by |
 |--------|----------------|---------|
@@ -80,11 +98,3 @@ Supports 2–4 players with USB buzzer input or keyboard controls. Available in 
 | **R** | Correct answer |
 | **F** | Wrong answer |
 | **Escape** | Back / Exit game |
-
-## Building a Windows Executable
-
-If you want to distribute Buzzinga as a standalone `.exe` (no uv or Python needed):
-
-```bash
-uv run pyinstaller buzzinga_class.py --onefile --add-data "src/buzzinga/staticfiles:staticfiles"
-```
