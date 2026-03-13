@@ -4,9 +4,16 @@ A fullscreen quiz game for parties and game nights. Supports USB buzzers, multip
 
 ## Installation
 
-You need two things: **[git](https://git-scm.com/)** and **[uv](https://docs.astral.sh/uv/getting-started/installation/)** (a Python tool manager — it handles Python and all dependencies for you).
+Before you start, install these two free tools:
 
-Once both are installed, open a terminal and run:
+1. **[git](https://git-scm.com/downloads)** — to download Buzzinga
+2. **[uv](https://docs.astral.sh/uv/getting-started/installation/)** — to build it (it handles Python and all dependencies for you)
+
+Then follow the guide for your system below. The setup script will ask you where to install Buzzinga (defaults to your Desktop) and build a standalone app you can double-click to play.
+
+### Linux
+
+Open a terminal and run:
 
 ```bash
 git clone https://github.com/S73FF3N/buzzinga.git
@@ -15,9 +22,21 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-The script will ask you where you want to install Buzzinga (defaults to `~/Desktop/Buzzinga`). It builds a standalone executable and sets up a game folder with everything you need.
+### Windows
 
-When it's done, just double-click the `buzzinga` file in your install folder to play. No terminal needed anymore.
+Open **Command Prompt** or **PowerShell** and run:
+
+```
+git clone https://github.com/S73FF3N/buzzinga.git
+cd buzzinga
+setup.bat
+```
+
+### After setup
+
+When the script is done, you'll have a folder (e.g. on your Desktop) with the Buzzinga app inside it. Double-click `buzzinga` (Linux) or `buzzinga.exe` (Windows) to play — no terminal needed anymore.
+
+You can delete the `buzzinga` folder you cloned during setup. You won't need it again unless you want to rebuild.
 
 ## Adding Game Content
 
