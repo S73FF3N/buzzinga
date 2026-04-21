@@ -5,15 +5,10 @@ Created on Tue Sep 22 19:54:59 2015
 @author: List
 """
 import os, pygame
-from pathlib import Path
 from PIL import Image
 import subprocess
 import functools
-from static import Static
-import time
-import gc
-#from pyvidplayer2 import Video
-from moviepy import VideoFileClip
+from .static import Static
 
 
 def text_objects(text, font, color=Static.WHITE):
@@ -142,63 +137,26 @@ def adjust_image_size(img, container_width, container_height):
             new_height = int(container_width / aspect_ratio)
             return (container_width, new_height)
 
-# convert image to desired image format
+# convert image to desired image format    
 def convert_image_to(image_file, im_format):
-    image_path = Path(image_file)
-    if image_path.suffix.lower() == f".{im_format.lower()}":
-        return str(image_path)
-
-    im_format_clean = im_format.lstrip(".")
-    file_out = str(image_path.with_suffix("." + im_format_clean))
-
-    # Open, copy into memory, then close the source file handle before saving
-    try:
-        with Image.open(image_file) as src:
-            img_copy = src.copy()
-    except Exception as e_open:
-        print(f"Could not open {image_file}: {e_open}")
-        return None
-
-    try:
-        if im_format_clean.lower() in ["jpg", "jpeg", "bmp"]:
-            img_to_save = img_copy.convert("RGB")
-        else:
-            img_to_save = img_copy
-        img_to_save.save(file_out)
-    except Exception as e_save:
-        print(f"Failed to save converted image {image_file} -> {file_out}: {e_save}")
+    if image_file[-4:] == "."+im_format:
+        file_out = image_file
+    else:
+        print("converting image file...")
         try:
-            if os.path.exists(file_out):
-                os.remove(file_out)
-        except Exception:
-            pass
-        try:
-            img_copy.close()
-        except Exception:
-            pass
-        return None
-    finally:
-        try:
-            img_copy.close()
-        except Exception:
-            pass
-
-    # try to remove original file; on Windows there may be transient locks so retry a few times
-    for attempt in range(6):
-        try:
-            gc.collect()
-            os.remove(image_file)
-            break
-        except PermissionError as pe:
-            if attempt == 5:
-                print(f"Could not remove original file {image_file}: {pe}")
-            else:
-                time.sleep(0.1)
-        except Exception as e_rm:
-            print(f"Could not remove original file {image_file}: {e_rm}")
-            break
-
+            img = Image.open(image_file)
+        except:
+            print("Could not open {}".format(img))
+            return
+        file_out = str(image_file[0:-4])+"."+im_format
+        if len(img.split()) == 4:
+            # prevent IOError: cannot write mode RGBA as BMP
+            r, g, b, a = img.split()
+            img = Image.merge("RGB", (r, g, b))
+        img.save(file_out)
+        os.remove(image_file)
     return file_out
+
 
 
 def reverse_mp3(mp3_file):
@@ -225,34 +183,3 @@ def count_files_by_extensions(directory, *extensions):
         if not file.stem.endswith('_solution')
     )
     return count
-
-def load_video(name, folder):
-    # Ensure correct full path
-    fullname = name if os.path.isabs(name) else os.path.join(folder, name)
-
-    if not os.path.exists(fullname):
-        raise FileNotFoundError(f"Cannot find video file: {fullname}")
-
-    try:
-        clip = VideoFileClip(fullname)
-    except Exception as e:
-        raise RuntimeError(f"Error loading video '{fullname}': {e}")
-
-    return clip
-
-def adjust_video_size(video_width, video_height, container_width, container_height):
-    aspect_ratio = video_width / video_height
-    if aspect_ratio >= 1: # Landscape or square video
-        new_height = int(container_width / aspect_ratio)
-        if new_height <= container_height:
-            return (container_width, new_height)
-        else:
-            new_width = int(container_height * aspect_ratio)
-            return (new_width, container_height)
-    else: # Portrait video
-        new_width = int(container_height * aspect_ratio)
-        if new_width <= container_width:
-            return (new_width, container_height)
-        else:
-            new_height = int(container_width / aspect_ratio)
-    return (container_width, new_height)

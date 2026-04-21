@@ -11,3 +11,11 @@ data/who-knows-more/*
 *.pdf
 *.docx
 .env
+<<<<<<< HEAD
+=======
+.venv/
+__pycache__/
+build/
+dist/
+*.spec
+>>>>>>> origin/master

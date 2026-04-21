@@ -3,7 +3,7 @@
 
 import os
 import subprocess
-from static import Static
+from .static import Static
 
 time_consumed = 0
 
