@@ -256,11 +256,17 @@ class QuestionQuiz(QuizGameBase):
                         self.show_solution()
 
                         for n in range(1, self.amount_players + 1):
-                            color = Static.LIGHT_GREEN if self.player_answers[n] and self.player_answers[n][0] == self.current_solution else Static.RED
-                            self.display_buzzer(n-1, color, width=15)
-                            if self.player_answers[n] and self.player_answers[n][0] == self.current_solution:
+                            if not self.player_answers[n]:
+                                color = Static.GREY
+                            elif self.player_answers[n][0] == self.current_solution:
+                                color = Static.LIGHT_GREEN
                                 self.scores[n-1] += 1
                                 self.update_score(n-1)
+                            else:
+                                color = Static.RED
+                                self.scores[n-1] -= 1
+                                self.update_score(n-1)
+                            self.display_buzzer(n-1, color, width=15)
                         self.solution_shown = True
                         pygame.display.flip()
 
