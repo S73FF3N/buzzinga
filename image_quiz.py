@@ -123,7 +123,12 @@ class ImageQuiz(QuizGameBase):
         return file_to_display, rect
 
     def play_round(self, tile_size=(50, 50), reveal_speed=60):
+        self.continue_reveal = False
         file_to_display, rect = self.get_current_file()
+
+        if self.current_file_type == "image":
+            self.round_img = file_to_display
+            self.round_img_rect = rect
 
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
 

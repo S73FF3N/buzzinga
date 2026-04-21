@@ -19,6 +19,8 @@ class QuestionQuiz(QuizGameBase):
         self.question_answered = False
         self.answers_shown = False
         self.solution_dict = {}
+        self.num_options = 4
+        self.option_containers = []
 
         self.question_container_width = self.left_container_width
         self.question_container_height = self.SCREEN_HEIGHT * 0.3
@@ -26,25 +28,12 @@ class QuestionQuiz(QuizGameBase):
         self.option_container_height = (self.SCREEN_HEIGHT * 0.25) - 20
         self.question_container = pygame.Rect(0, self.top_container_height, self.question_container_width,
                                      self.question_container_height)
-        self.option1_container = pygame.Rect(10, self.top_container_height + self.question_container_height, self.option_container_width,
-                                    self.option_container_height)
-        self.option2_container = pygame.Rect(30 + self.option_container_width,
-                                    self.top_container_height + self.question_container_height, self.option_container_width,
-                                    self.option_container_height)
-        self.option3_container = pygame.Rect(10,
-                                    self.top_container_height + self.question_container_height + self.option_container_height + 20,
-                                    self.option_container_width,
-                                    self.option_container_height)
-        self.option4_container = pygame.Rect(30 + self.option_container_width,
-                                    self.top_container_height + self.question_container_height + self.option_container_height + 20,
-                                    self.option_container_width,
-                                    self.option_container_height)
         
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         self.answer = None
         def handle_answer(buzzer_set: pybuzzers.BuzzerSet, buzzer: int, button: int):
-            if not self.question_answered and not self.initializing and not button == 0:
+            if not self.question_answered and not self.initializing and button != 0 and button <= self.num_options:
                 self.buzzering_player = buzzer + 1
                 self.answer = button
         
@@ -55,13 +44,44 @@ class QuestionQuiz(QuizGameBase):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         for q in data:
-            self.round_data.append({'question': q["fields"]["quiz_question"],
-                             'solution': q["fields"]["solution"],
-                             'option1': q["fields"]["option1"],
-                             'option2': q["fields"]["option2"],
-                             'option3': q["fields"]["option3"]})
+            fields = q["fields"]
+            num_options = fields.get("num_options", 4)
+            options = [fields["solution"]]
+            for i in range(1, num_options):
+                options.append(fields[f"option{i}"])
+            self.round_data.append({'question': fields["quiz_question"],
+                             'solution': fields["solution"],
+                             'options': options,
+                             'num_options': num_options})
         self.total_rounds = len(data)
         random.shuffle(self.round_data)
+
+    def _build_option_containers(self, num_options):
+        top = self.top_container_height + self.question_container_height
+        if num_options == 4:
+            w = self.option_container_width
+            h = self.option_container_height
+            return [
+                pygame.Rect(10, top, w, h),
+                pygame.Rect(30 + w, top, w, h),
+                pygame.Rect(10, top + h + 20, w, h),
+                pygame.Rect(30 + w, top + h + 20, w, h),
+            ]
+        elif num_options == 3:
+            w = (self.left_container_width - 40) / 3
+            h = self.option_container_height
+            return [
+                pygame.Rect(10, top, w, h),
+                pygame.Rect(20 + w, top, w, h),
+                pygame.Rect(30 + 2 * w, top, w, h),
+            ]
+        else:  # 2 options
+            w = self.option_container_width
+            h = self.option_container_height
+            return [
+                pygame.Rect(10, top, w, h),
+                pygame.Rect(30 + w, top, w, h),
+            ]
 
     def play_round(self):
         self.player_answers = {1: False, 2: False, 3: False, 4: False}
@@ -69,35 +89,28 @@ class QuestionQuiz(QuizGameBase):
         current_data = self.round_data[self.current_round - 1]
         self.current_question = current_data["question"]
         self.current_solution = current_data["solution"]
+        self.num_options = current_data["num_options"]
+        self.option_containers = self._build_option_containers(self.num_options)
+        self.solution_dict = {}
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
         optimize_text_in_container(self.screen, self.question_container, self.current_question, color=Static.RED)
-        options = [current_data["option1"], current_data["option2"], current_data["option3"], current_data["solution"]]
+        options = list(current_data["options"])
         random.shuffle(options)
         colors = [Static.BLUE, Static.ORANGE, Static.GREEN, Static.YELLOW]
-        containers = [self.option1_container, self.option2_container, self.option3_container, self.option4_container]
-        for i, (color, container) in enumerate(zip(colors, containers), start=1):
+        for i, container in enumerate(self.option_containers):
+            color = colors[i]
             self.draw_rect(color, Static.RED, 10, container)
-            optimize_text_in_container(self.screen, container, options[0])
-            self.solution_dict[5-i] = [options[0], color]
-            del options[0]
+            optimize_text_in_container(self.screen, container, options[i])
+            self.solution_dict[i + 1] = [options[i], color]
 
     def show_solution(self):
-        if self.solution_dict[4][0] == self.current_solution:
-            pygame.draw.rect(self.screen, Static.LIGHT_GREEN, self.option1_container, 50)
-            pygame.draw.rect(self.screen, Static.RED, self.option1_container, 10)
-            optimize_text_in_container(self.screen, self.option1_container, self.current_solution)
-        elif self.solution_dict[3][0] == self.current_solution:
-            pygame.draw.rect(self.screen, Static.LIGHT_GREEN, self.option2_container, 50)
-            pygame.draw.rect(self.screen, Static.RED, self.option2_container, 10)
-            optimize_text_in_container(self.screen, self.option2_container, self.current_solution)
-        elif self.solution_dict[2][0] == self.current_solution:
-            pygame.draw.rect(self.screen, Static.LIGHT_GREEN, self.option3_container, 50)
-            pygame.draw.rect(self.screen, Static.RED, self.option3_container, 10)
-            optimize_text_in_container(self.screen, self.option3_container, self.current_solution)
-        elif self.solution_dict[1][0] == self.current_solution:
-            pygame.draw.rect(self.screen, Static.LIGHT_GREEN, self.option4_container, 50)
-            pygame.draw.rect(self.screen, Static.RED, self.option4_container, 10)
-            optimize_text_in_container(self.screen, self.option4_container, self.current_solution)
+        for button_num, (option_text, color) in self.solution_dict.items():
+            if option_text == self.current_solution:
+                container = self.option_containers[button_num - 1]
+                pygame.draw.rect(self.screen, Static.LIGHT_GREEN, container, 50)
+                pygame.draw.rect(self.screen, Static.RED, container, 10)
+                optimize_text_in_container(self.screen, container, self.current_solution)
+                break
 
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -157,25 +170,25 @@ class QuestionQuiz(QuizGameBase):
 
                 if self.buzzering_player == 1 and not self.player1_locked:
                     self.player1_locked = True
-                    self.player_answers[1] = self.solution_dict[5-self.answer]
+                    self.player_answers[1] = self.solution_dict[self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(0, Static.RED)
                 elif self.buzzering_player == 2 and not self.player2_locked:
                     self.player2_locked = True
-                    self.player_answers[2] = self.solution_dict[5-self.answer]
+                    self.player_answers[2] = self.solution_dict[self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(1, Static.RED)
                 elif self.buzzering_player == 3 and not self.player3_locked:
                     self.player3_locked = True
-                    self.player_answers[3] = self.solution_dict[5-self.answer]
+                    self.player_answers[3] = self.solution_dict[self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(2, Static.RED)
                 elif self.buzzering_player == 4 and not self.player4_locked:
                     self.player4_locked = True
-                    self.player_answers[4] = self.solution_dict[5-self.answer]
+                    self.player_answers[4] = self.solution_dict[self.answer]
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(3, Static.RED)
