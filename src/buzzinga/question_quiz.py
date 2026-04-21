@@ -50,7 +50,7 @@ class QuestionQuiz(QuizGameBase):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         category = os.path.splitext(os.path.basename(self.game_data))[0]
-        image_folder = os.path.join(Static.ROOT_EXTENDED, "images", "questions", category)
+        image_folder = os.path.join(Static.ROOT_EXTENDED, "questions", "images", category)
         for q in data:
             fields = q["fields"]
             num_options = fields.get("num_options", 4)
