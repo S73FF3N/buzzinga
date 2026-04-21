@@ -1,9 +1,9 @@
 import os, glob, pygame, json, random, pybuzzers
 
-from quiz_games import QuizGameBase
+from buzzinga.src.buzzinga.quiz_games import QuizGameBase
 from static import Static
 from game_utilities import optimize_text_in_container, load_image, adjust_image_size
-from animation import BuzzingaAnimation
+from buzzinga.src.buzzinga.animation import BuzzingaAnimation
 
 
 class QuestionQuiz(QuizGameBase):

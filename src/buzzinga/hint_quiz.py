@@ -7,8 +7,8 @@ from .animation import BuzzingaAnimation
 
 
 class HintQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.hint_container_width = (self.left_container_width / 2) - 10
         self.hint_container_height = (self.main_container_height / 5) - 5
         self.hint1_container = pygame.Rect(5, self.top_container_height, self.hint_container_width, self.hint_container_height)

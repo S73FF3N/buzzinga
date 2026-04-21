@@ -8,6 +8,8 @@ from pathlib import Path
 
 # Package directory (where this file lives)
 _PACKAGE_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+# Project root: src/buzzinga/../../ = project root
+_PROJECT_ROOT = _PACKAGE_DIR.parent.parent
 
 if getattr(sys, 'frozen', False):
     # PyInstaller: use directory of the executable in dist for ROOT_EXTENDED
@@ -15,10 +17,10 @@ if getattr(sys, 'frozen', False):
     ROOT_EXTENDED = BASE_PATH / "data"
     STATIC_FOLDER = Path(sys._MEIPASS) / "staticfiles"
 else:
-    # Normal install: data is in the cwd, staticfiles are bundled in the package
-    BASE_PATH = Path.cwd()
-    ROOT_EXTENDED = BASE_PATH / "data"
-    STATIC_FOLDER = _PACKAGE_DIR / "staticfiles"
+    # Normal install: data and staticfiles are at the project root
+    BASE_PATH = _PROJECT_ROOT
+    ROOT_EXTENDED = _PROJECT_ROOT / "data"
+    STATIC_FOLDER = _PROJECT_ROOT / "staticfiles"
 
 class Static:
     BLACK = 0, 0, 0

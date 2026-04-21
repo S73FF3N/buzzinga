@@ -8,8 +8,8 @@ from .animation import BuzzingaAnimation
 
 
 class AudioQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.current_sound = None
         self.current_solution_sound = None
         self.current_solution_image = None

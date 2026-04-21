@@ -7,8 +7,8 @@ from .animation import BuzzingaAnimation
 
 
 class WhoKnowsMoreQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.answer_category = 1
         self.first_element_of_question = True
         self.active_player = 0
@@ -225,7 +225,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 pygame.display.flip()
                 if self.countdown_seconds_left == 0:
                     if self.is_game_sounds and not self.countdown_ended:
-                        countdown_sound = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'countdown_end.wav'))
+                        countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
                         self.game_sound_channel.play(countdown_sound)
                     self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                     pygame.display.flip()

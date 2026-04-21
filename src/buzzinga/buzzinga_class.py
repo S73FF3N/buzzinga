@@ -55,6 +55,7 @@ class Buzzinga():
         self.is_game_sounds = False
         self.game_modus = True
         self.points_to_win = 10
+        self.image_reveal_animation = False
 
         self.image_cache = {}
         self.is_game_choosen = False
@@ -87,7 +88,7 @@ class Buzzinga():
     def game(self):
         if self.game_modus:
             self.points_to_win = 100
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation)
         match self.game_type:
             case "images":
                 quiz = ImageQuiz(*common_args)
@@ -104,7 +105,7 @@ class Buzzinga():
     def get_amount_rounds(self, category_folder):
         path = self.game_folder / category_folder
         if self.game_type == "images":
-            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp")
+            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp", "*.avif", "*.mp4", "*.mov", "*.avi", "*.mkv")
             file_count = count_files_by_extensions(path, *extensions)
             return file_count
         elif self.game_type == "sounds":
@@ -140,7 +141,7 @@ class Buzzinga():
         if not image:
             blit_text_objects(self.SCREEN, rect, text, self.SMALL_TEXT, text_color)
         else:
-            image_file = load_image(text, Static.STATIC_FOLDER)
+            image_file = load_image(text, os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER))
             scaled_image = pygame.transform.scale(image_file, (int(rect.height / 2), rect.height // 2))
             self.SCREEN.blit(scaled_image, scaled_image.get_rect(center=rect.center))
         return hover and click and pygame.time.get_ticks() > 100
@@ -206,7 +207,7 @@ class Buzzinga():
         pygame.draw.rect(self.SCREEN, Static.RED, (x, y, w, h), 5)
         pygame.draw.rect(self.SCREEN, Static.RED, (x - w // 4, y, w // 4, h))
 
-        image_file = load_and_scale_image('user.png', Static.STATIC_FOLDER, h // 2, self.image_cache)
+        image_file = load_and_scale_image('user.bmp', os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER), h // 2, self.image_cache)
         self.SCREEN.blit(image_file, image_file.get_rect(center=pygame.Rect(x - w // 4, y, w // 4, h).center))
 
         blit_text_objects(self.SCREEN, pygame.Rect(x, y, w, h), player_name, self.SMALL_TEXT, Static.WHITE)
@@ -248,7 +249,8 @@ class Buzzinga():
             case 'images':
                 self.key_instructions.extend(
                     [('r', self.current_language['correct'], 4),
-                    ('f', self.current_language['wrong'], 5)]
+                    ('f', self.current_language['wrong'], 5),
+                    ('s', self.current_language['reveal'], 6)]
                 )
             case 'sounds':
                 self.key_instructions.extend(
@@ -283,7 +285,7 @@ class Buzzinga():
             for btn_index, item in enumerate(category_chunk):
                 x, y, w, h = self.button_layout_32[btn_index]
                 total_rounds = self.get_amount_rounds(item)
-                category_name = os.path.splitext(item)[0].replace('.', '')
+                category_name = os.path.splitext(item)[0]
                 self.buttons[f'page {page}'].append([category_name, x, y, w, h, total_rounds])
 
     @staticmethod
@@ -481,6 +483,8 @@ class Buzzinga():
 
         self.draw_button('SOUNDS', '', pygame.Rect(self.button_layout_32[8]), False, Static.RED)
         self.draw_button(self.current_language['mode'], '', pygame.Rect(self.button_layout_32[16]), False, Static.RED)
+        if self.game_type == 'images':
+            self.draw_button(self.current_language['reveal animation'], '', pygame.Rect(self.button_layout_32[10]), False, Static.RED)
 
     def settings_menu(self):
         def no_buzzer_connected():
@@ -495,6 +499,10 @@ class Buzzinga():
 
             if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
                 self.is_game_sounds = not self.is_game_sounds
+
+            if self.game_type == 'images':
+                if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[11]), click, Static.RED, enabled=self.image_reveal_animation, toggle=True):
+                    self.image_reveal_animation = not self.image_reveal_animation
 
             if self.draw_button(self.current_language['points'], self.current_language['all_rounds'], pygame.Rect(self.button_layout_32[17]), click, Static.RED, enabled=self.game_modus, toggle=True):
                 self.game_modus = not self.game_modus
