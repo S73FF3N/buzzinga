@@ -1,8 +1,8 @@
-import os, pygame, json, random, pybuzzers
+import os, glob, pygame, json, random, pybuzzers
 
 from quiz_games import QuizGameBase
 from static import Static
-from game_utilities import optimize_text_in_container
+from game_utilities import optimize_text_in_container, load_image, adjust_image_size
 from animation import BuzzingaAnimation
 
 
@@ -40,48 +40,73 @@ class QuestionQuiz(QuizGameBase):
         self.buzzer_set.on_button_down(handle_answer)
         self.buzzer_set.start_listening()
 
+    def _find_question_image(self, pk, image_folder):
+        if not os.path.isdir(image_folder):
+            return None
+        matches = glob.glob(os.path.join(image_folder, f"{pk}.*"))
+        return matches[0] if matches else None
+
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
+        category = os.path.splitext(os.path.basename(self.game_data))[0]
+        image_folder = os.path.join(Static.ROOT_EXTENDED, "images", "questions", category)
         for q in data:
             fields = q["fields"]
             num_options = fields.get("num_options", 4)
             options = [fields["solution"]]
             for i in range(1, num_options):
                 options.append(fields[f"option{i}"])
+            image_path = self._find_question_image(q["pk"], image_folder)
             self.round_data.append({'question': fields["quiz_question"],
                              'solution': fields["solution"],
                              'options': options,
-                             'num_options': num_options})
+                             'num_options': num_options,
+                             'image_path': image_path})
         self.total_rounds = len(data)
         random.shuffle(self.round_data)
 
-    def _build_option_containers(self, num_options):
-        top = self.top_container_height + self.question_container_height
+    def _build_layout(self, num_options, has_image):
+        if has_image:
+            q_h = self.SCREEN_HEIGHT * 0.15
+            img_h = self.SCREEN_HEIGHT * 0.25
+            opt_h = self.SCREEN_HEIGHT * 0.15 - 20
+        else:
+            q_h = self.question_container_height
+            img_h = 0
+            opt_h = self.option_container_height
+
+        q_container = pygame.Rect(0, self.top_container_height, self.left_container_width, q_h)
+
+        img_container = None
+        if has_image:
+            img_container = pygame.Rect(0, self.top_container_height + q_h,
+                                        self.left_container_width, img_h)
+
+        opt_top = self.top_container_height + q_h + img_h
+        opt_w_half = (self.left_container_width / 2) - 20
+
         if num_options == 4:
-            w = self.option_container_width
-            h = self.option_container_height
-            return [
-                pygame.Rect(10, top, w, h),
-                pygame.Rect(30 + w, top, w, h),
-                pygame.Rect(10, top + h + 20, w, h),
-                pygame.Rect(30 + w, top + h + 20, w, h),
+            option_containers = [
+                pygame.Rect(10, opt_top, opt_w_half, opt_h),
+                pygame.Rect(30 + opt_w_half, opt_top, opt_w_half, opt_h),
+                pygame.Rect(10, opt_top + opt_h + 20, opt_w_half, opt_h),
+                pygame.Rect(30 + opt_w_half, opt_top + opt_h + 20, opt_w_half, opt_h),
             ]
         elif num_options == 3:
-            w = (self.left_container_width - 40) / 3
-            h = self.option_container_height
-            return [
-                pygame.Rect(10, top, w, h),
-                pygame.Rect(20 + w, top, w, h),
-                pygame.Rect(30 + 2 * w, top, w, h),
+            opt_w_third = (self.left_container_width - 40) / 3
+            option_containers = [
+                pygame.Rect(10, opt_top, opt_w_third, opt_h),
+                pygame.Rect(20 + opt_w_third, opt_top, opt_w_third, opt_h),
+                pygame.Rect(30 + 2 * opt_w_third, opt_top, opt_w_third, opt_h),
             ]
         else:  # 2 options
-            w = self.option_container_width
-            h = self.option_container_height
-            return [
-                pygame.Rect(10, top, w, h),
-                pygame.Rect(30 + w, top, w, h),
+            option_containers = [
+                pygame.Rect(10, opt_top, opt_w_half, opt_h),
+                pygame.Rect(30 + opt_w_half, opt_top, opt_w_half, opt_h),
             ]
+
+        return q_container, img_container, option_containers
 
     def play_round(self):
         self.player_answers = {1: False, 2: False, 3: False, 4: False}
@@ -90,10 +115,18 @@ class QuestionQuiz(QuizGameBase):
         self.current_question = current_data["question"]
         self.current_solution = current_data["solution"]
         self.num_options = current_data["num_options"]
-        self.option_containers = self._build_option_containers(self.num_options)
+        has_image = current_data["image_path"] is not None
+        q_container, img_container, self.option_containers = self._build_layout(self.num_options, has_image)
         self.solution_dict = {}
         pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
-        optimize_text_in_container(self.screen, self.question_container, self.current_question, color=Static.RED)
+        optimize_text_in_container(self.screen, q_container, self.current_question, color=Static.RED)
+        if has_image:
+            img_name = os.path.basename(current_data["image_path"])
+            img_folder = os.path.dirname(current_data["image_path"])
+            img = load_image(img_name, img_folder)
+            img_size = adjust_image_size(img, int(img_container.width - 16), int(img_container.height - 16))
+            img = pygame.transform.scale(img, img_size)
+            self.screen.blit(img, img.get_rect(center=img_container.center))
         options = list(current_data["options"])
         random.shuffle(options)
         colors = [Static.BLUE, Static.ORANGE, Static.GREEN, Static.YELLOW]
