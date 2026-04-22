@@ -67,31 +67,43 @@ class QuestionQuiz(QuizGameBase):
         random.shuffle(self.round_data)
 
     def _build_layout(self, num_options, has_image):
-        if has_image:
-            q_h = self.SCREEN_HEIGHT * 0.15
-            img_h = self.SCREEN_HEIGHT * 0.25
-            opt_h = self.SCREEN_HEIGHT * 0.15 - 20
-        else:
-            q_h = self.question_container_height
-            img_h = 0
-            opt_h = self.option_container_height
+        option_spacing = 20
+        opt_h = self.SCREEN_HEIGHT * 0.15 - 20 if has_image else self.option_container_height
+        opt_w_half = (self.left_container_width / 2) - 20
 
-        q_container = pygame.Rect(0, self.top_container_height, self.left_container_width, q_h)
+        rows = 2 if num_options == 4 else 1
+        if rows == 1:
+            # Single-row rounds use slightly smaller option boxes.
+            min_opt_h = int(self.SCREEN_HEIGHT * 0.10)
+            opt_h = max(int(opt_h * 0.75), min_opt_h)
+
+        options_block_height = rows * opt_h + (rows - 1) * option_spacing
+        # Keep answer options anchored to the bottom of the playable area.
+        opt_top = self.main_container.bottom - options_block_height - 10
+
+        # Use all remaining space above options for question/image content.
+        top_space_height = max(40, int(opt_top - self.top_container_height))
+        if has_image:
+            img_h = int(top_space_height * 0.8)
+            q_h = top_space_height - img_h
+        else:
+            img_h = 0
+            q_h = top_space_height
 
         img_container = None
         if has_image:
-            img_container = pygame.Rect(0, self.top_container_height + q_h,
+            img_container = pygame.Rect(0, self.top_container_height,
                                         self.left_container_width, img_h)
 
-        opt_top = self.top_container_height + q_h + img_h
-        opt_w_half = (self.left_container_width / 2) - 20
+        q_top = self.top_container_height + img_h
+        q_container = pygame.Rect(0, q_top, self.left_container_width, q_h)
 
         if num_options == 4:
             option_containers = [
                 pygame.Rect(10, opt_top, opt_w_half, opt_h),
                 pygame.Rect(30 + opt_w_half, opt_top, opt_w_half, opt_h),
-                pygame.Rect(10, opt_top + opt_h + 20, opt_w_half, opt_h),
-                pygame.Rect(30 + opt_w_half, opt_top + opt_h + 20, opt_w_half, opt_h),
+                pygame.Rect(10, opt_top + opt_h + option_spacing, opt_w_half, opt_h),
+                pygame.Rect(30 + opt_w_half, opt_top + opt_h + option_spacing, opt_w_half, opt_h),
             ]
         elif num_options == 3:
             opt_w_third = (self.left_container_width - 40) / 3

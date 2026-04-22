@@ -113,6 +113,8 @@ class Buzzinga():
             file_count = count_files_by_extensions(path, *extensions)
             return file_count
         else:
+            if not path.is_file() or path.suffix.lower() != ".json":
+                return 0
             with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 return len(data)
@@ -277,6 +279,13 @@ class Buzzinga():
     def build_category_buttons_dict(self):
         self.game_folder = Static.ROOT_EXTENDED / self.FOLDER_MAPPING[self.game_type]
         categories = [item for item in os.listdir(self.game_folder) if not item.startswith('.')]
+        if self.game_type in ["questions", "hints", "who-knows-more"]:
+            categories = [
+                item for item in categories
+                if (self.game_folder / item).is_file() and item.lower().endswith('.json')
+            ]
+        else:
+            categories = [item for item in categories if (self.game_folder / item).is_dir()]
         
         self.pages = (len(categories) - 1) // Static.BUTTONS_PER_PAGE + 1
         self.buttons = {f'page {page+1}': [] for page in range(self.pages)}
