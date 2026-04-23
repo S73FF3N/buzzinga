@@ -183,3 +183,25 @@ def count_files_by_extensions(directory, *extensions):
         if not file.stem.endswith('_solution')
     )
     return count
+
+def load_video(name, folder):
+    from moviepy import VideoFileClip
+    fullname = os.path.join(folder, name)
+    return VideoFileClip(fullname)
+
+def adjust_video_size(video_width, video_height, container_width, container_height):
+    aspect_ratio = video_width / video_height
+    if aspect_ratio >= 1:
+        new_height = int(container_width / aspect_ratio)
+        if new_height <= container_height:
+            return (container_width, new_height)
+        else:
+            new_width = int(container_height * aspect_ratio)
+            return (new_width, container_height)
+    else:
+        new_width = int(container_height * aspect_ratio)
+        if new_width <= container_width:
+            return (new_width, container_height)
+        else:
+            new_height = int(container_width / aspect_ratio)
+            return (container_width, new_height)

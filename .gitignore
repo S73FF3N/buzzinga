@@ -10,9 +10,3 @@ data/who-knows-more/*
 .DS_Store
 *.pdf
 *.docx
-.env
-.venv/
-__pycache__/
-build/
-dist/
-*.spec

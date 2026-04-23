@@ -1,9 +1,9 @@
 import os, glob, pygame, json, random, pybuzzers
 
-from .quiz_games import QuizGameBase
-from .static import Static
-from .game_utilities import optimize_text_in_container, load_image, adjust_image_size
-from .animation import BuzzingaAnimation
+from buzzinga.src.buzzinga.quiz_games import QuizGameBase
+from static import Static
+from game_utilities import optimize_text_in_container, load_image, adjust_image_size
+from buzzinga.src.buzzinga.animation import BuzzingaAnimation
 
 
 class QuestionQuiz(QuizGameBase):
@@ -50,7 +50,7 @@ class QuestionQuiz(QuizGameBase):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         category = os.path.splitext(os.path.basename(self.game_data))[0]
-        image_folder = os.path.join(Static.ROOT_EXTENDED, "questions", "images", category)
+        image_folder = os.path.join(Static.ROOT_EXTENDED, "images", "questions", category)
         for q in data:
             fields = q["fields"]
             num_options = fields.get("num_options", 4)

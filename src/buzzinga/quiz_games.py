@@ -3,11 +3,11 @@ import pygame, os, sys, pybuzzers
 import pygame.locals
 
 from .static import Static, Confetti
-from .game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size
+from .game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size, load_video, adjust_video_size
 from .animation import SoundAnimation
 
 class QuizGameBase:
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock
@@ -34,8 +34,10 @@ class QuizGameBase:
         self.winner_found = False
         self.animation_stopped = False
         self.solution_shown = False
+        self.current_file_type = None
         self.current_solution = None
-        self.current_solution_image = None
+        self.current_solution_file = None
+        self.current_solution_file_type = None
         self.escape_pressed = False
 
         self.left_container_width = self.SCREEN_WIDTH * 8 // 10
@@ -165,15 +167,15 @@ class QuizGameBase:
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()
                 if self.is_game_sounds:
-                    countdown_sound = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'countdown.wav'))
+                    countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown.wav'))
                     self.game_sound_channel.play(countdown_sound)
         if self.is_game_sounds:
-            countdown_end_sound = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'countdown_end.wav'))
+            countdown_end_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
             self.game_sound_channel.play(countdown_end_sound)
 
     def play_buzzer_sound(self):
         if self.is_game_sounds:
-            buzzerHit = pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, 'buzzer.wav'))
+            buzzerHit = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'buzzer.wav'))
             self.game_sound_channel.play(buzzerHit)
 
     def award_points(self, first_buzz, key, reset=False):
@@ -193,14 +195,27 @@ class QuizGameBase:
     def show_solution(self):
         blit_text_objects(self.screen, self.bottom_left_container, self.current_solution, self.SMALL_TEXT)
         # show solution image
-        if self.current_solution_image:
-            img = load_image(self.current_solution_image, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
-            image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
-            img = pygame.transform.scale(img, image_size)
-            pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
-            pygame.display.flip()
-            self.screen.blit(img, img.get_rect(center=self.main_container.center))
-            pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
+        if self.current_solution_file:
+            if self.current_solution_file_type == "image":
+                img = load_image(self.current_solution_file, os.path.join(Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data))
+                image_size = adjust_image_size(img, self.left_container_width-16, self.main_container_height-16) # subtract 16 for the border
+                img = pygame.transform.scale(img, image_size)
+                pygame.draw.rect(self.screen, Static.WHITE, self.main_container)
+                pygame.display.flip()
+                self.screen.blit(img, img.get_rect(center=self.main_container.center))
+                pygame.draw.rect(self.screen, Static.WHITE, self.main_container, width=8)
+            elif self.current_solution_file_type == "video":
+                file_to_display = load_video(self.current_solution_file, os.path.join(
+                Static.ROOT_EXTENDED, Static.GAME_FOLDER_IMAGES, self.game_data
+                ))
+
+                video_size = adjust_video_size(
+                    file_to_display.w, file_to_display.h, self.left_container_width - 16, self.main_container_height - 16
+                )
+                file_to_display = file_to_display.resized(new_size=video_size)
+                self.clip = file_to_display
+                self.video_frame_time = 0.0
+                self.solution_video_playing = True
 
     def check_game_over(self):
         if max(self.scores) >= self.max_score:
