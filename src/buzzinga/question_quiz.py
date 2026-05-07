@@ -32,11 +32,21 @@ class QuestionQuiz(QuizGameBase):
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         self.answer = None
+
         def handle_answer(buzzer_set: pybuzzers.BuzzerSet, buzzer: int, button: int):
-            if not self.question_answered and not self.initializing and button != 0 and button <= self.num_options:
+            if self.question_answered or self.initializing:
+                return
+
+            # Ignore the red buzz button in multiple-choice mode.
+            if button == 0:
+                return
+
+            if 1 <= button <= self.num_options:
                 self.buzzering_player = buzzer + 1
                 self.answer = button
-        
+
+        # Ensure only this game mode receives buzzer callbacks.
+        self.buzzer_set.clear_handlers()
         self.buzzer_set.on_button_down(handle_answer)
         self.buzzer_set.start_listening()
 
@@ -213,27 +223,32 @@ class QuestionQuiz(QuizGameBase):
                         pygame.display.flip()
                         self.question_answered = True
 
+                selected_option = self.solution_dict.get(self.answer)
+                if self.buzzering_player and selected_option is None:
+                    self.buzzering_player = None
+                    self.answer = None
+
                 if self.buzzering_player == 1 and not self.player1_locked:
                     self.player1_locked = True
-                    self.player_answers[1] = self.solution_dict[self.answer]
+                    self.player_answers[1] = selected_option
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(0, Static.RED)
                 elif self.buzzering_player == 2 and not self.player2_locked:
                     self.player2_locked = True
-                    self.player_answers[2] = self.solution_dict[self.answer]
+                    self.player_answers[2] = selected_option
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(1, Static.RED)
                 elif self.buzzering_player == 3 and not self.player3_locked:
                     self.player3_locked = True
-                    self.player_answers[3] = self.solution_dict[self.answer]
+                    self.player_answers[3] = selected_option
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(2, Static.RED)
                 elif self.buzzering_player == 4 and not self.player4_locked:
                     self.player4_locked = True
-                    self.player_answers[4] = self.solution_dict[self.answer]
+                    self.player_answers[4] = selected_option
                     self.buzzering_player = None
                     self.answer = None
                     self.display_buzzer(3, Static.RED)
