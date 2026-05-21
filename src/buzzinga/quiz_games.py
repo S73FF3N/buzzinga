@@ -193,7 +193,7 @@ class QuizGameBase:
         pygame.display.flip()
 
     def show_solution(self):
-        blit_text_objects(self.screen, self.bottom_left_container, self.current_solution, self.SMALL_TEXT)
+        optimize_text_in_container(self.screen, self.bottom_left_container, self.current_solution)
         # show solution image
         if self.current_solution_file:
             if self.current_solution_file_type == "image":
