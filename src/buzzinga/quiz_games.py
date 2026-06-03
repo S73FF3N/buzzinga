@@ -216,6 +216,10 @@ class QuizGameBase:
                 self.clip = file_to_display
                 self.video_frame_time = 0.0
                 self.solution_video_playing = True
+                # Start the solution video's audio in sync with its frames.
+                # Defined on subclasses that support video playback (e.g. ImageQuiz).
+                if hasattr(self, "_start_video_audio"):
+                    self._start_video_audio(self.clip)
 
     def check_game_over(self):
         if max(self.scores) >= self.max_score:
