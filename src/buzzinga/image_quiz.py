@@ -222,7 +222,11 @@ class ImageQuiz(QuizGameBase):
             return
 
         frame_surface = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
-        self.screen.blit(frame_surface, self.main_container.move(16, 16))
+        # Center the frame within the main container (matches how images are
+        # centered via get_rect(center=...)), rather than pinning it to the
+        # top-left corner with a fixed (16, 16) offset.
+        frame_rect = frame_surface.get_rect(center=self.main_container.center)
+        self.screen.blit(frame_surface, frame_rect)
         pygame.display.update(self.main_container)
 
     def _start_video_audio(self, clip):
@@ -314,6 +318,12 @@ class ImageQuiz(QuizGameBase):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
 
+                # replay video from the start
+                if key == pygame.K_p and self.current_file_type == "video" and self.clip:
+                    self.video_frame_time = 0.0
+                    self.video_playing = True
+                    self._start_video_audio(self.clip)
+
                 # player buzzers
                 if self.buzzering_player:
                     first_buzz = self.buzzering_player - 1
@@ -353,6 +363,13 @@ class ImageQuiz(QuizGameBase):
                 #self.update_tile_reveal()
                 if key == pygame.K_s:
                     self.continue_reveal = True
+
+                # replay solution video from the start
+                if (key == pygame.K_p and self.solution_shown
+                        and self.current_solution_file_type == "video" and self.clip):
+                    self.video_frame_time = 0.0
+                    self.solution_video_playing = True
+                    self._start_video_audio(self.clip)
 
                 if key == pygame.K_RETURN:
                     # solution is shown
