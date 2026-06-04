@@ -23,6 +23,10 @@ class ImageQuiz(QuizGameBase):
         self.continue_reveal = False
         self.clip = None
         self.video_frame_time = 0.0
+        # Wall-clock anchor (ms) for the moment video playback starts, so frame
+        # timing is derived from real elapsed time rather than accumulated
+        # per-frame deltas (which would include setup overhead).
+        self.video_start_ticks = 0
         self.video_playing = False
         self.solution_video_playing = False
         self.tiles = None
@@ -234,28 +238,57 @@ class ImageQuiz(QuizGameBase):
         video audio channel, in sync with the start of frame playback."""
         self._stop_video_audio()
         audio = getattr(clip, "audio", None)
-        if audio is None or self.video_audio_channel is None:
-            return
-        try:
-            import numpy as np
-            # Match the mixer format set in run(): 44100 Hz, signed 16-bit, stereo
-            arr = audio.to_soundarray(fps=44100, quantize=True, nbytes=2)
-            if arr.ndim == 1:  # mono -> duplicate into stereo
-                arr = np.column_stack((arr, arr))
-            elif arr.shape[1] == 1:
-                arr = np.column_stack((arr[:, 0], arr[:, 0]))
-            arr = np.ascontiguousarray(arr.astype(np.int16))
-            self.video_sound = pygame.sndarray.make_sound(arr)
-            self.video_audio_channel.play(self.video_sound)
-        except Exception as e:
-            print("DEBUG: failed to start video audio:", e)
-            self.video_sound = None
+        if audio is not None and self.video_audio_channel is not None:
+            try:
+                import numpy as np
+                # Match the mixer format set in run(): 44100 Hz, signed 16-bit, stereo
+                arr = audio.to_soundarray(fps=44100, quantize=True, nbytes=2)
+                if arr.ndim == 1:  # mono -> duplicate into stereo
+                    arr = np.column_stack((arr, arr))
+                elif arr.shape[1] == 1:
+                    arr = np.column_stack((arr[:, 0], arr[:, 0]))
+                arr = np.ascontiguousarray(arr.astype(np.int16))
+                self.video_sound = pygame.sndarray.make_sound(arr)
+                self.video_audio_channel.play(self.video_sound)
+            except Exception as e:
+                print("DEBUG: failed to start video audio:", e)
+                self.video_sound = None
+        # Anchor frame timing to the moment playback starts (after the audio
+        # decode/setup above). Driving video_frame_time from this wall-clock
+        # anchor keeps frames in step with the audio and prevents short clips
+        # from being cut off by setup overhead landing in the first frame delta.
+        self.video_frame_time = 0.0
+        self.video_start_ticks = pygame.time.get_ticks()
 
     def _stop_video_audio(self):
         """Stop any currently playing video audio."""
         if self.video_audio_channel is not None:
             self.video_audio_channel.stop()
         self.video_sound = None
+
+    def _video_finished(self):
+        """Return True only once BOTH the video frames and the clip's audio
+        have finished playing.
+
+        A clip's audio track is often slightly longer than its video stream
+        (encoder padding, a sound sting that rings out past the last frame).
+        clip.duration reports the video length, so stopping purely on
+        video_frame_time >= duration cuts that audio tail off — negligible on
+        long clips, but a noticeable chunk of a short (< ~2s) clip. By holding
+        on the last frame until the audio channel goes idle, the whole clip
+        plays out. Conversely, if the video outlasts the audio, the frames keep
+        playing until their own duration elapses."""
+        if not self.clip:
+            return True
+        duration = getattr(self.clip, "duration", None)
+        if not duration:
+            return False  # unknown length: let it run (matches prior behaviour)
+        if self.video_frame_time < duration:
+            return False  # still frames left to show
+        # All frames shown — wait for any remaining audio on the video channel.
+        if self.video_sound is not None and self.video_audio_channel is not None:
+            return not self.video_audio_channel.get_busy()
+        return True
 
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -336,11 +369,11 @@ class ImageQuiz(QuizGameBase):
                     self.buzzer_hit = True
                     self.countdown(5)
 
-                dt = self.clock.tick(60) / 1000.0
+                self.clock.tick(60)
                 if self.video_playing and self.clip:
+                    self.video_frame_time = (pygame.time.get_ticks() - self.video_start_ticks) / 1000.0
                     self._draw_video_frame()
-                    self.video_frame_time += dt
-                    if getattr(self.clip, "duration", None) and self.video_frame_time >= self.clip.duration:
+                    if self._video_finished():
                         self.video_playing = False
                         self._stop_video_audio()
 
@@ -399,11 +432,11 @@ class ImageQuiz(QuizGameBase):
                 if key in self.answer_keys and self.solution_shown:
                     self.award_points(first_buzz, key)
 
-                dt = self.clock.tick(60) / 1000.0
+                self.clock.tick(60)
                 if self.solution_video_playing and self.clip:
+                    self.video_frame_time = (pygame.time.get_ticks() - self.video_start_ticks) / 1000.0
                     self._draw_video_frame()
-                    self.video_frame_time += dt
-                    if getattr(self.clip, "duration", None) and self.video_frame_time >= self.clip.duration:
+                    if self._video_finished():
                         self.solution_video_playing = False
                         self._stop_video_audio()
 
