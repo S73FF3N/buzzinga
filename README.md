@@ -25,6 +25,20 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
+### Enabling USB buzzers on Linux (one-time)
+
+On Linux, USB buzzers need a one-time permission rule before any app can read them. Paste this **single line** into a terminal once (it asks for your password once, then prints nothing):
+
+```bash
+printf '%s\n' 'SUBSYSTEM=="usb", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="1000", MODE="0660", GROUP="plugdev", TAG+="uaccess"' 'KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="1000", MODE="0660", GROUP="plugdev", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/99-buzz.rules >/dev/null && sudo udevadm control --reload-rules && sudo udevadm trigger
+```
+
+That's it — your buzzers now work in the game. A few notes:
+
+- Run it **once per computer**. You can run it even before plugging the buzzers in.
+- If the buzzers were already plugged in, unplug and replug them once afterwards.
+- Without this, the buzzers show up as "not detected" (you can still play with the keyboard).
+
 ### Starting the setup script on Windows
 
 First, install these two free tools (if you don't have them already):
