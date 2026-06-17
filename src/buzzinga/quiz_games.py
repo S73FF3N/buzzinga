@@ -193,7 +193,7 @@ class QuizGameBase:
         pygame.display.flip()
 
     def show_solution(self):
-        blit_text_objects(self.screen, self.bottom_left_container, self.current_solution, self.SMALL_TEXT)
+        optimize_text_in_container(self.screen, self.bottom_left_container, self.current_solution)
         # show solution image
         if self.current_solution_file:
             if self.current_solution_file_type == "image":
@@ -216,6 +216,10 @@ class QuizGameBase:
                 self.clip = file_to_display
                 self.video_frame_time = 0.0
                 self.solution_video_playing = True
+                # Start the solution video's audio in sync with its frames.
+                # Defined on subclasses that support video playback (e.g. ImageQuiz).
+                if hasattr(self, "_start_video_audio"):
+                    self._start_video_audio(self.clip)
 
     def check_game_over(self):
         if max(self.scores) >= self.max_score:
