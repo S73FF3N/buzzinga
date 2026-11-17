@@ -86,6 +86,7 @@ Buzzinga doesn't come with quiz content — you bring your own! Open the `data/`
 | `data/hints/` | JSON files with 10 hints per answer | 10 Hints |
 | `data/questions/` | JSON files with multiple choice questions | Multiple Choice |
 | `data/who-knows-more/` | JSON files with quick-fire questions | Who Knows More? |
+| `data/sort/` | JSON files with elements to sort by a value | Sort it! |
 
 Create a subfolder or JSON file for each category you want to play. The category name shown in the game is taken from the folder or file name.
 
@@ -113,6 +114,28 @@ Each hint file is a list of entries. Each entry has a solution and 10 hints that
 ]
 ```
 
+### Example: Sort JSON
+
+Each entry is one round. The `reference` element is already placed when the round starts; players insert the `elements` one by one. `value` decides the correct order, with the largest value on top (set `"descending": false` to put the smallest on top). Values stay hidden until the round ends. `top_label` and `bottom_label` appear as arrow banners at both ends of the list so players see which direction means what (e.g. "more people" / "fewer people", "older" / "younger"); without them the banners read "mehr" / "weniger". `unit` is appended to the revealed values; an element can set `display` to show a custom text instead.
+
+```json
+[
+  {
+    "criterion": "Population",
+    "top_label": "more people",
+    "bottom_label": "fewer people",
+    "unit": "M",
+    "reference": {"name": "Switzerland", "value": 8.96},
+    "elements": [
+      {"name": "Germany", "value": 83.4},
+      {"name": "France", "value": 68.4},
+      {"name": "Austria", "value": 9.16},
+      {"name": "Luxembourg", "value": 0.67, "display": "about 670,000"}
+    ]
+  }
+]
+```
+
 ## Game Modes
 
 - **Image Quiz** — an image is revealed step by step, buzz in to guess what it is
@@ -120,6 +143,7 @@ Each hint file is a list of entries. Each entry has a solution and 10 hints that
 - **10 Hints** — you get up to 10 hints to figure out the solution
 - **Who Knows More?** — answer as many questions as possible before time runs out
 - **Multiple Choice** — classic question format with answer options
+- **Sort it!** — players take turns inserting elements into a sorted list; a wrong slot knocks you out for the round (no buzzers needed)
 
 Supports 2-4 players with USB buzzer input or keyboard controls. Available in English and German.
 
@@ -131,3 +155,5 @@ Supports 2-4 players with USB buzzer input or keyboard controls. Available in En
 | **R** | Correct answer |
 | **F** | Wrong answer |
 | **Escape** | Back / Exit game |
+
+In **Sort it!** each player has 20 seconds. The game master types the number of the chosen element and presses Enter, then types the slot number (shown in the yellow circles) and presses Enter. The game checks the placement itself. **Backspace** deletes input or deselects the element, **F** knocks out a player who has no answer.

@@ -55,6 +55,7 @@ mkdir -p "$INSTALL_DIR/data/sounds"
 mkdir -p "$INSTALL_DIR/data/hints"
 mkdir -p "$INSTALL_DIR/data/questions"
 mkdir -p "$INSTALL_DIR/data/who-knows-more"
+mkdir -p "$INSTALL_DIR/data/sort"
 
 # Copy executable
 cp dist/buzzinga "$INSTALL_DIR/buzzinga"

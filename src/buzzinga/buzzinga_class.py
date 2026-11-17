@@ -12,6 +12,7 @@ from .audio_quiz import AudioQuiz
 from .question_quiz import QuestionQuiz
 from .hint_quiz import HintQuiz
 from .whoknowsmore_quiz import WhoKnowsMoreQuiz
+from .sort_quiz import SortQuiz
 from .animation import BuzzingaAnimation
 
 
@@ -79,6 +80,7 @@ class Buzzinga():
             "questions": Static.GAME_FOLDER_QUESTIONS,
             "hints": Static.GAME_FOLDER_HINTS,
             "who-knows-more": Static.GAME_FOLDER_WHO_KNOWS_MORE,
+            "sort": Static.GAME_FOLDER_SORT,
         }
 
         pygame.display.set_caption('BUZZINGA')
@@ -100,6 +102,8 @@ class Buzzinga():
                 quiz = HintQuiz(*common_args)
             case "who-knows-more":
                 quiz = WhoKnowsMoreQuiz(*common_args)
+            case "sort":
+                quiz = SortQuiz(*common_args)
         quiz.run()
 
     def get_amount_rounds(self, category_folder):
@@ -274,12 +278,18 @@ class Buzzinga():
                     ('f', self.current_language['wrong'], 5),
                     ('z', self.current_language['reverse_wrong_input'], 6),
                     ('1-9', self.current_language['display_answer'], 7)]
+                )
+            case 'sort':
+                self.key_instructions.extend(
+                    [('f', self.current_language['wrong'], 5),
+                    ('0-9', self.current_language['element_position'], 6),
+                    ('<-', self.current_language['undo_input'], 7)]
                 )               
 
     def build_category_buttons_dict(self):
         self.game_folder = Static.ROOT_EXTENDED / self.FOLDER_MAPPING[self.game_type]
         categories = [item for item in os.listdir(self.game_folder) if not item.startswith('.')]
-        if self.game_type in ["questions", "hints", "who-knows-more"]:
+        if self.game_type in ["questions", "hints", "who-knows-more", "sort"]:
             categories = [
                 item for item in categories
                 if (self.game_folder / item).is_file() and item.lower().endswith('.json')
@@ -422,7 +432,8 @@ class Buzzinga():
             ('Audio Quiz', 9, "sounds"),
             ('Multiple Choice Quiz', 10, "questions"),
             (self.current_language['hints'], 11, "hints"),
-            (self.current_language['who_knows_more'], 12, "who-knows-more")
+            (self.current_language['who_knows_more'], 12, "who-knows-more"),
+            (self.current_language['sort'], 13, "sort")
         ]
 
         while self.choose_game_menu_running:
@@ -532,7 +543,7 @@ class Buzzinga():
                 pygame.draw.rect(self.SCREEN, Static.BLUE, (x9, y9, w9, h9))
 
             if self.render_button(self.current_language['start_game'], pygame.Rect(self.button_layout_32[21]), click, Static.RED):
-                if self.game_type == "who-knows-more":
+                if self.game_type in ["who-knows-more", "sort"]:
                     self.start_game = True
                 else:
                     try:
