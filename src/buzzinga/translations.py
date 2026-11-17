@@ -20,6 +20,7 @@ english = {
     'audio_quiz': 'Audio Quiz',
     'hints': '10 Hints',
     'who_knows_more': 'Who knows more?',
+    'sort': 'Sort it!',
     'back': 'Back',
     'game_category': 'W H I C H  C A T E G O R Y ?',
     'free_disk_space': 'free disk space',
@@ -43,7 +44,9 @@ english = {
     'already_solved': 'Already solved!',
     'all_solved': 'All solved!',
     'wrong_id': 'Wrong ID',
-    'reverse_wrong_input': 'Reverse wrong input'
+    'reverse_wrong_input': 'Reverse wrong input',
+    'element_position': 'Item, then slot',
+    'undo_input': 'Undo input',
 
 }
 
@@ -66,6 +69,7 @@ german = {
     'image_quiz': 'Bilder Quiz',
     'hints': '10 Hinweise',
     'who_knows_more': 'Wer weiß mehr?',
+    'sort': 'Sortieren',
     'back': 'Zurück',
     'game_category': 'W E L C H E  K A T E G O R I E ?',
     'free_disk_space': 'freier Speicherplatz',
@@ -90,6 +94,8 @@ german = {
     'all_solved': 'Alles gelöst!',
     'wrong_id': 'Falsche ID',
     'reverse_wrong_input': 'Korrektur',
+    'element_position': 'Element, dann Position',
+    'undo_input': 'Eingabe löschen',
     'reveal': 'aufdecken',
     'reveal animation': 'Aufdeckanimation'
 }

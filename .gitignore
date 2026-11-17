@@ -7,6 +7,7 @@ data/images/*
 data/hints/*
 data/questions/*
 data/who-knows-more/*
+data/sort/*
 .DS_Store
 *.pdf
 *.docx

@@ -57,6 +57,7 @@ mkdir "%INSTALL_DIR%\data\sounds" 2>nul
 mkdir "%INSTALL_DIR%\data\hints" 2>nul
 mkdir "%INSTALL_DIR%\data\questions" 2>nul
 mkdir "%INSTALL_DIR%\data\who-knows-more" 2>nul
+mkdir "%INSTALL_DIR%\data\sort" 2>nul
 
 :: Copy executable
 copy /y "dist\buzzinga.exe" "%INSTALL_DIR%\buzzinga.exe" >nul

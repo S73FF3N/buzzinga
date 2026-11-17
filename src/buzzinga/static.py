@@ -43,6 +43,7 @@ class Static:
     GAME_FOLDER_QUESTIONS = "questions/"
     GAME_FOLDER_HINTS = "hints/"
     GAME_FOLDER_WHO_KNOWS_MORE = "who-knows-more/"
+    GAME_FOLDER_SORT = "sort/"
     BUTTONS_PER_PAGE = 29
 
 
