@@ -2,7 +2,7 @@ import os, random, pygame, pybuzzers, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import convert_image_to, load_image, adjust_image_size, load_video, adjust_video_size, optimize_text_in_container
+from .game_utilities import load_image, adjust_image_size, load_video, adjust_video_size, optimize_text_in_container
 from .animation import BuzzingaAnimation
 
 
@@ -45,16 +45,11 @@ class ImageQuiz(QuizGameBase):
             if os.path.isdir(full_path):
                 continue
             lower_f = f.lower()
+            # Files are used as they are; load_image() reads every listed format
             if lower_f.endswith(self.image_exts):
-                try:
-                    converted = convert_image_to(full_path, "png")
-                    if converted:
-                        # store filename (existing code expects filenames, joins with self.game_data later)
-                        self.cleaned_game_data.append({"filename": os.path.basename(converted), "file_type": "image"})
-                except Exception as e:
-                    print(f"convert_image_to raised for {full_path}: {e}")
+                self.cleaned_game_data.append({"filename": f, "file_type": "image"})
             elif lower_f.endswith(self.video_exts):
-                self.cleaned_game_data.append({"filename": os.path.basename(full_path), "file_type": "video"})
+                self.cleaned_game_data.append({"filename": f, "file_type": "video"})
 
 
     def load_round_data(self):    
@@ -70,18 +65,14 @@ class ImageQuiz(QuizGameBase):
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
                 solution_filename = f"{name_no_ext}_solution"
-                for ext in self.image_exts + self.video_exts:
-                    solution_path = os.path.join(self.game_data, solution_filename + ext)
-                    if os.path.exists(solution_path):
-                        solution_file = solution_path
-                        if ext.lower() in self.image_exts:
-                            solution_file_type = "image"
-                        else:
-                            solution_file_type = "video"
+                # Match the extension case-insensitively (e.g. "_solution.JPG")
+                solution_file = None
+                solution_file_type = None
+                for candidate in self.cleaned_game_data:
+                    if os.path.splitext(candidate["filename"])[0] == solution_filename:
+                        solution_file = os.path.join(self.game_data, candidate["filename"])
+                        solution_file_type = candidate["file_type"]
                         break
-                    else:
-                        solution_file = None
-                        solution_file_type = None
                 
                 self.round_data.append({
                     "solution": name if not name_no_ext.endswith("_example") else name[:-8],

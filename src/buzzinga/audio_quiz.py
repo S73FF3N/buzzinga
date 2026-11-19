@@ -3,7 +3,6 @@ from pathlib import Path
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import mp3_to_wav
 from .animation import BuzzingaAnimation
 
 
@@ -25,15 +24,8 @@ class AudioQuiz(QuizGameBase):
     def clean_game_data(self):
         game_data_path = Path(self.game_data)
         for f in game_data_path.iterdir():
-            if f.is_dir() or f.suffix.lower() not in (".wav", ".mp3"):
-                continue
-            elif f.suffix.lower() == ".mp3":
-                try:
-                    converted = mp3_to_wav(f)
-                    self.cleaned_game_data.append(converted)
-                except Exception:
-                    pass
-            else:
+            # pygame.mixer plays both formats directly
+            if f.is_file() and f.suffix.lower() in (".wav", ".mp3"):
                 self.cleaned_game_data.append(f)
 
     def load_round_data(self):    
