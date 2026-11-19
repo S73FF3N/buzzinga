@@ -62,26 +62,23 @@ class HintQuiz(QuizGameBase):
         optimize_text_in_container(self.screen, self.hint_match_dict[n][0], self.round_data[self.current_round-1][self.hint_match_dict[n][1]])
         pygame.display.flip()
 
+    @classmethod
+    def parse_entry(cls, entry):
+        fields = entry["fields"]
+        round_data = {
+            'solution': str(fields["solution"]),
+            # Shown next to the buzzer; optional
+            'solution_link': str(entry.get("pk", "")),
+        }
+        for n in range(1, 11):
+            round_data[f'hint{n}'] = str(fields[f'hint{n}'])
+        return round_data
+
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
-        for q in data:
-            solution_link = str(q["pk"])
-            self.round_data.append({
-                'solution': q["fields"]["solution"],
-                'hint1': q["fields"]["hint1"],
-                'hint2': q["fields"]["hint2"],
-                'hint3': q["fields"]["hint3"],
-                'hint4': q["fields"]["hint4"],
-                'hint5': q["fields"]["hint5"],
-                'hint6': q["fields"]["hint6"],
-                'hint7': q["fields"]["hint7"],
-                'hint8': q["fields"]["hint8"],
-                'hint9': q["fields"]["hint9"],
-                'hint10': q["fields"]["hint10"],
-                'solution_link': solution_link,
-                })
-        self.total_rounds = len(data)
+        self.round_data = self.parse_rounds(data)
+        self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
     def play_round(self):

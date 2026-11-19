@@ -69,6 +69,14 @@ class Buzzinga():
         self.key_instructions = []
 
 
+        # Quiz types whose categories are JSON files
+        self.JSON_QUIZ_CLASSES = {
+            "questions": QuestionQuiz,
+            "hints": HintQuiz,
+            "who-knows-more": WhoKnowsMoreQuiz,
+            "sort": SortQuiz,
+        }
+
         self.FOLDER_MAPPING = {
             "images": Static.GAME_FOLDER_IMAGES,
             "sounds": Static.GAME_FOLDER_SOUNDS,
@@ -118,6 +126,8 @@ class Buzzinga():
             self.buzzer_set.clear_handlers()
 
     def get_amount_rounds(self, category_folder):
+        """Number of rounds the category will play, or None if its file
+        cannot be read."""
         path = self.game_folder / category_folder
         if self.game_type == "images":
             return count_round_files(path, ImageQuiz.image_exts + ImageQuiz.video_exts)
@@ -126,9 +136,16 @@ class Buzzinga():
         else:
             if not path.is_file() or path.suffix.lower() != ".json":
                 return 0
-            with open(path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                return len(data)
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+            except (OSError, ValueError) as e:
+                print(f"Cannot read {path}: {e}")
+                return None
+            if not isinstance(data, list):
+                print(f"Cannot read {path}: expected a list of entries")
+                return None
+            return len(self.JSON_QUIZ_CLASSES[self.game_type].parse_rounds(data, warn=False))
 
     def build_required_folders(self):
         for folder in self.FOLDER_MAPPING.keys():
@@ -238,13 +255,18 @@ class Buzzinga():
         for game_option in game_options:
             game_name, clicked, x, y, w, h, total_rounds = game_option
 
+            readable = total_rounds is not None
             self.render_button(game_name, pygame.Rect(x, y, w, h), clicked)
-            pygame.draw.circle(self.SCREEN, Static.LIGHT_BLUE, (x+w, y), 24)
+            pygame.draw.circle(self.SCREEN, Static.LIGHT_BLUE if readable else Static.RED, (x+w, y), 24)
             pygame.draw.circle(self.SCREEN, Static.WHITE, (x+w, y), 24, width=2)
-            blit_text_objects(self.SCREEN, pygame.Rect(x+w-12,y-12,24,24), str(total_rounds), self.MINI_TEXT)
+            blit_text_objects(self.SCREEN, pygame.Rect(x+w-12,y-12,24,24), str(total_rounds) if readable else "!", self.MINI_TEXT)
             
-            if clicked:
+            if clicked and readable:
                 selected = game_name
+            elif clicked:
+                message_rect = pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH * 11 / 15, self.SCREEN_HEIGHT / 9)
+                pygame.draw.rect(self.SCREEN, Static.BLUE, message_rect)
+                blit_text_objects(self.SCREEN, message_rect, f"{game_name}: {self.current_language['broken_category']}", self.SMALL_TEXT)
         return selected
 
     def get_free_disk_space(self):

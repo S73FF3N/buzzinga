@@ -37,3 +37,16 @@ def test_solution_files_are_matched_case_insensitively(tmp_path, make_quiz):
     assert quiz.total_rounds == 1
     assert os.path.basename(quiz.round_data[0]["solution_sound"]) == "Song_solution.WAV"
     assert os.path.basename(quiz.round_data[0]["solution_img"]) == "Song_solution.JPG"
+
+
+def test_unloadable_sound_is_shown_as_resolved(tmp_path, make_quiz):
+    (tmp_path / "Kaputt.wav").write_bytes(b"not a sound")
+
+    quiz = make_quiz(AudioQuiz, tmp_path)
+    quiz.current_round = 1
+    quiz.start_round()
+
+    # Resolved state: buzzers are ignored and Enter moves on to the next round
+    assert quiz.round_load_failed
+    assert quiz.buzzer_hit and quiz.solution_shown
+    assert not quiz.sound_animation_running

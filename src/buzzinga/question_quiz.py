@@ -48,29 +48,36 @@ class QuestionQuiz(QuizGameBase):
         self.set_buzzer_handler(on_button_down=handle_answer)
 
     def _find_question_image(self, pk, image_folder):
-        if not os.path.isdir(image_folder):
+        if pk is None or not os.path.isdir(image_folder):
             return None
         matches = glob.glob(os.path.join(image_folder, f"{pk}.*"))
         return matches[0] if matches else None
+
+    @classmethod
+    def parse_entry(cls, entry):
+        fields = entry["fields"]
+        num_options = int(fields.get("num_options", 4))
+        # The answer layout has room for two to four options
+        if not 2 <= num_options <= 4:
+            raise ValueError(f"num_options={num_options}")
+        options = [str(fields["solution"])]
+        for i in range(1, num_options):
+            options.append(str(fields[f"option{i}"]))
+        return {'question': str(fields["quiz_question"]),
+                'solution': str(fields["solution"]),
+                'options': options,
+                'num_options': num_options,
+                'pk': entry.get("pk")}
 
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
         category = os.path.splitext(os.path.basename(self.game_data))[0]
         image_folder = os.path.join(Static.ROOT_EXTENDED, "questions", "images", category)
-        for q in data:
-            fields = q["fields"]
-            num_options = fields.get("num_options", 4)
-            options = [fields["solution"]]
-            for i in range(1, num_options):
-                options.append(fields[f"option{i}"])
-            image_path = self._find_question_image(q["pk"], image_folder)
-            self.round_data.append({'question': fields["quiz_question"],
-                             'solution': fields["solution"],
-                             'options': options,
-                             'num_options': num_options,
-                             'image_path': image_path})
-        self.total_rounds = len(data)
+        self.round_data = self.parse_rounds(data)
+        for round_data in self.round_data:
+            round_data['image_path'] = self._find_question_image(round_data.pop('pk'), image_folder)
+        self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
     def _build_layout(self, num_options, has_image):

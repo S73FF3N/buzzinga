@@ -90,6 +90,8 @@ Buzzinga doesn't come with quiz content — you bring your own! Open the `data/`
 
 Create a subfolder or JSON file for each category you want to play. The category name shown in the game is taken from the folder or file name.
 
+If a JSON file cannot be read (e.g. a missing comma), its category shows a red **!** instead of the round count. Entries with missing fields are skipped; the round count on the category button only counts complete entries.
+
 ### Image Quiz and Audio Quiz files
 
 Every file in a category folder is one round, and its **file name is the answer**:

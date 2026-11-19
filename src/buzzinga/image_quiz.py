@@ -1,8 +1,8 @@
-import os, random, pygame, pybuzzers, traceback
+import os, random, pygame, pybuzzers
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import load_image, adjust_image_size, load_video, adjust_video_size, optimize_text_in_container
+from .game_utilities import load_image, adjust_image_size, load_video, adjust_video_size
 from .animation import BuzzingaAnimation
 
 
@@ -34,9 +34,6 @@ class ImageQuiz(QuizGameBase):
         # Channel/sound used to play a video clip's audio in sync with its frames
         self.video_audio_channel = None
         self.video_sound = None
-        # True while the current round's file could not be loaded; the round
-        # is then shown as resolved so Enter moves on to the next one.
-        self.round_load_failed = False
 
 
     def clean_game_data(self):
@@ -181,41 +178,14 @@ class ImageQuiz(QuizGameBase):
             except Exception as e:
                 print("DEBUG: failed to draw first frame:", e)
 
-    def start_round(self):
-        """Show the current round. If its file cannot be loaded (corrupt file,
-        missing codec or library), show an error in place of the round and
-        mark it as resolved, so the next Enter press skips to the next round
-        instead of leaving an empty screen."""
-        self.round_load_failed = False
-        try:
-            self.play_round()
-        except Exception:
-            traceback.print_exc()
-            self.show_round_load_error()
+    def round_file_name(self):
+        if 0 < self.current_round <= len(self.round_data):
+            return os.path.basename(self.round_data[self.current_round - 1]["data"])
+        return ""
 
-    def show_round_load_error(self):
-        self.round_load_failed = True
+    def stop_round_media(self):
         self.tiles = None
         self._close_video()
-
-        if 0 < self.current_round <= len(self.round_data):
-            file_name = os.path.basename(self.round_data[self.current_round - 1]["data"])
-        else:
-            file_name = ""
-        self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
-        message_rect = pygame.Rect(self.main_container.x, self.main_container.y,
-                                   self.main_container.w, self.main_container.h // 2)
-        file_rect = pygame.Rect(self.main_container.x, self.main_container.centery,
-                                self.main_container.w, self.main_container.h // 4)
-        optimize_text_in_container(self.screen, message_rect,
-                                   "Runde konnte nicht geladen werden – Enter für die nächste Runde")
-        optimize_text_in_container(self.screen, file_rect, file_name, color=Static.YELLOW)
-        for n in range(self.amount_players):
-            self.display_buzzer(n, Static.GREY)
-
-        # Resolved state: buzzers are ignored and Enter starts the next round
-        self.buzzer_hit = True
-        self.solution_shown = True
 
     def update_tile_reveal(self):
         if not self.tiles:  # no reveal in progress

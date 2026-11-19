@@ -24,21 +24,23 @@ class WhoKnowsMoreQuiz(QuizGameBase):
         self.active_players = [True] * self.amount_players
         self.solution_shown = True
 
+    @classmethod
+    def parse_entry(cls, entry):
+        # The game master types an answer's count_id to reveal it
+        answers = {int(a["count_id"]): str(a["answer"]) for a in entry["answers"]}
+        if not answers:
+            raise ValueError("answers is empty")
+        return {
+            'answer_category': str(entry["solution"]),
+            'solution_link': str(entry.get("id", "")),
+            'answers': answers,
+        }
+
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
-        data_counter = 0
-        for q in data:
-            solution_link = str(q["id"])
-            self.round_data.append({
-                'answer_category': q["solution"],
-                'solution_link': solution_link,
-                'answers': {}
-                })
-            for a in q["answers"]:
-                self.round_data[data_counter]["answers"][a["count_id"]] = a["answer"]
-            data_counter += 1
-        self.total_rounds = len(data)
+        self.round_data = self.parse_rounds(data)
+        self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
     def play_round(self):
