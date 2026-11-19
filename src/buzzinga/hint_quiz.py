@@ -1,4 +1,4 @@
-import os, random, pygame, json, pybuzzers
+import random, pygame, json, pybuzzers
 
 from .quiz_games import QuizGameBase
 from .static import Static
@@ -117,7 +117,6 @@ class HintQuiz(QuizGameBase):
                         self.play_round()
                         pygame.display.flip()
                     except Exception as e:
-                        os.chdir(Static.BASE_PATH)
                         self.running = False
                     self.initializing = False
                 if not self.animation_stopped:
@@ -136,6 +135,7 @@ class HintQuiz(QuizGameBase):
                 # noone buzzers
                 if key == pygame.K_RETURN and self.hint_nr == 10:
                     self.buzzer_hit = True
+                    self.first_buzz = None
                     for n in range(0, self.amount_players):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
@@ -149,8 +149,8 @@ class HintQuiz(QuizGameBase):
 
                 # player buzzers
                 if self.buzzering_player:
-                    first_buzz = self.buzzering_player - 1
-                    buzzer_container = self.display_buzzer(first_buzz, Static.RED)
+                    self.first_buzz = self.buzzering_player - 1
+                    buzzer_container = self.display_buzzer(self.first_buzz, Static.RED)
                     blit_text_objects(self.screen, buzzer_container, self.round_data[self.current_round-1]['solution_link'], self.MINI_TEXT)
                     self.buzzering_player = None
                     self.play_buzzer_sound()
@@ -164,13 +164,8 @@ class HintQuiz(QuizGameBase):
                     break
 
                 # Award or deduct points based on answer keys
-                if not self.points_awarded and key in self.answer_keys:
-                    try:
-                        self.award_points(first_buzz, key, reset=True)
-                    except NameError:
-                        print("Error: 'first_buzz' is undefined. Ensure it is set when a player buzzes in.")
-                        self.buzzer_hit = False  # fail-safe exit
-                        continue
+                if not self.points_awarded and key in self.answer_keys and self.first_buzz is not None:
+                    self.award_points(self.first_buzz, key, reset=True)
 
                     if not self.buzzer_hit:
                         # Reset buzzer visuals if buzzer_hit was cleared in award_points()

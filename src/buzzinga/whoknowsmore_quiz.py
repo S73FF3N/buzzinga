@@ -1,4 +1,4 @@
-import os, random, pygame, json, sys, traceback
+import random, pygame, json, sys, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
@@ -77,7 +77,6 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
                     self.running = False
-                    os.chdir(Static.BASE_PATH)
         return key_pressed, letter_pressed
             
     def get_answer_text(self, answer_text, is_large_grid, container=None):
@@ -171,7 +170,6 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                             self.play_round()
                             pygame.display.flip()
                         except Exception as e:
-                            os.chdir(Static.BASE_PATH)
                             self.running = False
                         self.initializing = False
                     if not self.animation_stopped:

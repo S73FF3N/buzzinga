@@ -1,8 +1,7 @@
-import pygame, os, sys, shutil, subprocess, shutil, json, pybuzzers
+import pygame, os, sys, shutil, json, pybuzzers
 from pygame import gfxdraw
 from itertools import islice
 from pathlib import Path
-import stat
 
 from .static import Static
 from .game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_round_files
@@ -367,7 +366,6 @@ class Buzzinga():
                 letter_pressed = event.unicode
                 if key_pressed == pygame.K_ESCAPE:
                     self.escape_pressed = True
-                    os.chdir(Static.BASE_PATH)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 click = True
         return key_pressed, letter_pressed, click
