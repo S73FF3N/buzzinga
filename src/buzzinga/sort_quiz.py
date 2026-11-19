@@ -64,25 +64,35 @@ class SortQuiz(QuizGameBase):
                                      inner.w - list_width - inner.w // 20, inner.h)
         self.reveal_rect = inner
 
+    @classmethod
+    def parse_entry(cls, entry):
+        elements = [dict(e) for e in entry["elements"]]
+        reference = dict(entry["reference"], is_reference=True)
+        for element in elements + [reference]:
+            if "name" not in element:
+                raise KeyError("name")
+            # Values are compared to check placements
+            if isinstance(element["value"], bool) or not isinstance(element["value"], (int, float)):
+                raise ValueError(f"value={element['value']!r} of {element['name']!r}")
+        random.shuffle(elements)
+        descending = entry.get("descending", True)
+        larger, smaller = "mehr", "weniger"
+        return {
+            'id': str(entry.get("id", "")),
+            'criterion': str(entry["criterion"]),
+            'top_label': entry.get("top_label") or (larger if descending else smaller),
+            'bottom_label': entry.get("bottom_label") or (smaller if descending else larger),
+            'unit': entry.get("unit", ""),
+            'descending': descending,
+            'reference': reference,
+            'elements': elements,
+        }
+
     def load_round_data(self):
         with open(self.game_data, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
-        for q in data:
-            elements = [dict(e) for e in q["elements"]]
-            random.shuffle(elements)
-            descending = q.get("descending", True)
-            larger, smaller = "mehr", "weniger"
-            self.round_data.append({
-                'id': str(q.get("id", "")),
-                'criterion': q["criterion"],
-                'top_label': q.get("top_label") or (larger if descending else smaller),
-                'bottom_label': q.get("bottom_label") or (smaller if descending else larger),
-                'unit': q.get("unit", ""),
-                'descending': descending,
-                'reference': dict(q["reference"], is_reference=True),
-                'elements': elements,
-            })
-        self.total_rounds = len(data)
+        self.round_data = self.parse_rounds(data)
+        self.total_rounds = len(self.round_data)
         random.shuffle(self.round_data)
 
     @property

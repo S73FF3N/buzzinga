@@ -1,4 +1,4 @@
-import pygame, os, sys, pybuzzers
+import pygame, os, sys, pybuzzers, traceback
 
 import pygame.locals
 
@@ -91,7 +91,69 @@ class QuizGameBase:
         # Index of the player whose buzz is being judged in the current round,
         # None if nobody buzzed
         self.first_buzz = None
+        # True while the current round could not be loaded; the round is then
+        # shown as resolved so Enter moves on to the next one
+        self.round_load_failed = False
 
+
+    @classmethod
+    def parse_entry(cls, entry):
+        """Turn one entry of a category's JSON file into round data. Raises
+        KeyError, TypeError or ValueError if the entry is incomplete. Only
+        quiz types whose categories are JSON files implement this."""
+        raise NotImplementedError
+
+    @classmethod
+    def parse_rounds(cls, data, warn=True):
+        """Parse the entries of a category's JSON file. Incomplete entries are
+        skipped, so a single bad entry does not stop the whole category. The
+        category menu uses this too, so its round count matches the game."""
+        rounds = []
+        for index, entry in enumerate(data):
+            try:
+                rounds.append(cls.parse_entry(entry))
+            except (KeyError, TypeError, ValueError) as e:
+                if warn:
+                    print(f"Skipping entry {index + 1}: missing or invalid {e!r}")
+        return rounds
+
+    def start_round(self):
+        """Show the current round. If it cannot be loaded (corrupt file,
+        missing codec or library), show an error in place of the round and
+        mark it as resolved, so the next Enter press skips to the next round
+        instead of leaving an empty screen or crashing."""
+        self.round_load_failed = False
+        try:
+            self.play_round()
+        except Exception:
+            traceback.print_exc()
+            self.show_round_load_error()
+
+    def round_file_name(self):
+        """File shown on the error screen when the round cannot be loaded."""
+        return ""
+
+    def stop_round_media(self):
+        """Stop whatever the failed round already started playing."""
+
+    def show_round_load_error(self):
+        self.round_load_failed = True
+        self.stop_round_media()
+
+        self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
+        message_rect = pygame.Rect(self.main_container.x, self.main_container.y,
+                                   self.main_container.w, self.main_container.h // 2)
+        file_rect = pygame.Rect(self.main_container.x, self.main_container.centery,
+                                self.main_container.w, self.main_container.h // 4)
+        optimize_text_in_container(self.screen, message_rect,
+                                   "Runde konnte nicht geladen werden – Enter für die nächste Runde")
+        optimize_text_in_container(self.screen, file_rect, self.round_file_name(), color=Static.YELLOW)
+        for n in range(self.amount_players):
+            self.display_buzzer(n, Static.GREY)
+
+        # Resolved state: buzzers are ignored and Enter starts the next round
+        self.buzzer_hit = True
+        self.solution_shown = True
 
     def set_buzzer_handler(self, on_buzz=None, on_button_down=None):
         """Make the given handler the only one on the buzzer set, so buzzes

@@ -78,6 +78,17 @@ class AudioQuiz(QuizGameBase):
         self.sound_channel.play(self.current_sound)
         self.sound_animation_running = True
 
+    def round_file_name(self):
+        if 0 < self.current_round <= len(self.round_data):
+            return os.path.basename(self.round_data[self.current_round - 1]["data"])
+        return ""
+
+    def stop_round_media(self):
+        self.sound_channel.stop()
+        self.sound_animation_running = False
+        self.current_solution_sound = None
+        self.current_solution_file = None
+
     def check_sound_animation(self):
         if self.sound_animation_running:
             self.draw_rect(Static.WHITE, Static.WHITE, 8, self.main_container)
@@ -108,15 +119,11 @@ class AudioQuiz(QuizGameBase):
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
-                    try:
-                        self.animation_stopped = True
-                        self.current_round += 1
-                        self.update_progress()
-                        self.play_round()
-                        pygame.display.flip()
-                    except Exception as e:
-                        os.chdir(Static.BASE_PATH)
-                        self.running = False
+                    self.animation_stopped = True
+                    self.current_round += 1
+                    self.update_progress()
+                    self.start_round()
+                    pygame.display.flip()
                     self.initializing = False
                 if not self.animation_stopped:
                     self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
@@ -195,13 +202,14 @@ class AudioQuiz(QuizGameBase):
                             self.current_round += 1
                             self.display_game_info()
                             self.update_progress()
-                            self.play_round()
+                            self.start_round()
                         else:
                             self.show_winner()
                         pygame.display.flip()
 
                 # points are awarded
-                if key in self.answer_keys and self.solution_shown and self.first_buzz is not None:
+                if (key in self.answer_keys and self.solution_shown
+                        and not self.round_load_failed and self.first_buzz is not None):
                     self.award_points(self.first_buzz, key)
 
                 self.check_game_over()
