@@ -143,14 +143,16 @@ def adjust_image_size(img, container_width, container_height):
             new_height = int(container_width / aspect_ratio)
             return (container_width, new_height)
 
-def count_files_by_extensions(directory, *extensions):
-    count = sum(
+def count_round_files(directory, extensions):
+    """Count the files in `directory` that a quiz plays as rounds: files whose
+    extension (case-insensitive) is in `extensions`, excluding solution files."""
+    return sum(
         1
-        for ext in extensions
-        for file in directory.glob(ext)
-        if not file.stem.endswith('_solution')
+        for file in directory.iterdir()
+        if file.is_file()
+        and file.suffix.lower() in extensions
+        and not file.stem.endswith('_solution')
     )
-    return count
 
 def load_video(name, folder):
     from moviepy import VideoFileClip

@@ -7,6 +7,9 @@ from .animation import BuzzingaAnimation
 
 
 class AudioQuiz(QuizGameBase):
+    # Class-level so the category menu counts rounds with the same extensions
+    sound_exts = (".wav", ".mp3")
+
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
         super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.current_sound = None
@@ -25,7 +28,7 @@ class AudioQuiz(QuizGameBase):
         game_data_path = Path(self.game_data)
         for f in game_data_path.iterdir():
             # pygame.mixer plays both formats directly
-            if f.is_file() and f.suffix.lower() in (".wav", ".mp3"):
+            if f.is_file() and f.suffix.lower() in self.sound_exts:
                 self.cleaned_game_data.append(f)
 
     def load_round_data(self):    
@@ -40,7 +43,7 @@ class AudioQuiz(QuizGameBase):
                 name_no_ext, ext = os.path.splitext(f)
                 solution_filename = f"{name_no_ext}_solution"
                 solution_sound = None
-                for ext in [".wav", ".mp3"]:
+                for ext in self.sound_exts:
                     solution_path = os.path.join(self.game_data, solution_filename + ext)
                     if os.path.exists(solution_path):
                         solution_sound = solution_path
