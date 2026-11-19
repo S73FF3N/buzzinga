@@ -1,4 +1,4 @@
-import os, random, pygame, json, sys, traceback
+import random, pygame, json, sys, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
@@ -115,7 +115,6 @@ class SortQuiz(QuizGameBase):
                 if event.key == pygame.K_ESCAPE:
                     self.escape_pressed = True
                     self.running = False
-                    os.chdir(Static.BASE_PATH)
                 keys.append((event.key, event.unicode))
         return keys
 
@@ -386,7 +385,6 @@ class SortQuiz(QuizGameBase):
                         self.play_round()
                     except Exception:
                         traceback.print_exc()
-                        os.chdir(Static.BASE_PATH)
                         self.running = False
                 elif not self.animation_stopped:
                     self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
