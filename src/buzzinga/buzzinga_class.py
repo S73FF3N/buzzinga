@@ -68,11 +68,6 @@ class Buzzinga():
 
         self.key_instructions = []
 
-        self.running = True
-        self.choose_game_menu_running = False
-        self.choose_category_menu = False
-        self.settings_menu_running = False
-        self.start_game = False
 
         self.FOLDER_MAPPING = {
             "images": Static.GAME_FOLDER_IMAGES,
@@ -224,9 +219,10 @@ class Buzzinga():
             self.game_dir = self.game_folder / category_folder
         else:
             self.game_dir = f"{self.game_folder}/{category_folder}.json"
-        self.settings_menu()
 
     def handle_category_selection(self, click, game_options):
+        """Draw the category buttons; return the clicked category or None."""
+        selected = None
         for game_option in game_options:
             game_name, clicked, x, y, w, h, total_rounds = game_option
 
@@ -236,7 +232,8 @@ class Buzzinga():
             blit_text_objects(self.SCREEN, pygame.Rect(x+w-12,y-12,24,24), str(total_rounds), self.MINI_TEXT)
             
             if clicked:
-                self.setup_selected_category(game_name)
+                selected = game_name
+        return selected
 
     def get_free_disk_space(self):
         usage = shutil.disk_usage(Static.BASE_PATH)
@@ -355,10 +352,10 @@ class Buzzinga():
         animation = BuzzingaAnimation(main_container, self.image_cache)
         moving_sprites.add(animation)
 
-        while self.running:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    self.players_names_menu()
+                    return "players"
 
             pygame.draw.rect(self.SCREEN, Static.BLUE, main_container)
             moving_sprites.draw(self.SCREEN)
@@ -380,7 +377,7 @@ class Buzzinga():
         player_name_input_active = [False, False, False, False]
         input_mappings = [(8, 0), (9, 1), (10, 2), (11, 3)]
 
-        while self.running:
+        while True:
             click = False
             key, letter, click = self.handle_events()
 
@@ -406,16 +403,16 @@ class Buzzinga():
             if self.draw_button('English', 'Deutsch', pygame.Rect(self.button_layout_32[18]), click, Static.RED, enabled=self.language_toggle, toggle=True):
                 self.language_toggle = not self.language_toggle
                 self.current_language = german if self.current_language == english else english
-                self.players_names_menu()
+                # Re-enter the screen to redraw it in the new language
+                return "players"
 
             x11, y11, w11, h11 = self.button_layout_32[19]
             x12, y12, w12, h12 = self.button_layout_32[16]
 
             if self.render_button(self.current_language['choose_game'], pygame.Rect(x11, y11, w11, h11), click):
-                self.choose_game_menu()
+                return "game_type"
 
             elif self.render_button('X', pygame.Rect(x12+w12*3/4, y12, w12/4, h12), click):
-                self.running = self.choose_game_menu_running = self.choose_category_menu = self.settings_menu_running = self.start_game = False
                 pygame.quit()
                 sys.exit()
 
@@ -424,7 +421,6 @@ class Buzzinga():
     
     def choose_game_menu(self):
         self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'W E L C H E  S P I E L A R T ?')
-        self.choose_game_menu_running = True
 
         button_data = [
             (self.current_language['image_quiz'], 8, "images"),
@@ -435,7 +431,7 @@ class Buzzinga():
             (self.current_language['sort'], 13, "sort")
         ]
 
-        while self.choose_game_menu_running:
+        while True:
             click = False
             key, letter, click = self.handle_events()
 
@@ -444,12 +440,11 @@ class Buzzinga():
                 
                 if self.render_button(button_text, pygame.Rect(x, y, w, h), click):
                     self.game_type = game_type
-                    self.choose_category()
+                    return "category"
             
             x, y, w, h = self.button_layout_32[20]
             if self.render_button(self.current_language['back'], pygame.Rect(x+w/2, y, w/2, h), click):
-                        self.choose_game_menu_running = False
-                        self.players_names_menu()
+                return "players"
 
             pygame.display.update()
             self.clock.tick(100)
@@ -470,10 +465,9 @@ class Buzzinga():
         else:
             self.choose_category_setup(no_categories=False)
         
-        self.choose_category_menu = True
         page_counter = 1
         
-        while self.choose_category_menu:
+        while True:
             key, letter, click = self.handle_events()
             
             # Rebuilt every frame from the current page only
@@ -490,10 +484,12 @@ class Buzzinga():
             x, y, w, h = self.button_layout_32[29]
             
             if self.render_button(self.current_language['back'], pygame.Rect(*self.button_layout_32[30]), click):
-                self.choose_category_menu = False
-                self.choose_game_menu()
+                return "game_type"
 
-            self.handle_category_selection(click, game_options)
+            selected = self.handle_category_selection(click, game_options)
+            if selected is not None:
+                self.setup_selected_category(selected)
+                return "settings"
 
             pygame.display.update()
             self.clock.tick(60)
@@ -511,10 +507,9 @@ class Buzzinga():
             blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 8 / 9, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 9), self.current_language['no_buzzer'], self.SMALL_TEXT)
 
         self.settings_menu_setup()
-        self.settings_menu_running, self.start_game = True, False
         self.build_key_instructions()
 
-        while self.settings_menu_running:
+        while True:
             key_pressed, letter, click = self.handle_events()
 
             if self.draw_button(self.current_language['off'], self.current_language['on'], pygame.Rect(self.button_layout_32[9]), click, Static.RED, enabled=self.is_game_sounds, toggle=True):
@@ -544,12 +539,12 @@ class Buzzinga():
 
             if self.render_button(self.current_language['start_game'], pygame.Rect(self.button_layout_32[21]), click, Static.RED):
                 if self.game_type in ["who-knows-more", "sort"]:
-                    self.start_game = True
+                    return "game"
                 else:
                     try:
                         self.buzzer_set = pybuzzers.get_all_buzzers()[0]
                         if self.buzzer_set:
-                            self.start_game = True
+                            return "game"
                         else:
                             no_buzzer_connected()
                     except Exception as e:
@@ -557,8 +552,7 @@ class Buzzinga():
 
             x, y, w, h = self.button_layout_32[20]
             if self.render_button(self.current_language['back'], pygame.Rect(x+w/2, y, w/2, h), click, Static.RED):
-                self.settings_menu_running = False
-                self.choose_category()
+                return "category"
 
             x, y, w, h = self.button_layout_32[1]
             blit_text_objects(self.SCREEN, pygame.Rect(x,y,w,h), self.current_language['keys'], self.SMALL_TEXT, Static.WHITE)
@@ -568,18 +562,32 @@ class Buzzinga():
                 pygame.draw.rect(self.SCREEN, Static.WHITE, (x,y,w/2,h), width=4)
                 blit_text_objects(self.SCREEN, pygame.Rect(x+w/2,y,w/2,h), text, self.SMALL_TEXT, Static.WHITE)
 
-            if self.start_game:
-                while self.start_game:
-                    self.start_game = self.game()
-                    self.settings_menu_running = False
-                    self.players_names_menu()
-
             pygame.display.update()
             self.clock.tick(100)
 
+    def play_game(self):
+        self.game()
+        return "players"
+
+    def run(self):
+        """Switch between the screens. Each screen runs its own loop and
+        returns the name of the next one, so navigating back and forth or
+        playing many games in a row never nests calls."""
+        screens = {
+            "start": self.start_screen,
+            "players": self.players_names_menu,
+            "game_type": self.choose_game_menu,
+            "category": self.choose_category,
+            "settings": self.settings_menu,
+            "game": self.play_game,
+        }
+        screen = "start"
+        while True:
+            screen = screens[screen]()
+
 def main():
     buzzinga = Buzzinga()
-    buzzinga.start_screen()
+    buzzinga.run()
 
 if __name__ == "__main__":
     main()
