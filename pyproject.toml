@@ -10,7 +10,6 @@ dependencies = [
     "pillow>=11.3.0",
     "pybuzzers>=1.0.6",
     "pygame>=2.6.1",
-    "pyinstaller>=6.16.0",
 ]
 
 [project.scripts]
@@ -22,3 +21,12 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/buzzinga"]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.16.0",
+    "pytest>=9.2.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

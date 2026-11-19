@@ -90,6 +90,25 @@ Buzzinga doesn't come with quiz content — you bring your own! Open the `data/`
 
 Create a subfolder or JSON file for each category you want to play. The category name shown in the game is taken from the folder or file name.
 
+### Image Quiz and Audio Quiz files
+
+Every file in a category folder is one round, and its **file name is the answer**:
+
+- `_` becomes a space, `zzz` becomes `(` and `uuu` becomes `)`. So `Take_On_Me_zzzLiveuuu.jpg` is shown as "Take On Me (Live)".
+- A file whose name ends in `_example` (e.g. `Eiffel_Tower_example.jpg`) is always played first, as a warm-up round.
+- A file with the same name plus `_solution` is shown or played together with the answer and is not a round of its own:
+  - Image Quiz: `Eiffel_Tower_solution.jpg` (an image or a video)
+  - Audio Quiz: `Take_On_Me_solution.mp3` (a sound) and/or `Take_On_Me_solution.jpg` (an image)
+
+Supported formats:
+
+| Quiz | Rounds | Solution files |
+|------|--------|----------------|
+| Image Quiz | `.png` `.jpg` `.jpeg` `.bmp` `.webp` `.avif`, videos `.mp4` `.mov` `.avi` `.webm` `.mkv` | same as rounds |
+| Audio Quiz | `.wav` `.mp3` | sounds `.wav` `.mp3`, images `.jpg` `.jpeg` `.png` `.bmp` (lower-case extensions only) |
+
+Your files are only read, never changed. If a file cannot be loaded, the game shows its name and skips to the next round on Enter.
+
 ### Example: Hints JSON
 
 Each hint file is a list of entries. Each entry has a solution and 10 hints that gradually make it easier to guess:
@@ -152,8 +171,30 @@ Supports 2-4 players with USB buzzer input or keyboard controls. Available in En
 | Key | Action |
 |-----|--------|
 | **USB Buzzers** | Buzz in |
+| **Enter** | Next step: start the round, nobody buzzed, show the solution, next round |
 | **R** | Correct answer |
 | **F** | Wrong answer |
+| **S** | Image Quiz with reveal animation: reveal the rest of the image faster |
+| **P** | Image Quiz: replay the video · Audio Quiz: replay the sound |
+| **N** | 10 Hints: show the next hint |
 | **Escape** | Back / Exit game |
 
+The settings screen before each game lists the keys for the chosen game mode.
+
 In **Sort it!** each player has 20 seconds. The game master types the number of the chosen element and presses Enter, then types the slot number (shown in the yellow circles) and presses Enter. The game checks the placement itself. **Backspace** deletes input or deselects the element, **F** knocks out a player who has no answer.
+
+## Development
+
+Run the game from a clone of the repository without building it:
+
+```bash
+uv run buzzinga
+```
+
+It uses the `data/` and `staticfiles/` folders of the repository. Run the tests with:
+
+```bash
+uv run pytest
+```
+
+They run headless and also run on GitHub for every pull request. To build the executable, use `setup.sh` / `setup.bat`; they contain the PyInstaller options the game needs (bundled `staticfiles/`, and the `imageio` metadata for video playback).
