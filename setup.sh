@@ -42,6 +42,7 @@ echo ""
 # Build the executable
 uv run pyinstaller launcher.py --onefile \
     --add-data "staticfiles:staticfiles" \
+    --copy-metadata imageio \
     --name buzzinga \
     --paths src \
     --log-level WARN

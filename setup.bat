@@ -40,7 +40,7 @@ echo Building Buzzinga... (this may take a minute the first time)
 echo.
 
 :: Build the executable
-uv run pyinstaller launcher.py --onefile --add-data "staticfiles;staticfiles" --name buzzinga --paths src --log-level WARN
+uv run pyinstaller launcher.py --onefile --add-data "staticfiles;staticfiles" --copy-metadata imageio --name buzzinga --paths src --log-level WARN
 if %errorlevel% neq 0 (
     echo.
     echo Build failed. Please check the error messages above.
