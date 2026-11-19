@@ -82,7 +82,19 @@ class Buzzinga():
         self.clock = pygame.time.Clock()
         self.build_required_folders()
 
+    def fill_default_player_names(self):
+        """Keep names the players entered. Empty names and default names get
+        the default of the current language, so switching the language also
+        translates the defaults."""
+        for i in range(len(self.player)):
+            key = f'player{i + 1}'
+            if self.player[i] in (english[key], german[key]) or not self.player[i].strip():
+                self.player[i] = self.current_language[key]
+
     def game(self):
+        # A name cleared on the player screen and not retyped would otherwise
+        # show up as an empty label during the game
+        self.fill_default_player_names()
         if self.game_modus:
             self.points_to_win = 100
         common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation)
@@ -368,13 +380,7 @@ class Buzzinga():
     def players_names_menu_setup(self):
         self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['who_plays'])
 
-        # Keep names the players entered (e.g. when returning after a game).
-        # Empty names and default names get the default of the current
-        # language, so switching the language also translates the defaults.
-        for i in range(len(self.player)):
-            key = f'player{i + 1}'
-            if self.player[i] in (english[key], german[key]) or not self.player[i].strip():
-                self.player[i] = self.current_language[key]
+        self.fill_default_player_names()
         for i, player in enumerate(self.player):
             self.print_player_name(i, player)
 
