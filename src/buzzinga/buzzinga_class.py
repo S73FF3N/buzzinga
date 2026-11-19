@@ -368,7 +368,13 @@ class Buzzinga():
     def players_names_menu_setup(self):
         self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['who_plays'])
 
-        self.player = [self.current_language['player1'], self.current_language['player2'], self.current_language['player3'], self.current_language['player4']]
+        # Keep names the players entered (e.g. when returning after a game).
+        # Empty names and default names get the default of the current
+        # language, so switching the language also translates the defaults.
+        for i in range(len(self.player)):
+            key = f'player{i + 1}'
+            if self.player[i] in (english[key], german[key]) or not self.player[i].strip():
+                self.player[i] = self.current_language[key]
         for i, player in enumerate(self.player):
             self.print_player_name(i, player)
 
