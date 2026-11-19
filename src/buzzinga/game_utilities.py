@@ -6,7 +6,6 @@ Created on Tue Sep 22 19:54:59 2015
 """
 import os, pygame
 from PIL import Image
-import subprocess
 import functools
 from .static import Static
 
@@ -98,7 +97,14 @@ def load_image(name, folder, colorkey=None):
     try:
         image = pygame.image.load(fullname)
     except pygame.error as e:
-        raise FileNotFoundError(f"Cannot load image: {fullname}") from e
+        # pygame's bundled SDL_image cannot read every format (e.g. AVIF);
+        # decode those with Pillow in memory instead.
+        try:
+            with Image.open(fullname) as pil_image:
+                pil_image = pil_image.convert("RGBA")
+                image = pygame.image.frombytes(pil_image.tobytes(), pil_image.size, "RGBA")
+        except Exception:
+            raise FileNotFoundError(f"Cannot load image: {fullname}") from e
 
     # Use convert_alpha() to preserve per-pixel alpha (transparency)
     image = image.convert_alpha()
@@ -136,44 +142,6 @@ def adjust_image_size(img, container_width, container_height):
         else:
             new_height = int(container_width / aspect_ratio)
             return (container_width, new_height)
-
-# convert image to desired image format    
-def convert_image_to(image_file, im_format):
-    if image_file[-4:] == "."+im_format:
-        file_out = image_file
-    else:
-        print("converting image file...")
-        try:
-            img = Image.open(image_file)
-        except:
-            print("Could not open {}".format(img))
-            return
-        file_out = str(image_file[0:-4])+"."+im_format
-        if len(img.split()) == 4:
-            # prevent IOError: cannot write mode RGBA as BMP
-            r, g, b, a = img.split()
-            img = Image.merge("RGB", (r, g, b))
-        img.save(file_out)
-        os.remove(image_file)
-    return file_out
-
-
-
-def reverse_mp3(mp3_file):
-    print(mp3_file)
-    reverse = subprocess.Popen('sox -v 0.98 '+mp3_file+' '+mp3_file[:-3]+'wav reverse', shell=True)
-    subprocess.Popen.wait(reverse)
-    os.remove(mp3_file)
-    
-def mp3_to_wav(mp3_file):
-    if mp3_file[-3:] == "wav":
-        file_out = mp3_file
-    else:
-        conversion = subprocess.Popen('sudo lame --decode ' + mp3_file + ' ' + mp3_file[:-3] + 'wav', shell=True)
-        subprocess.Popen.wait(conversion)
-        os.remove(mp3_file)
-        file_out = mp3_file[:-3] + 'wav'
-    return file_out
 
 def count_files_by_extensions(directory, *extensions):
     count = sum(
