@@ -105,7 +105,7 @@ class Buzzinga():
         self.fill_default_player_names()
         if self.game_modus:
             self.points_to_win = 100
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation)
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation, self.current_language)
         match self.game_type:
             case "images":
                 quiz = ImageQuiz(*common_args)
@@ -377,7 +377,7 @@ class Buzzinga():
 
     def start_screen_setup(self):
         self.SCREEN.fill(Static.BLUE)
-        blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 4 / 5, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 5), 'PRESS ANY KEY', self.SMALL_TEXT)
+        blit_text_objects(self.SCREEN, pygame.Rect(0, self.SCREEN_HEIGHT * 4 / 5, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 5), self.current_language['press_any_key'], self.SMALL_TEXT)
 
     def start_screen(self):
         self.start_screen_setup()
@@ -458,11 +458,11 @@ class Buzzinga():
             self.clock.tick(100)
     
     def choose_game_menu(self):
-        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), 'W E L C H E  S P I E L A R T ?')
+        self.menu_setup(pygame.Rect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT / 2), self.current_language['which_game'])
 
         button_data = [
             (self.current_language['image_quiz'], 8, "images"),
-            ('Audio Quiz', 9, "sounds"),
+            (self.current_language['audio_quiz'], 9, "sounds"),
             ('Multiple Choice Quiz', 10, "questions"),
             (self.current_language['hints'], 11, "hints"),
             (self.current_language['who_knows_more'], 12, "who-knows-more"),

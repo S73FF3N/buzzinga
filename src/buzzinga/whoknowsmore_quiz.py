@@ -7,8 +7,8 @@ from .animation import BuzzingaAnimation
 
 
 class WhoKnowsMoreQuiz(QuizGameBase):
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language=None):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language)
         self.answer_category = 1
         self.first_element_of_question = True
         self.active_player = 0
@@ -199,6 +199,9 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                     pygame.display.flip()
                     self.countdown = True
 
+            # The countdown is driven by elapsed time rather than a blocking
+            # one-second wait, so R/F take effect immediately
+            next_countdown_tick = pygame.time.get_ticks()
             while self.countdown and not self.winner_found:
                 key, letter = self.handle_events()
                 if self.escape_pressed:
@@ -212,23 +215,22 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 if key == pygame.K_f:
                     self.countdown = False
                     self.incorrect_answer = True
-
-                if not self.countdown_ended:
-                    self.countdown_seconds_left -= 1
-                time_left = str(self.countdown_seconds_left)
-                self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                blit_text_objects(self.screen, self.bottom_right_container, time_left, self.SMALL_TEXT)
-                pygame.display.flip()
-                self.wait_responsive(1000)
-                self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                pygame.display.flip()
-                if self.countdown_seconds_left == 0:
-                    if self.is_game_sounds and not self.countdown_ended:
-                        countdown_sound = load_static_sound('countdown_end.wav')
-                        self.game_sound_channel.play(countdown_sound)
+                if not self.countdown:
                     self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                     pygame.display.flip()
-                    self.countdown_ended = True
+                    break
+
+                if not self.countdown_ended and pygame.time.get_ticks() >= next_countdown_tick:
+                    next_countdown_tick += 1000
+                    self.countdown_seconds_left -= 1
+                    self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
+                    blit_text_objects(self.screen, self.bottom_right_container, str(self.countdown_seconds_left), self.SMALL_TEXT)
+                    pygame.display.flip()
+                    if self.countdown_seconds_left == 0:
+                        if self.is_game_sounds:
+                            self.game_sound_channel.play(load_static_sound('countdown_end.wav'))
+                        self.countdown_ended = True
+                self.clock.tick(60)
                 
 
             while self.correct_answer and not self.winner_found:
@@ -258,7 +260,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         answer_id_int = int(self.answer_id)
                         if current_round_data["answers"][answer_id_int] in self.answers_solved:
                             self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                            blit_text_objects(self.screen, self.bottom_right_container, 'Schon gelöst!', self.MINI_TEXT)
+                            blit_text_objects(self.screen, self.bottom_right_container, self.language['already_solved'], self.MINI_TEXT)
                             pygame.display.flip()
                             self.skip_print_answer = True
                         if not self.skip_print_answer:
@@ -279,7 +281,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                             # no answers left
                             else:
                                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                                blit_text_objects(self.screen, self.bottom_right_container, 'Alles gelöst!', self.MINI_TEXT)
+                                blit_text_objects(self.screen, self.bottom_right_container, self.language['all_solved'], self.MINI_TEXT)
                                 pygame.display.flip()
                                 # Award one point to all active players if all answers are solved
                                 for idx, is_active in enumerate(self.active_players):
@@ -298,7 +300,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                     except Exception as e:
                         print(e, traceback.print_exc())
                         self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
-                        blit_text_objects(self.screen, self.bottom_right_container, 'Falsche ID', self.SMALL_TEXT)
+                        blit_text_objects(self.screen, self.bottom_right_container, self.language['wrong_id'], self.SMALL_TEXT)
                         pygame.display.flip()
                         self.answer_id = ""
 

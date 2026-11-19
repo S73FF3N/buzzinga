@@ -137,7 +137,7 @@ Each hint file is a list of entries. Each entry has a solution and 10 hints that
 
 ### Example: Sort JSON
 
-Each entry is one round. The `reference` element is already placed when the round starts; players insert the `elements` one by one. `value` decides the correct order, with the largest value on top (set `"descending": false` to put the smallest on top). Values stay hidden until the round ends. `top_label` and `bottom_label` appear as arrow banners at both ends of the list so players see which direction means what (e.g. "more people" / "fewer people", "older" / "younger"); without them the banners read "mehr" / "weniger". `unit` is appended to the revealed values; an element can set `display` to show a custom text instead.
+Each entry is one round. The `reference` element is already placed when the round starts; players insert the `elements` one by one. `value` decides the correct order, with the largest value on top (set `"descending": false` to put the smallest on top). Values stay hidden until the round ends. `top_label` and `bottom_label` appear as arrow banners at both ends of the list so players see which direction means what (e.g. "more people" / "fewer people", "older" / "younger"); without them the banners read "more" / "fewer" (in German "mehr" / "weniger"). `unit` is appended to the revealed values; an element can set `display` to show a custom text instead.
 
 ```json
 [

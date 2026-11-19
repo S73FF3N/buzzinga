@@ -11,8 +11,8 @@ class ImageQuiz(QuizGameBase):
     image_exts = (".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")
     video_exts = (".mp4", ".mov", ".avi", ".webm", ".mkv")
 
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language=None):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language)
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
         def handle_buzz(buzzer_set: pybuzzers.BuzzerSet, buzzer: int):
