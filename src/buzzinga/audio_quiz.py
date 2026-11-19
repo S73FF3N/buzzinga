@@ -12,7 +12,6 @@ class AudioQuiz(QuizGameBase):
         super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.current_sound = None
         self.current_solution_sound = None
-        self.current_solution_image = None
 
         self.buzzer_set = buzzer_set
         self.buzzering_player = None
@@ -48,12 +47,12 @@ class AudioQuiz(QuizGameBase):
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
                 solution_filename = f"{name_no_ext}_solution"
+                solution_sound = None
                 for ext in [".wav", ".mp3"]:
                     solution_path = os.path.join(self.game_data, solution_filename + ext)
                     if os.path.exists(solution_path):
                         solution_sound = solution_path
-                    else:
-                        solution_sound = None
+                        break
                 
                 solution_img_path_list = [os.path.join(self.game_data, f"{name_no_ext}_solution{img_ext}") for img_ext in [".jpg", ".png", ".jpeg", ".bmp"]]
                 solution_image = None
@@ -76,7 +75,9 @@ class AudioQuiz(QuizGameBase):
         current_data = self.round_data[self.current_round - 1]
         self.current_sound = pygame.mixer.Sound(current_data["data"])
         self.current_solution = current_data["solution"]
-        self.current_solution_image = current_data["solution_img"]
+        # show_solution() in the base class displays current_solution_file
+        self.current_solution_file = current_data["solution_img"]
+        self.current_solution_file_type = "image" if current_data["solution_img"] else None
         self.current_solution_sound = current_data["solution_sound"]
         if self.current_solution_sound:
             self.current_solution_sound = pygame.mixer.Sound(current_data["solution_sound"])
@@ -181,7 +182,7 @@ class AudioQuiz(QuizGameBase):
                             self.sound_channel.play(self.current_solution_sound)
                         else:
                             self.sound_channel.unpause()
-                        if self.current_solution_image:
+                        if self.current_solution_file:
                             self.sound_animation_running = False
                         else:
                             self.sound_animation_running = True
