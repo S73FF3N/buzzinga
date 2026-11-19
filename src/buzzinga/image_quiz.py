@@ -2,7 +2,7 @@ import os, random, pygame, pybuzzers, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import convert_image_to, load_image, adjust_image_size, load_video, adjust_video_size
+from .game_utilities import convert_image_to, load_image, adjust_image_size, load_video, adjust_video_size, optimize_text_in_container
 from .animation import BuzzingaAnimation
 
 
@@ -33,6 +33,9 @@ class ImageQuiz(QuizGameBase):
         # Channel/sound used to play a video clip's audio in sync with its frames
         self.video_audio_channel = None
         self.video_sound = None
+        # True while the current round's file could not be loaded; the round
+        # is then shown as resolved so Enter moves on to the next one.
+        self.round_load_failed = False
 
 
     def clean_game_data(self):
@@ -186,6 +189,47 @@ class ImageQuiz(QuizGameBase):
             except Exception as e:
                 print("DEBUG: failed to draw first frame:", e)
 
+    def start_round(self):
+        """Show the current round. If its file cannot be loaded (corrupt file,
+        missing codec or library), show an error in place of the round and
+        mark it as resolved, so the next Enter press skips to the next round
+        instead of leaving an empty screen."""
+        self.round_load_failed = False
+        try:
+            self.play_round()
+        except Exception:
+            traceback.print_exc()
+            self.show_round_load_error()
+
+    def show_round_load_error(self):
+        self.round_load_failed = True
+        self.tiles = None
+        self.video_playing = False
+        self.solution_video_playing = False
+        self._stop_video_audio()
+        if self.clip:
+            self.clip.close()
+            self.clip = None
+
+        if 0 < self.current_round <= len(self.round_data):
+            file_name = os.path.basename(self.round_data[self.current_round - 1]["data"])
+        else:
+            file_name = ""
+        self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
+        message_rect = pygame.Rect(self.main_container.x, self.main_container.y,
+                                   self.main_container.w, self.main_container.h // 2)
+        file_rect = pygame.Rect(self.main_container.x, self.main_container.centery,
+                                self.main_container.w, self.main_container.h // 4)
+        optimize_text_in_container(self.screen, message_rect,
+                                   "Runde konnte nicht geladen werden – Enter für die nächste Runde")
+        optimize_text_in_container(self.screen, file_rect, file_name, color=Static.YELLOW)
+        for n in range(self.amount_players):
+            self.display_buzzer(n, Static.GREY)
+
+        # Resolved state: buzzers are ignored and Enter starts the next round
+        self.buzzer_hit = True
+        self.solution_shown = True
+
     def update_tile_reveal(self):
         if not self.tiles:  # no reveal in progress
             return
@@ -314,16 +358,11 @@ class ImageQuiz(QuizGameBase):
                 if self.escape_pressed:
                     break
                 if key == pygame.K_RETURN:
-                    try:
-                        self.animation_stopped = True
-                        self.current_round += 1
-                        self.update_progress()
-                        self.play_round()
-                        pygame.display.flip()
-                    except Exception as e:
-                        traceback.print_exc()
-                        os.chdir(Static.BASE_PATH)
-                        self.running = False
+                    self.animation_stopped = True
+                    self.current_round += 1
+                    self.update_progress()
+                    self.start_round()
+                    pygame.display.flip()
                     self.initializing = False
                 if not self.animation_stopped:
                     self.draw_rect(Static.BLUE, Static.WHITE, 8, self.main_container)
@@ -423,13 +462,13 @@ class ImageQuiz(QuizGameBase):
                             self.current_round += 1
                             self.display_game_info()
                             self.update_progress()
-                            self.play_round()
+                            self.start_round()
                         else:
                             self.show_winner()
                         pygame.display.flip()
 
                 # points are awarded
-                if key in self.answer_keys and self.solution_shown:
+                if key in self.answer_keys and self.solution_shown and not self.round_load_failed:
                     self.award_points(first_buzz, key)
 
                 self.clock.tick(60)
