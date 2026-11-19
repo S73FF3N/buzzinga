@@ -11,3 +11,8 @@ data/sort/*
 .DS_Store
 *.pdf
 *.docx
+
+# PyInstaller output of setup.sh / setup.bat
+build/
+dist/
+*.spec

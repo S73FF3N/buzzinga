@@ -149,6 +149,11 @@ def adjust_image_size(img, container_width, container_height):
             new_height = int(container_width / aspect_ratio)
             return (container_width, new_height)
 
+def is_hidden_file(name):
+    """Hidden files such as macOS' '._Bild.png' metadata files on USB sticks
+    or '.DS_Store' are never game content."""
+    return os.path.basename(str(name)).startswith(".")
+
 def count_round_files(directory, extensions):
     """Count the files in `directory` that a quiz plays as rounds: files whose
     extension (case-insensitive) is in `extensions`, excluding solution files."""
@@ -156,6 +161,7 @@ def count_round_files(directory, extensions):
         1
         for file in directory.iterdir()
         if file.is_file()
+        and not is_hidden_file(file)
         and file.suffix.lower() in extensions
         and not file.stem.endswith('_solution')
     )

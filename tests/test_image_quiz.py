@@ -72,3 +72,15 @@ def test_category_menu_counts_the_rounds_the_quiz_plays(tmp_path, make_quiz):
     quiz = make_quiz(ImageQuiz, tmp_path)
 
     assert count_round_files(tmp_path, ImageQuiz.image_exts + ImageQuiz.video_exts) == quiz.total_rounds == 5
+
+
+def test_hidden_files_are_not_rounds(tmp_path, make_quiz):
+    write_image(tmp_path / "A.png")
+    # macOS writes these next to copied files on USB sticks
+    (tmp_path / "._A.png").write_bytes(b"\x00\x05\x16\x07")
+    (tmp_path / ".DS_Store").write_bytes(b"")
+
+    quiz = make_quiz(ImageQuiz, tmp_path)
+
+    assert quiz.total_rounds == 1
+    assert count_round_files(tmp_path, ImageQuiz.image_exts) == 1

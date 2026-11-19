@@ -3,6 +3,7 @@ from pathlib import Path
 
 from .quiz_games import QuizGameBase
 from .static import Static
+from .game_utilities import is_hidden_file
 from .animation import BuzzingaAnimation
 
 
@@ -28,11 +29,11 @@ class AudioQuiz(QuizGameBase):
         game_data_path = Path(self.game_data)
         for f in game_data_path.iterdir():
             # pygame.mixer plays both formats directly
-            if f.is_file() and f.suffix.lower() in self.sound_exts:
+            if f.is_file() and not is_hidden_file(f) and f.suffix.lower() in self.sound_exts:
                 self.cleaned_game_data.append(f)
 
     def load_round_data(self):    
-        folder_files = [str(p) for p in Path(self.game_data).iterdir() if p.is_file()]
+        folder_files = [str(p) for p in Path(self.game_data).iterdir() if p.is_file() and not is_hidden_file(p)]
 
         def find_solution(solution_filename, extensions):
             # Match the extension case-insensitively (e.g. "_solution.MP3")
