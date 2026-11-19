@@ -386,6 +386,7 @@ class ImageQuiz(QuizGameBase):
                 # noone buzzers
                 if key == pygame.K_RETURN:
                     self.buzzer_hit = True
+                    self.first_buzz = None
                     for n in range(0, self.amount_players):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
@@ -398,8 +399,8 @@ class ImageQuiz(QuizGameBase):
 
                 # player buzzers
                 if self.buzzering_player:
-                    first_buzz = self.buzzering_player - 1
-                    self.display_buzzer(first_buzz, Static.RED)
+                    self.first_buzz = self.buzzering_player - 1
+                    self.display_buzzer(self.first_buzz, Static.RED)
                     self.buzzering_player = None
                     # Stop the question video's audio immediately so it does not
                     # keep playing through the buzzer sound / countdown
@@ -468,8 +469,9 @@ class ImageQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 # points are awarded
-                if key in self.answer_keys and self.solution_shown and not self.round_load_failed:
-                    self.award_points(first_buzz, key)
+                if (key in self.answer_keys and self.solution_shown
+                        and not self.round_load_failed and self.first_buzz is not None):
+                    self.award_points(self.first_buzz, key)
 
                 self.clock.tick(60)
                 if self.solution_video_playing and self.clip:
@@ -486,12 +488,9 @@ class ImageQuiz(QuizGameBase):
                 pygame.display.flip()
 
             # Update and draw particles
-            for p in self.particles[:]:
-                p.update()
-                p.draw(self.screen)
-                if p.life <= 0:
-                    self.particles.remove(p)
-                pygame.display.flip()
+            self.update_particles()
+            pygame.display.flip()
+            self.clock.tick(60)
 
         # Ensure no video audio keeps playing after leaving the game (e.g. escape)
         self._stop_video_audio()

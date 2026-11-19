@@ -338,13 +338,6 @@ class SortQuiz(QuizGameBase):
         self.check_game_over()
         self.initializing = True
 
-    def update_particles(self):
-        for p in self.particles[:]:
-            p.update()
-            p.draw(self.screen)
-            if p.life <= 0:
-                self.particles.remove(p)
-
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
         pygame.mixer.init()

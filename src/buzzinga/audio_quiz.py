@@ -91,7 +91,6 @@ class AudioQuiz(QuizGameBase):
             self.sound_moving_sprites.update(0.15)
             self.sound_animation.animate()
             pygame.display.flip()
-            self.clock.tick(60)
 
     def run(self):
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -144,6 +143,7 @@ class AudioQuiz(QuizGameBase):
                 # noone buzzers
                 if key == pygame.K_RETURN:
                     self.buzzer_hit = True
+                    self.first_buzz = None
                     for n in range(0, self.amount_players):
                         self.display_buzzer(n, Static.GREY)
                     pygame.display.flip()
@@ -156,17 +156,19 @@ class AudioQuiz(QuizGameBase):
 
                 # player buzzers
                 if self.buzzering_player:
-                    first_buzz = self.buzzering_player - 1
+                    self.first_buzz = self.buzzering_player - 1
                     if self.current_solution_sound:
                         self.sound_channel.stop()
                     else:
                         self.sound_channel.pause()
                     self.sound_animation_running = False
-                    self.display_buzzer(first_buzz, Static.RED)
+                    self.display_buzzer(self.first_buzz, Static.RED)
                     self.buzzering_player = None
                     self.play_buzzer_sound()
                     self.buzzer_hit = True
                     self.countdown(5)
+
+                self.clock.tick(60)
 
             while self.buzzer_hit:
                 self.check_sound_animation()
@@ -205,16 +207,13 @@ class AudioQuiz(QuizGameBase):
                         pygame.display.flip()
 
                 # points are awarded
-                if key in self.answer_keys and self.solution_shown:
-                    self.award_points(first_buzz, key)
+                if key in self.answer_keys and self.solution_shown and self.first_buzz is not None:
+                    self.award_points(self.first_buzz, key)
 
                 self.check_game_over()
+                self.clock.tick(60)
 
             # Update and draw particles
-            for p in self.particles[:]:
-                p.update()
-                p.draw(self.screen)
-                if p.life <= 0:
-                    self.particles.remove(p)
-                pygame.display.flip()            
+            self.update_particles()
+            pygame.display.flip()
             self.clock.tick(60)

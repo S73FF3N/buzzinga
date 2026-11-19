@@ -81,7 +81,28 @@ class QuizGameBase:
         self.sound_animation_running = False
 
         self.particles = []
+        # Index of the player whose buzz is being judged in the current round,
+        # None if nobody buzzed
+        self.first_buzz = None
 
+
+    def update_particles(self):
+        """Advance and draw the confetti. The caller flips the display once
+        per frame, so the cost does not grow with the number of particles."""
+        for p in self.particles[:]:
+            p.update()
+            p.draw(self.screen)
+            if p.life <= 0:
+                self.particles.remove(p)
+
+    def wait_responsive(self, ms):
+        """Wait for `ms` milliseconds while still pumping the event loop, so the
+        window manager does not flag the window as unresponsive. Key presses
+        stay queued and are handled once the wait is over."""
+        end = pygame.time.get_ticks() + ms
+        while pygame.time.get_ticks() < end:
+            pygame.event.pump()
+            self.clock.tick(60)
 
     # Trigger confetti
     def celebrate(self, x, y, amount=100):
@@ -162,7 +183,7 @@ class QuizGameBase:
             countdown = self.SMALL_TEXT.render(time_left, 1, Static.WHITE)
             self.screen.blit(countdown, countdown.get_rect(center=self.bottom_right_container.center))
             pygame.display.flip()
-            pygame.time.wait(1000)
+            self.wait_responsive(1000)
             if time_left != 0:
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()

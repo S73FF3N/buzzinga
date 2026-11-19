@@ -181,15 +181,12 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                         self.clock.tick(60)
                 
                 #Update and draw particles
-                for p in self.particles[:]:
-                    p.update()
-                    p.draw(self.screen)
-                    if p.life <= 0:
-                        self.particles.remove(p)
-                    pygame.display.flip()            
+                self.update_particles()
+                pygame.display.flip()
                 self.clock.tick(60)
 
             while self.first_element_of_question and not self.winner_found:
+                self.clock.tick(60)
                 key, letter = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -220,7 +217,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 blit_text_objects(self.screen, self.bottom_right_container, time_left, self.SMALL_TEXT)
                 pygame.display.flip()
-                pygame.time.wait(1000)
+                self.wait_responsive(1000)
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()
                 if self.countdown_seconds_left == 0:
@@ -233,6 +230,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 
 
             while self.correct_answer and not self.winner_found:
+                self.clock.tick(60)
                 key, letter = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -347,10 +345,6 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                     self.countdown = True
                 
                 # Update and draw particles
-                for p in self.particles[:]:
-                    p.update()
-                    p.draw(self.screen)
-                    if p.life <= 0:
-                        self.particles.remove(p)
-                    pygame.display.flip()            
+                self.update_particles()
+                pygame.display.flip()
                 self.clock.tick(60)
