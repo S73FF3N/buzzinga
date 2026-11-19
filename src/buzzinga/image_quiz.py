@@ -7,9 +7,11 @@ from .animation import BuzzingaAnimation
 
 
 class ImageQuiz(QuizGameBase):
+    # Class-level so the category menu counts rounds with the same extensions
+    image_exts = (".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")
+    video_exts = (".mp4", ".mov", ".avi", ".webm", ".mkv")
+
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
-        self.image_exts = (".bmp", ".png", ".jpg", ".jpeg", ".webp", ".avif")
-        self.video_exts = (".mp4", ".mov", ".avi", ".webm", ".mkv")
         super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
         self.buzzer_set = buzzer_set
         self.buzzering_player = None

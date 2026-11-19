@@ -5,7 +5,7 @@ from pathlib import Path
 import stat
 
 from .static import Static
-from .game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_files_by_extensions
+from .game_utilities import load_and_scale_image, load_image, blit_text_objects, text_objects, count_round_files
 from .translations import english, german
 from .image_quiz import ImageQuiz
 from .audio_quiz import AudioQuiz
@@ -116,13 +116,9 @@ class Buzzinga():
     def get_amount_rounds(self, category_folder):
         path = self.game_folder / category_folder
         if self.game_type == "images":
-            extensions = ("*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff", "*.webp", "*.avif", "*.mp4", "*.mov", "*.avi", "*.mkv")
-            file_count = count_files_by_extensions(path, *extensions)
-            return file_count
+            return count_round_files(path, ImageQuiz.image_exts + ImageQuiz.video_exts)
         elif self.game_type == "sounds":
-            extensions = ("*.wav", "*.mp3")
-            file_count = count_files_by_extensions(path, *extensions)
-            return file_count
+            return count_round_files(path, AudioQuiz.sound_exts)
         else:
             if not path.is_file() or path.suffix.lower() != ".json":
                 return 0
