@@ -42,8 +42,8 @@ class SortQuiz(QuizGameBase):
     and returns the element to the pool.
     """
 
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
-        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language=None):
+        super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language)
         self.solution_shown = True
         self.active_player = -1
         self.active_players = [True] * self.amount_players
@@ -76,12 +76,12 @@ class SortQuiz(QuizGameBase):
                 raise ValueError(f"value={element['value']!r} of {element['name']!r}")
         random.shuffle(elements)
         descending = entry.get("descending", True)
-        larger, smaller = "mehr", "weniger"
         return {
             'id': str(entry.get("id", "")),
             'criterion': str(entry["criterion"]),
-            'top_label': entry.get("top_label") or (larger if descending else smaller),
-            'bottom_label': entry.get("bottom_label") or (smaller if descending else larger),
+            # None: a default in the game's language is shown (see direction_labels)
+            'top_label': entry.get("top_label"),
+            'bottom_label': entry.get("bottom_label"),
             'unit': entry.get("unit", ""),
             'descending': descending,
             'reference': reference,
@@ -126,6 +126,13 @@ class SortQuiz(QuizGameBase):
         rows = len(self.current_data['elements']) + 3
         return rect.h / rows
 
+    def direction_labels(self, data):
+        """Banner texts for the top and bottom of the list; without labels in
+        the JSON entry, "more"/"fewer" in the game's language."""
+        larger, smaller = self.language['more'], self.language['fewer']
+        default_top, default_bottom = (larger, smaller) if data['descending'] else (smaller, larger)
+        return data['top_label'] or default_top, data['bottom_label'] or default_bottom
+
     def draw_sorted_list(self, rect, show_values):
         data = self.current_data
         row_h = self.row_geometry(rect)
@@ -134,9 +141,10 @@ class SortQuiz(QuizGameBase):
         box_w = rect.w - slot_w
 
         items = self.sorted_items if not show_values else self.full_solution()
-        self.draw_direction_banner(pygame.Rect(box_x, rect.y + 2, box_w, row_h - 4), data['top_label'], up=True)
+        top_label, bottom_label = self.direction_labels(data)
+        self.draw_direction_banner(pygame.Rect(box_x, rect.y + 2, box_w, row_h - 4), top_label, up=True)
         self.draw_direction_banner(pygame.Rect(box_x, rect.y + row_h * (len(items) + 1) + 2, box_w, row_h - 4),
-                                   data['bottom_label'], up=False)
+                                   bottom_label, up=False)
 
         for i, item in enumerate(items):
             box = pygame.Rect(box_x, rect.y + row_h * (i + 1) + 2, box_w, row_h - 4)
@@ -278,7 +286,7 @@ class SortQuiz(QuizGameBase):
 
     def handle_turn_input(self, key, letter):
         if key == pygame.K_f:
-            self.message = "Keine Antwort"
+            self.message = self.language['no_answer']
             self.eliminate_active_player()
             return
         if letter.isdigit():
@@ -299,12 +307,12 @@ class SortQuiz(QuizGameBase):
                     self.selected = number
                     self.draw_board()
                 else:
-                    self.message = "Falsche Nr."
+                    self.message = self.language['wrong_number']
             elif 1 <= number <= len(self.sorted_items) + 1:
                 self.place_selected(number)
                 return
             else:
-                self.message = "Falsche Pos."
+                self.message = self.language['wrong_position']
         self.draw_status()
 
     def place_selected(self, slot):
@@ -314,13 +322,13 @@ class SortQuiz(QuizGameBase):
         if is_valid_placement(values, element['value'], slot, data['descending']):
             self.sorted_items.insert(slot - 1, element)
             del self.pool[self.selected]
-            self.message = "Richtig!"
+            self.message = self.language['right']
             if not self.pool:
                 self.end_round()
             else:
                 self.start_next_turn()
         else:
-            self.message = f"Falsch: {element['name']}"
+            self.message = f"{self.language['wrong_placement']}: {element['name']}"
             self.eliminate_active_player()
 
     def eliminate_active_player(self):
@@ -341,7 +349,7 @@ class SortQuiz(QuizGameBase):
                 self.scores[idx] += 1
                 self.update_score(idx)
         if not self.pool:
-            self.message = "Alles sortiert!"
+            self.message = self.language['all_sorted']
         self.draw_board(show_values=True)
         self.draw_status()
         self.draw_players()

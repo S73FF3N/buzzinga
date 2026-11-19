@@ -3,6 +3,7 @@ import pygame, os, sys, pybuzzers, traceback
 import pygame.locals
 
 from .static import Static, Confetti
+from .translations import german
 from .game_utilities import load_static_sound, blit_text_objects, optimize_text_in_container, load_image, adjust_image_size, load_video, adjust_video_size
 from .animation import SoundAnimation
 
@@ -14,7 +15,9 @@ _listening_buzzer_sets = set()
 
 
 class QuizGameBase:
-    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
+    def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation, language=None):
+        # Texts on the game screens follow the language chosen in the menu
+        self.language = language or german
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT), pygame.FULLSCREEN)
         self.clock = clock
@@ -146,7 +149,7 @@ class QuizGameBase:
         file_rect = pygame.Rect(self.main_container.x, self.main_container.centery,
                                 self.main_container.w, self.main_container.h // 4)
         optimize_text_in_container(self.screen, message_rect,
-                                   "Runde konnte nicht geladen werden – Enter für die nächste Runde")
+                                   self.language['round_load_error'])
         optimize_text_in_container(self.screen, file_rect, self.round_file_name(), color=Static.YELLOW)
         for n in range(self.amount_players):
             self.display_buzzer(n, Static.GREY)
@@ -227,9 +230,9 @@ class QuizGameBase:
     def update_progress(self):
         self.draw_rect(Static.RED, Static.WHITE, 8, self.top_right_container)
         if self.current_round == 0:
-            progress = f"{str(self.total_rounds)} Runden" #self.SMALL_TEXT.render(f"{str(self.total_rounds)} Runden", 1, Static.WHITE)
+            progress = f"{self.total_rounds} {self.language['rounds']}"
         else:
-            progress = f"Runde {str(self.current_round)}/{str(self.total_rounds)}" #self.SMALL_TEXT.render(f"Runde {str(self.current_round)}/{str(self.total_rounds)}", 1, Static.WHITE)
+            progress = f"{self.language['round']} {self.current_round}/{self.total_rounds}"
         #self.screen.blit(progress, progress.get_rect(center=self.top_right_container.center))
         optimize_text_in_container(self.screen, self.top_right_container, progress)
         
@@ -335,7 +338,7 @@ class QuizGameBase:
         self.celebrate(self.left_container_width // 4, self.top_container_height * 5)
         winner_ix = [i for i, x in enumerate(self.scores) if x == max(self.scores)]
         title_rect = pygame.Rect(0, self.top_container_height, self.left_container_width, self.main_container_height/2)
-        blit_text_objects(self.screen, title_rect, "GEWINNER", self.MEDIUM_TEXT)
+        blit_text_objects(self.screen, title_rect, self.language['winner'], self.MEDIUM_TEXT)
         winners = []
         [winners.append(self.players[i]) for i in winner_ix]
         for line in range(len(winners)):
