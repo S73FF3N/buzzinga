@@ -366,6 +366,10 @@ class Buzzinga():
 
         while True:
             for event in pygame.event.get():
+                # Closing the window (or SIGTERM, which SDL turns into QUIT)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.KEYDOWN:
                     return "players"
 

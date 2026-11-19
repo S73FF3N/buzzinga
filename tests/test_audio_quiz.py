@@ -25,3 +25,15 @@ def test_mp3_and_wav_rounds_with_solution_sound_and_image(tmp_path, make_quiz):
     # show_solution() in the base class displays current_solution_file
     assert os.path.basename(quiz.current_solution_file) == "Song_solution.png"
     assert quiz.current_solution_file_type == "image"
+
+
+def test_solution_files_are_matched_case_insensitively(tmp_path, make_quiz):
+    write_wav(tmp_path / "Song.wav")
+    write_wav(tmp_path / "Song_solution.WAV")
+    write_image(tmp_path / "Song_solution.JPG")
+
+    quiz = make_quiz(AudioQuiz, tmp_path)
+
+    assert quiz.total_rounds == 1
+    assert os.path.basename(quiz.round_data[0]["solution_sound"]) == "Song_solution.WAV"
+    assert os.path.basename(quiz.round_data[0]["solution_img"]) == "Song_solution.JPG"

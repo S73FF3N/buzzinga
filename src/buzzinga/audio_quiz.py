@@ -9,6 +9,7 @@ from .animation import BuzzingaAnimation
 class AudioQuiz(QuizGameBase):
     # Class-level so the category menu counts rounds with the same extensions
     sound_exts = (".wav", ".mp3")
+    solution_image_exts = (".jpg", ".png", ".jpeg", ".bmp")
 
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
         super().__init__(clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation)
@@ -31,6 +32,16 @@ class AudioQuiz(QuizGameBase):
                 self.cleaned_game_data.append(f)
 
     def load_round_data(self):    
+        folder_files = [str(p) for p in Path(self.game_data).iterdir() if p.is_file()]
+
+        def find_solution(solution_filename, extensions):
+            # Match the extension case-insensitively (e.g. "_solution.MP3")
+            for candidate in folder_files:
+                stem, ext = os.path.splitext(candidate)
+                if stem == solution_filename and ext.lower() in extensions:
+                    return candidate
+            return None
+
         for f in self.cleaned_game_data:
             if not os.path.splitext(f)[0].endswith("_solution"):
                 file_path = os.path.join(self.game_data,f)
@@ -41,19 +52,8 @@ class AudioQuiz(QuizGameBase):
                 # Build the expected solution file name
                 name_no_ext, ext = os.path.splitext(f)
                 solution_filename = f"{name_no_ext}_solution"
-                solution_sound = None
-                for ext in self.sound_exts:
-                    solution_path = os.path.join(self.game_data, solution_filename + ext)
-                    if os.path.exists(solution_path):
-                        solution_sound = solution_path
-                        break
-                
-                solution_img_path_list = [os.path.join(self.game_data, f"{name_no_ext}_solution{img_ext}") for img_ext in [".jpg", ".png", ".jpeg", ".bmp"]]
-                solution_image = None
-                for img_path in solution_img_path_list:
-                    if os.path.exists(img_path):
-                        solution_image = img_path
-                        break
+                solution_sound = find_solution(solution_filename, self.sound_exts)
+                solution_image = find_solution(solution_filename, self.solution_image_exts)
 
                 self.round_data.append({"solution": name if not name_no_ext.endswith("_example") else name[:-8], "data": file_path, "solution_sound": solution_sound, "solution_img": solution_image, "example": False if not name_no_ext.endswith("_example") else True})
         self.total_rounds = len(self.round_data)
