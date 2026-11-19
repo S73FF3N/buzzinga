@@ -196,12 +196,7 @@ class ImageQuiz(QuizGameBase):
     def show_round_load_error(self):
         self.round_load_failed = True
         self.tiles = None
-        self.video_playing = False
-        self.solution_video_playing = False
-        self._stop_video_audio()
-        if self.clip:
-            self.clip.close()
-            self.clip = None
+        self._close_video()
 
         if 0 < self.current_round <= len(self.round_data):
             file_name = os.path.basename(self.round_data[self.current_round - 1]["data"])
@@ -296,6 +291,15 @@ class ImageQuiz(QuizGameBase):
         self.video_frame_time = 0.0
         self.video_start_ticks = pygame.time.get_ticks()
 
+    def _close_video(self):
+        """Stop the question or solution video and release its clip."""
+        self.video_playing = False
+        self.solution_video_playing = False
+        self._stop_video_audio()
+        if self.clip:
+            self.clip.close()
+            self.clip = None
+
     def _stop_video_audio(self):
         """Stop any currently playing video audio."""
         if self.video_audio_channel is not None:
@@ -365,12 +369,6 @@ class ImageQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.buzzer_hit and not self.solution_shown:
-                #if self.solution_video_playing:
-                #    self.solution_video_playing = False
-                #    if self.clip:
-                #        self.clip.close()
-                #        self.clip = None
-
                 key = self.handle_events()
 
                 if self.escape_pressed:
@@ -414,13 +412,10 @@ class ImageQuiz(QuizGameBase):
                 pygame.display.flip()
 
             while self.buzzer_hit:
+                # The question video stops once someone buzzed or nobody did
                 if self.video_playing:
-                    self.video_playing = False
-                    self._stop_video_audio()
-                    if self.clip:
-                        self.clip.close()
-                        self.clip = None
-                    
+                    self._close_video()
+
                 key = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -449,8 +444,9 @@ class ImageQuiz(QuizGameBase):
                         self.buzzer_hit = False
                         self.solution_shown = False
                         self.particles = []
-                        # Stop any solution video audio before moving on
-                        self._stop_video_audio()
+                        # Otherwise a solution video still playing keeps
+                        # drawing its frames over the next round
+                        self._close_video()
                         if not self.winner_found:
                             self.current_round += 1
                             self.display_game_info()
@@ -484,5 +480,6 @@ class ImageQuiz(QuizGameBase):
             pygame.display.flip()
             self.clock.tick(60)
 
-        # Ensure no video audio keeps playing after leaving the game (e.g. escape)
-        self._stop_video_audio()
+        # Ensure no video keeps playing or stays open after leaving the game
+        # (e.g. escape)
+        self._close_video()
