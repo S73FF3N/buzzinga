@@ -21,8 +21,7 @@ class AudioQuiz(QuizGameBase):
             if not self.buzzer_hit and not self.initializing:
                 self.buzzering_player = buzzer + 1
         
-        self.buzzer_set.on_buzz(handle_buzz)
-        self.buzzer_set.start_listening()
+        self.set_buzzer_handler(on_buzz=handle_buzz)
 
     def clean_game_data(self):
         game_data_path = Path(self.game_data)

@@ -112,6 +112,10 @@ class Buzzinga():
             case "sort":
                 quiz = SortQuiz(*common_args)
         quiz.run()
+        # Drop the finished game's handlers so buzzes no longer reach it and
+        # it can be freed
+        if self.buzzer_set is not None:
+            self.buzzer_set.clear_handlers()
 
     def get_amount_rounds(self, category_folder):
         path = self.game_folder / category_folder

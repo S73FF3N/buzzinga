@@ -45,10 +45,7 @@ class QuestionQuiz(QuizGameBase):
                 self.buzzering_player = buzzer + 1
                 self.answer = button
 
-        # Ensure only this game mode receives buzzer callbacks.
-        self.buzzer_set.clear_handlers()
-        self.buzzer_set.on_button_down(handle_answer)
-        self.buzzer_set.start_listening()
+        self.set_buzzer_handler(on_button_down=handle_answer)
 
     def _find_question_image(self, pk, image_folder):
         if not os.path.isdir(image_folder):

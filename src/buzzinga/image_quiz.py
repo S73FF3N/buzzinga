@@ -19,8 +19,7 @@ class ImageQuiz(QuizGameBase):
             if not self.buzzer_hit and not self.initializing:
                 self.buzzering_player = buzzer + 1
         
-        self.buzzer_set.on_buzz(handle_buzz)
-        self.buzzer_set.start_listening()
+        self.set_buzzer_handler(on_buzz=handle_buzz)
         self.image_reveal_animation = image_reveal_animation
         self.continue_reveal = False
         self.clip = None

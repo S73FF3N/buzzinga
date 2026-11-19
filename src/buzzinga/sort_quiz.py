@@ -2,7 +2,7 @@ import os, random, pygame, json, sys, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import blit_text_objects, optimize_text_in_container
+from .game_utilities import blit_text_objects, optimize_text_in_container, load_static_sound
 from .animation import BuzzingaAnimation
 
 
@@ -263,7 +263,7 @@ class SortQuiz(QuizGameBase):
         if seconds == 0 and not self.countdown_end_played:
             self.countdown_end_played = True
             if self.is_game_sounds:
-                countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
+                countdown_sound = load_static_sound('countdown_end.wav')
                 self.game_sound_channel.play(countdown_sound)
 
     def handle_turn_input(self, key, letter):

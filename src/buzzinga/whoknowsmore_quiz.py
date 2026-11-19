@@ -2,7 +2,7 @@ import os, random, pygame, json, sys, traceback
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import blit_text_objects, optimize_text_in_container
+from .game_utilities import blit_text_objects, optimize_text_in_container, load_static_sound
 from .animation import BuzzingaAnimation
 
 
@@ -222,7 +222,7 @@ class WhoKnowsMoreQuiz(QuizGameBase):
                 pygame.display.flip()
                 if self.countdown_seconds_left == 0:
                     if self.is_game_sounds and not self.countdown_ended:
-                        countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
+                        countdown_sound = load_static_sound('countdown_end.wav')
                         self.game_sound_channel.play(countdown_sound)
                     self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                     pygame.display.flip()
