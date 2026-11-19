@@ -54,8 +54,7 @@ class HintQuiz(QuizGameBase):
             if not self.buzzer_hit and not self.initializing and not self.points_awarded:
                 self.buzzering_player = buzzer + 1
         
-        self.buzzer_set.on_buzz(handle_buzz)
-        self.buzzer_set.start_listening()
+        self.set_buzzer_handler(on_buzz=handle_buzz)
 
     def print_hint(self, n):
         pygame.draw.rect(self.screen, Static.BLUE, self.hint_match_dict[n][0])

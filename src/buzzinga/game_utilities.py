@@ -89,8 +89,9 @@ def blit_text_objects(screen, container, text, font, color=Static.WHITE):
     text_rect.center = container.center
     screen.blit(text_surface, text_rect)
 
-# Cache decorator to store loaded images
-@functools.lru_cache(maxsize=128)
+# Not cached: game images are shown once per game, and caching them at full
+# resolution can hold gigabytes for large photos. Callers keep the scaled
+# version they need (see load_and_scale_image).
 def load_image(name, folder, colorkey=None):
     fullname = os.path.join(folder, name)
     
@@ -117,6 +118,11 @@ def load_image(name, folder, colorkey=None):
         image.set_colorkey(colorkey, pygame.RLEACCEL)
     
     return image
+
+@functools.lru_cache(maxsize=None)
+def load_static_sound(name):
+    """Load a sound effect from the static folder once and reuse it."""
+    return pygame.mixer.Sound(os.path.join(Static.STATIC_FOLDER, name))
 
 def load_and_scale_image(image_name, folder, target_height, image_cache):
     if image_name not in image_cache:

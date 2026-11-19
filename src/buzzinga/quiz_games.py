@@ -3,8 +3,15 @@ import pygame, os, sys, pybuzzers
 import pygame.locals
 
 from .static import Static, Confetti
-from .game_utilities import blit_text_objects, optimize_text_in_container, load_image, adjust_image_size, load_video, adjust_video_size
+from .game_utilities import load_static_sound, blit_text_objects, optimize_text_in_container, load_image, adjust_image_size, load_video, adjust_video_size
 from .animation import SoundAnimation
+
+# Buzzer sets whose listener thread is running. pybuzzers keeps one BuzzerSet
+# per device, and its stop_listening() closes the device underneath a read
+# that may still be blocked on it, so each set's thread is started once and
+# reused by every following game; only the handlers are swapped.
+_listening_buzzer_sets = set()
+
 
 class QuizGameBase:
     def __init__(self, clock, game_data, players, is_game_sounds, max_score, buzzer_set, image_reveal_animation):
@@ -85,6 +92,18 @@ class QuizGameBase:
         # None if nobody buzzed
         self.first_buzz = None
 
+
+    def set_buzzer_handler(self, on_buzz=None, on_button_down=None):
+        """Make the given handler the only one on the buzzer set, so buzzes
+        no longer reach earlier games, and start listening if not yet done."""
+        self.buzzer_set.clear_handlers()
+        if on_buzz:
+            self.buzzer_set.on_buzz(on_buzz)
+        if on_button_down:
+            self.buzzer_set.on_button_down(on_button_down)
+        if self.buzzer_set not in _listening_buzzer_sets:
+            self.buzzer_set.start_listening()
+            _listening_buzzer_sets.add(self.buzzer_set)
 
     def update_particles(self):
         """Advance and draw the confetti. The caller flips the display once
@@ -188,16 +207,13 @@ class QuizGameBase:
                 self.draw_rect(Static.RED, Static.WHITE, 8, self.bottom_right_container)
                 pygame.display.flip()
                 if self.is_game_sounds:
-                    countdown_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown.wav'))
-                    self.game_sound_channel.play(countdown_sound)
+                    self.game_sound_channel.play(load_static_sound('countdown.wav'))
         if self.is_game_sounds:
-            countdown_end_sound = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'countdown_end.wav'))
-            self.game_sound_channel.play(countdown_end_sound)
+            self.game_sound_channel.play(load_static_sound('countdown_end.wav'))
 
     def play_buzzer_sound(self):
         if self.is_game_sounds:
-            buzzerHit = pygame.mixer.Sound(os.path.join(Static.ROOT_EXTENDED, Static.STATIC_FOLDER, 'buzzer.wav'))
-            self.game_sound_channel.play(buzzerHit)
+            self.game_sound_channel.play(load_static_sound('buzzer.wav'))
 
     def award_points(self, first_buzz, key, reset=False):
         if key == self.answer_keys[0]:
