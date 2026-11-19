@@ -50,3 +50,14 @@ def test_unloadable_sound_is_shown_as_resolved(tmp_path, make_quiz):
     assert quiz.round_load_failed
     assert quiz.buzzer_hit and quiz.solution_shown
     assert not quiz.sound_animation_running
+
+
+def test_hidden_files_are_neither_rounds_nor_solutions(tmp_path, make_quiz):
+    write_wav(tmp_path / "Song.wav")
+    (tmp_path / "._Song.wav").write_bytes(b"\x00\x05\x16\x07")
+    (tmp_path / "._Song_solution.wav").write_bytes(b"\x00\x05\x16\x07")
+
+    quiz = make_quiz(AudioQuiz, tmp_path)
+
+    assert quiz.total_rounds == 1
+    assert quiz.round_data[0]["solution_sound"] is None

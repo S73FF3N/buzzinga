@@ -1,6 +1,7 @@
 import pygame
 import pytest
 
+from buzzinga import buzzinga_class
 from buzzinga.buzzinga_class import Buzzinga
 from buzzinga.translations import english
 
@@ -30,3 +31,25 @@ def test_start_screen_exits_when_the_window_is_closed(buzzinga, monkeypatch):
 
     with pytest.raises(SystemExit):
         buzzinga.start_screen()
+
+
+@pytest.mark.parametrize("all_rounds_mode, expected_max_score", [(True, 100), (False, 10)])
+def test_points_setting_survives_an_all_rounds_game(buzzinga, monkeypatch, all_rounds_mode, expected_max_score):
+    started = []
+
+    class FakeQuiz:
+        def __init__(self, clock, game_dir, players, is_game_sounds, max_score, *rest):
+            started.append(max_score)
+
+        def run(self):
+            pass
+
+    monkeypatch.setattr(buzzinga_class, "ImageQuiz", FakeQuiz)
+    buzzinga.game_type = "images"
+    buzzinga.points_to_win = 10
+    buzzinga.game_modus = all_rounds_mode
+
+    buzzinga.game()
+
+    assert started == [expected_max_score]
+    assert buzzinga.points_to_win == 10

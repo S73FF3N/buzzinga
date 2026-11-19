@@ -103,9 +103,11 @@ class Buzzinga():
         # A name cleared on the player screen and not retyped would otherwise
         # show up as an empty label during the game
         self.fill_default_player_names()
-        if self.game_modus:
-            self.points_to_win = 100
-        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, self.points_to_win, self.buzzer_set, self.image_reveal_animation, self.current_language)
+        # "All rounds" mode plays until the last round; 100 points is out of
+        # reach for typical categories. Kept separate from points_to_win so
+        # the points setting survives for the next game.
+        max_score = 100 if self.game_modus else self.points_to_win
+        common_args = (self.clock, self.game_dir, self.player, self.is_game_sounds, max_score, self.buzzer_set, self.image_reveal_animation, self.current_language)
         match self.game_type:
             case "images":
                 quiz = ImageQuiz(*common_args)
@@ -624,6 +626,9 @@ class Buzzinga():
             screen = screens[screen]()
 
 def main():
+    if "--self-test" in sys.argv[1:]:
+        from .self_test import run_self_test
+        sys.exit(run_self_test())
     buzzinga = Buzzinga()
     buzzinga.run()
 

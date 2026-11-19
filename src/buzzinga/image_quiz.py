@@ -2,7 +2,7 @@ import os, random, pygame, pybuzzers
 
 from .quiz_games import QuizGameBase
 from .static import Static
-from .game_utilities import load_image, adjust_image_size, load_video, adjust_video_size
+from .game_utilities import is_hidden_file, load_image, adjust_image_size, load_video, adjust_video_size
 from .animation import BuzzingaAnimation
 
 
@@ -40,7 +40,7 @@ class ImageQuiz(QuizGameBase):
         game_data_list = os.listdir(self.game_data)
         for f in game_data_list:
             full_path = os.path.join(self.game_data, f)
-            if os.path.isdir(full_path):
+            if os.path.isdir(full_path) or is_hidden_file(f):
                 continue
             lower_f = f.lower()
             # Files are used as they are; load_image() reads every listed format

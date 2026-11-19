@@ -15,3 +15,17 @@ jobs:
         run: uv sync --locked
       - name: Run tests
         run: uv run pytest
+
+  build:
+    # Missing bundled files or packages only show up in the built executable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Build with setup.sh
+        run: printf '%s\n' "$RUNNER_TEMP/buzzinga" | bash setup.sh
+      - name: Self-test the built executable
+        run: '"$RUNNER_TEMP/buzzinga/buzzinga" --self-test'
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
