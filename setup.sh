@@ -41,7 +41,7 @@ echo ""
 
 # Build the executable
 uv run pyinstaller launcher.py --onefile \
-    --add-data "src/buzzinga/staticfiles:staticfiles" \
+    --add-data "staticfiles:staticfiles" \
     --name buzzinga \
     --paths src \
     --log-level WARN
