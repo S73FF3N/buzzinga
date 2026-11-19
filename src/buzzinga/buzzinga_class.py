@@ -198,7 +198,6 @@ class Buzzinga():
             return self.render_button(text, rect, click, inactive_color=color, active_color=color, text_color=Static.WHITE, image=is_image)
         
     def show_mouse(self):
-        pygame.event.set_grab(True)
         pygame.mouse.set_visible(True)
 
     def player_name_input(self, rect, click, inactive_color=Static.RED, active_color=Static.YELLOW):
@@ -472,12 +471,13 @@ class Buzzinga():
             self.choose_category_setup(no_categories=False)
         
         self.choose_category_menu = True
-        game_options = []
         page_counter = 1
         
         while self.choose_category_menu:
             key, letter, click = self.handle_events()
             
+            # Rebuilt every frame from the current page only
+            game_options = []
             if page_counter <= self.pages:
                 for game in self.buttons[f'page {page_counter}']:
                     game_options.append([game[0], self.render_button(game[0], pygame.Rect(game[1], game[2], game[3], game[4]), click), *game[1:]])

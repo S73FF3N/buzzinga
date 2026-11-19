@@ -133,6 +133,7 @@ class HintQuiz(QuizGameBase):
                     self.clock.tick(60)
 
             while not self.buzzer_hit and not self.solution_shown:
+                self.clock.tick(60)
                 key = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -161,6 +162,7 @@ class HintQuiz(QuizGameBase):
                     self.countdown(5)
 
             while self.buzzer_hit:
+                self.clock.tick(60)
                 key = self.handle_events()
                 if self.escape_pressed:
                     break
@@ -209,10 +211,6 @@ class HintQuiz(QuizGameBase):
                 self.check_game_over()
 
             # Update and draw particles
-            for p in self.particles[:]:
-                p.update()
-                p.draw(self.screen)
-                if p.life <= 0:
-                    self.particles.remove(p)
-                pygame.display.flip()            
+            self.update_particles()
+            pygame.display.flip()
             self.clock.tick(60)
