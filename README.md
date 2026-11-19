@@ -100,12 +100,12 @@ Every file in a category folder is one round, and its **file name is the answer*
   - Image Quiz: `Eiffel_Tower_solution.jpg` (an image or a video)
   - Audio Quiz: `Take_On_Me_solution.mp3` (a sound) and/or `Take_On_Me_solution.jpg` (an image)
 
-Supported formats:
+Supported formats (upper or lower case):
 
 | Quiz | Rounds | Solution files |
 |------|--------|----------------|
 | Image Quiz | `.png` `.jpg` `.jpeg` `.bmp` `.webp` `.avif`, videos `.mp4` `.mov` `.avi` `.webm` `.mkv` | same as rounds |
-| Audio Quiz | `.wav` `.mp3` | sounds `.wav` `.mp3`, images `.jpg` `.jpeg` `.png` `.bmp` (lower-case extensions only) |
+| Audio Quiz | `.wav` `.mp3` | sounds `.wav` `.mp3`, images `.jpg` `.jpeg` `.png` `.bmp` |
 
 Your files are only read, never changed. If a file cannot be loaded, the game shows its name and skips to the next round on Enter.
 
